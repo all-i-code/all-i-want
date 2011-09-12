@@ -1,0 +1,80 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<!--
+  File: HeaderImpl.ui.xml 
+  Description: UiBinder definition of HeaderImpl
+  
+  Copyright 2011 Adam Meadows 
+ 
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+       xmlns:gwt="urn:import:com.google.gwt.user.client.ui">
+  
+  <ui:with type="com.googlecode.jhb.gwt.client.ui.css.CssBundle" field="css" />
+  <ui:with type="com.googlecode.jhb.gwt.client.i18n.JhbConstants" field="jhbc" />
+  
+  <ui:style field="s">
+    .left { float: left; }
+    .right { float: right; }
+    .active { font-weight: bold; }
+  </ui:style>
+  
+  <gwt:FlowPanel addStyleNames="{css.layout.containFloats}">
+    <gwt:FlowPanel styleName="{css.layout.left}">
+      <gwt:Hyperlink ui:field="dashboardLink" text="{jhbc.dashboard}" 
+       targetHistoryToken="Dashboard" />
+      <gwt:InlineLabel ui:field="dashboardLabel" text="{jhbc.dashboard}" 
+       styleName="{s.active}" visible="false" />
+       
+      <gwt:Hyperlink ui:field="balanceLink" text="{jhbc.balance}"
+       targetHistoryToken="Balance" />
+      <gwt:InlineLabel ui:field="balanceLabel" text="{jhbc.balance}" 
+       styleName="{s.active}" visible="false" />
+      
+      <gwt:Hyperlink ui:field="transactionsLink" text="{jhbc.transactions}"
+       targetHistoryToken="Transactions" />
+      <gwt:InlineLabel ui:field="transactionsLabel" text="{jhbc.transactions}"
+       styleName="{s.active}" visible="false" />
+      
+      <gwt:Hyperlink ui:field="budgetLink" text="{jhbc.budget}" 
+       targetHistoryToken="Budget" />
+      <gwt:InlineLabel ui:field="budgetLabel" text="{jhbc.budget}" 
+       styleName="{s.active}" visible="false" />
+       
+      <gwt:Hyperlink ui:field="billsLink" text="{jhbc.bills}" 
+       targetHistoryToken="Bills" />
+      <gwt:InlineLabel ui:field="billsLabel" text="{jhbc.bills}" 
+       styleName="{s.active}" visible="false" />
+      
+      <gwt:Hyperlink ui:field="reportsLink" text="{jhbc.reports}" 
+       targetHistoryToken="Reports" />
+      <gwt:InlineLabel ui:field="reportsLabel" text="{jhbc.reports}" 
+       styleName="{s.active}" visible="false" />
+    </gwt:FlowPanel>
+    
+    <gwt:FlowPanel styleName="{css.layout.right}">
+      <gwt:InlineLabel ui:field="user" styleName="{s.active}" />
+      <gwt:InlineLabel text="{jhbc.pipe}" />
+      <gwt:InlineLabel ui:field="account" styleName="{s.active}" />
+      <gwt:InlineLabel text="{jhbc.pipe}" />
+      
+      <gwt:Hyperlink ui:field="settingsLink" text="{jhbc.settings}" 
+       targetHistoryToken="Settings" />
+      <gwt:InlineLabel ui:field="settingsLabel" text="{jhbc.settings}" 
+       styleName="{s.active}" visible="false" />
+      <gwt:InlineLabel text = "{jhbc.pipe}" />
+      
+      <gwt:Anchor ui:field="logout" text="{jhbc.logout}" />
+    </gwt:FlowPanel>
+  </gwt:FlowPanel>
+</ui:UiBinder>

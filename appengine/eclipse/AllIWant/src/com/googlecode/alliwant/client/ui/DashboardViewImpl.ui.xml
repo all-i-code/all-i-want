@@ -1,0 +1,50 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<!--
+  File: DashboardViewImpl.ui.xml 
+  Description: UiBinder definition of DashboardViewImpl
+  
+  Copyright 2011 Adam Meadows 
+ 
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+       xmlns:gwt="urn:import:com.google.gwt.user.client.ui"
+       xmlns:jhb="urn:import:com.googlecode.jhb.gwt.client.ui.widget">
+  
+  <ui:with type="com.googlecode.jhb.gwt.client.i18n.JhbConstants" field="jhbc" />
+  <ui:with type="com.googlecode.jhb.gwt.client.ui.css.CssBundle" field="css" />
+  
+  <gwt:FlowPanel>
+    <gwt:SimplePanel ui:field="headerWrapper" />
+    <gwt:Label styleName="{css.font.title} {css.layout.centered}" 
+     text="{jhbc.jobbersHomeBudget}" />
+     
+    <gwt:Image styleName="{css.layout.centered}" url="/static/images/JHB.png" />
+    
+    <gwt:FlowPanel styleName="{css.layout.left}">
+      <gwt:Label styleName="{css.font.heading}" text="{jhbc.upcomingBills}" />
+      <jhb:Table ui:field="bills" />
+    </gwt:FlowPanel>
+    
+    <gwt:FlowPanel styleName="{css.layout.right}">
+      <gwt:Label styleName="{css.font.heading}" text="{jhbc.accountBalances}" />
+      <jhb:Table ui:field="accounts" />
+    </gwt:FlowPanel>
+    
+    <gwt:FlowPanel styleName="{css.layout.clear}">
+      <gwt:Label styleName="{css.font.heading}" 
+       text="{jhbc.mostRecentTransactions}" />
+      <jhb:Table ui:field="transactions" />
+    </gwt:FlowPanel>
+  </gwt:FlowPanel>
+</ui:UiBinder>

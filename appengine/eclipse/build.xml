@@ -1,0 +1,51 @@
+<!--
+  File: build.xml 
+  Description: ant build config for jhb-web
+  
+  Copyright 2011 Adam Meadows 
+ 
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+ 
+         http://www.apache.org/licenses/LICENSE-2.0
+ 
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<project name="jhb-web" default="build" basedir=".">
+
+  <target name="-do">
+    <ant target="${target}" dir="JhbGwt"/>
+  </target>
+
+  <target name="build" description="Build all targets">
+    <antcall target="-do">
+      <param name="target" value="build" />
+    </antcall>
+  </target>
+
+  <target name="compile" description="Compile all targets, no javascript">
+    <antcall target="-do">
+      <param name="target" value="javac" />
+    </antcall>
+  </target>
+
+  <target name="test" description="Test all targets">
+    <antcall target="-do">
+      <param name="target" value="test" />
+    </antcall>
+  </target>
+
+  <target name="clean" description="Clean all targets">
+    <antcall target="-do">
+      <param name="target" value="clean" />
+    </antcall>
+  </target>
+
+</project>
+

@@ -1,0 +1,12 @@
+
+syntax: regexp
+^.*/WEB-INF/lib
+^.*/WEB-INF/classes
+^.*/WEB-INF/deploy
+^.*/war/alliwant
+^.*\.pyc$
+^.*\.orig$
+^.*\.class$
+^.*\.gwt.log$
+^appengine/eclipse/AllIWant/.settings
+^appengine/.coverage
