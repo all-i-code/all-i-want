@@ -17,27 +17,25 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client;
+package com.googlecode.alliwant.client;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.PlaceController;
-import com.googlecode.jhb.gwt.client.db.DbCache;
-import com.googlecode.jhb.gwt.client.db.DbCacheImpl;
-import com.googlecode.jhb.gwt.client.rpc.Manager;
-import com.googlecode.jhb.gwt.client.rpc.ManagerImpl;
-import com.googlecode.jhb.gwt.client.rpc.Rpc;
-import com.googlecode.jhb.gwt.client.rpc.RpcImpl;
-import com.googlecode.jhb.gwt.client.ui.DashboardView;
-import com.googlecode.jhb.gwt.client.ui.DashboardViewImpl;
-import com.googlecode.jhb.gwt.client.ui.GoodbyeView;
-import com.googlecode.jhb.gwt.client.ui.GoodbyeViewImpl;
-import com.googlecode.jhb.gwt.client.ui.widget.Alert;
-import com.googlecode.jhb.gwt.client.ui.widget.AlertImpl;
-import com.googlecode.jhb.gwt.client.ui.widget.smart.Header;
-import com.googlecode.jhb.gwt.client.ui.widget.smart.HeaderPresenter;
-import com.googlecode.jhb.gwt.client.ui.widget.smart.HeaderView;
-import com.googlecode.jhb.gwt.client.ui.widget.smart.HeaderViewImpl;
+import com.googlecode.alliwant.client.rpc.Manager;
+import com.googlecode.alliwant.client.rpc.ManagerImpl;
+import com.googlecode.alliwant.client.rpc.Rpc;
+import com.googlecode.alliwant.client.rpc.RpcImpl;
+import com.googlecode.alliwant.client.ui.DashboardView;
+import com.googlecode.alliwant.client.ui.DashboardViewImpl;
+import com.googlecode.alliwant.client.ui.GoodbyeView;
+import com.googlecode.alliwant.client.ui.GoodbyeViewImpl;
+import com.googlecode.alliwant.client.ui.widget.Alert;
+import com.googlecode.alliwant.client.ui.widget.AlertImpl;
+import com.googlecode.alliwant.client.ui.widget.smart.Header;
+import com.googlecode.alliwant.client.ui.widget.smart.HeaderPresenter;
+import com.googlecode.alliwant.client.ui.widget.smart.HeaderView;
+import com.googlecode.alliwant.client.ui.widget.smart.HeaderViewImpl;
 
 public class ClientFactoryImpl implements ClientFactory {
 
@@ -45,8 +43,7 @@ public class ClientFactoryImpl implements ClientFactory {
   private PlaceController placeController = new PlaceController(eventBus);
   private Alert alert = new AlertImpl();
   private Rpc rpc = new RpcImpl(getAlert());
-  private DbCache db = new DbCacheImpl();
-  private Manager manager = new ManagerImpl(rpc, eventBus, db);
+  private Manager manager = new ManagerImpl(rpc, eventBus);
   private HeaderView headerView = new HeaderViewImpl();
   private Header header = new HeaderPresenter(headerView, getEventBus(), 
    getManager());

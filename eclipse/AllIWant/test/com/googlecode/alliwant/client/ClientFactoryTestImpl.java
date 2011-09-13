@@ -17,19 +17,19 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client;
+package com.googlecode.alliwant.client;
 
 import static org.mockito.Mockito.mock;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.PlaceController;
-import com.googlecode.jhb.gwt.client.rpc.Manager;
-import com.googlecode.jhb.gwt.client.ui.DashboardViewTestImpl;
-import com.googlecode.jhb.gwt.client.ui.GoodbyeViewTestImpl;
-import com.googlecode.jhb.gwt.client.ui.widget.AlertTestImpl;
-import com.googlecode.jhb.gwt.client.ui.widget.smart.Header;
-import com.googlecode.jhb.gwt.client.ui.widget.smart.HeaderTestImpl;
+import com.googlecode.alliwant.client.rpc.Manager;
+import com.googlecode.alliwant.client.ui.DashboardViewTestImpl;
+import com.googlecode.alliwant.client.ui.GoodbyeViewTestImpl;
+import com.googlecode.alliwant.client.ui.widget.AlertTestImpl;
+import com.googlecode.alliwant.client.ui.widget.smart.Header;
+import com.googlecode.alliwant.client.ui.widget.smart.HeaderTestImpl;
 
 public class ClientFactoryTestImpl implements ClientFactory {
 

@@ -20,8 +20,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
        xmlns:gwt="urn:import:com.google.gwt.user.client.ui">
   
-  <ui:with type="com.googlecode.jhb.gwt.client.ui.css.CssBundle" field="css" />
-  <ui:with type="com.googlecode.jhb.gwt.client.i18n.JhbConstants" field="jhbc" />
+  <ui:with type="com.googlecode.alliwant.client.ui.css.CssBundle" field="css" />
+  <ui:with type="com.googlecode.alliwant.client.i18n.JhbConstants" field="jhbc" />
   
   <ui:style field="s">
     .left { float: left; }

@@ -20,7 +20,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.place;
+package com.googlecode.alliwant.client.place;
 
 import java.util.logging.Logger;
 

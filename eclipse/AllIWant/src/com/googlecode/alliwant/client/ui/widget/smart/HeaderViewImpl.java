@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.ui.widget.smart;
+package com.googlecode.alliwant.client.ui.widget.smart;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
-import com.googlecode.jhb.gwt.client.ui.ProcessingOverlay;
+import com.googlecode.alliwant.client.ui.ProcessingOverlay;
 
 public class HeaderViewImpl extends Composite implements HeaderView {
 

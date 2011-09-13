@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client;
+package com.googlecode.alliwant.client;
 
 public abstract class StringUtils {
  

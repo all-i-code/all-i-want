@@ -1,4 +1,4 @@
-package com.googlecode.jhb.gwt.client.i18n;
+package com.googlecode.alliwant.client.i18n;
 
 public class JhbConstantsTestImpl implements JhbConstants {
 

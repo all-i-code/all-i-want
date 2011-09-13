@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.ui.widget.smart;
+package com.googlecode.alliwant.client.ui.widget.smart;
 
 import com.google.gwt.user.client.ui.Widget;
 

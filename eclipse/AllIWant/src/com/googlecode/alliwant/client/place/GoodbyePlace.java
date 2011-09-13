@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.place;
+package com.googlecode.alliwant.client.place;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;

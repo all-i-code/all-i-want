@@ -17,22 +17,22 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.mvp;
+package com.googlecode.alliwant.client.mvp;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
-import com.googlecode.jhb.gwt.client.ClientFactory;
-import com.googlecode.jhb.gwt.client.activity.DashboardActivity;
-import com.googlecode.jhb.gwt.client.activity.GoodbyeActivity;
-import com.googlecode.jhb.gwt.client.place.DashboardPlace;
-import com.googlecode.jhb.gwt.client.place.GoodbyePlace;
+import com.googlecode.alliwant.client.ClientFactory;
+import com.googlecode.alliwant.client.activity.DashboardActivity;
+import com.googlecode.alliwant.client.activity.GoodbyeActivity;
+import com.googlecode.alliwant.client.place.DashboardPlace;
+import com.googlecode.alliwant.client.place.GoodbyePlace;
 
-public class JhbActivityMapper implements ActivityMapper {
+public class AiwActivityMapper implements ActivityMapper {
 
   private final ClientFactory clientFactory;
   
-  public JhbActivityMapper(final ClientFactory clientFactory) {
+  public AiwActivityMapper(final ClientFactory clientFactory) {
     super();
     this.clientFactory = clientFactory;
   }

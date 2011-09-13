@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.i18n;
+package com.googlecode.alliwant.client.i18n;
 
 import com.google.gwt.i18n.client.Messages;
 

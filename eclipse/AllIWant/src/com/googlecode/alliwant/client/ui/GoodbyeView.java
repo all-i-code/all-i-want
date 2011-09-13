@@ -17,9 +17,9 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.ui;
+package com.googlecode.alliwant.client.ui;
 
-import com.googlecode.jhb.gwt.client.i18n.JhbConstants;
+import com.googlecode.alliwant.client.i18n.JhbConstants;
 
 
 public interface GoodbyeView extends JhbView {

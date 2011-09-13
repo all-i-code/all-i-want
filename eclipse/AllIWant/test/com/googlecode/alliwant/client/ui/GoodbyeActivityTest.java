@@ -17,17 +17,17 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.ui;
+package com.googlecode.alliwant.client.ui;
 
 import static org.mockito.Mockito.*;
 import com.google.gwt.event.shared.EventBus;
-import com.googlecode.jhb.gwt.client.ClientFactoryTestImpl;
-import com.googlecode.jhb.gwt.client.activity.GoodbyeActivity;
-import com.googlecode.jhb.gwt.client.event.ModelEvent;
-import com.googlecode.jhb.gwt.client.model.MockModel;
-import com.googlecode.jhb.gwt.client.model.User;
-import com.googlecode.jhb.gwt.client.place.GoodbyePlace;
-import com.googlecode.jhb.gwt.client.rpc.Manager;
+import com.googlecode.alliwant.client.ClientFactoryTestImpl;
+import com.googlecode.alliwant.client.activity.GoodbyeActivity;
+import com.googlecode.alliwant.client.event.ModelEvent;
+import com.googlecode.alliwant.client.model.MockModel;
+import com.googlecode.alliwant.client.model.User;
+import com.googlecode.alliwant.client.place.GoodbyePlace;
+import com.googlecode.alliwant.client.rpc.Manager;
 
 import junit.framework.TestCase;
 

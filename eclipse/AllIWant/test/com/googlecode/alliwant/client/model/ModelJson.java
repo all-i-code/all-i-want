@@ -17,9 +17,9 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.model;
+package com.googlecode.alliwant.client.model;
 
-import static com.googlecode.jhb.gwt.client.logging.Logging.logger;
+import static com.googlecode.alliwant.client.logging.Logging.logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;

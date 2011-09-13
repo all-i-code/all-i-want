@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.db;
+package com.googlecode.alliwant.client.db;
 
 import junit.framework.TestCase;
 

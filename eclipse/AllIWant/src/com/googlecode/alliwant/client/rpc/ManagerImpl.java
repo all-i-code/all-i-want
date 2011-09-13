@@ -17,33 +17,23 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.rpc;
-
-import java.util.List;
+package com.googlecode.alliwant.client.rpc;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
-import com.googlecode.jhb.gwt.client.db.DbCache;
-import com.googlecode.jhb.gwt.client.event.ModelEvent;
-import com.googlecode.jhb.gwt.client.event.ModelListEvent;
-import com.googlecode.jhb.gwt.client.model.Account;
-import com.googlecode.jhb.gwt.client.model.AccountImpl;
-import com.googlecode.jhb.gwt.client.model.Category;
-import com.googlecode.jhb.gwt.client.model.CategoryImpl;
-import com.googlecode.jhb.gwt.client.model.User;
-import com.googlecode.jhb.gwt.client.model.UserImpl;
+import com.googlecode.alliwant.client.event.ModelEvent;
+import com.googlecode.alliwant.client.model.User;
+import com.googlecode.alliwant.client.model.UserImpl;
 
 public class ManagerImpl implements Manager {
 
   private Rpc rpc;
   private EventBus eventBus;
-  private DbCache db;
   private User user;
   
-  public ManagerImpl(Rpc rpc, EventBus eventBus, DbCache db) {
+  public ManagerImpl(Rpc rpc, EventBus eventBus) {
     this.rpc = rpc;
     this.eventBus = eventBus;
-    this.db = db;
     user = null;
   }
   
@@ -73,44 +63,6 @@ public class ManagerImpl implements Manager {
     });
   } // getCurrentUser //
   
-  /**
-   * Request a listing of all Accounts for the current User
-   */
-  @Override
-  public void getAccounts() {
-    List<Account> accounts = db.getAccounts();
-    if (accounts.size() > 0) {
-      eventBus.fireEvent(new ModelListEvent<Account>(Account.class, accounts));
-      return;
-    }
-    
-    String url = "/rpc/account/get_accounts";
-    rpc.send(url, new Rpc.Handler() {
-      public void onComplete(String result) {
-        handleAccounts(result);
-      }
-    });
-  } // getAccounts //
-  
-  /**
-   * Request a listing of all Categories for the current User
-   */
-  @Override
-  public void getCategories() {
-    List<Category> categories = db.getCategories();
-    if (categories.size() > 0) {
-      eventBus.fireEvent(new ModelListEvent<Category>(Category.class, categories));
-      return;
-    }
-    
-    String url = "/rpc/account/get_categories";
-    rpc.send(url, new Rpc.Handler() {
-      public void onComplete(String result) {
-        handleCategories(result);
-      }
-    });
-  } // getCategories //
-  
   // ================================================================
   // END: Manager methods
   // ================================================================
@@ -119,17 +71,5 @@ public class ManagerImpl implements Manager {
     user = UserImpl.decode(response);
     eventBus.fireEvent(new ModelEvent<User>(User.class, user));
   } // handleUser //
-  
-  private void handleAccounts(String response) {
-    List<Account> accounts = AccountImpl.decodeList(response);
-    db.updateAccounts(accounts);
-    eventBus.fireEvent(new ModelListEvent<Account>(Account.class, accounts));
-  } // handleAccounts //
-  
-  private void handleCategories(String response) {
-    List<Category> categories = CategoryImpl.decodeList(response);
-    db.updateCategories(categories);
-    eventBus.fireEvent(new ModelListEvent<Category>(Category.class, categories));
-  } // handleCategories //
   
 } // ManagerJson //

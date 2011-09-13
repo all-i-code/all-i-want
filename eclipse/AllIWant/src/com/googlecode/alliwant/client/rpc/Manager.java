@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.rpc;
+package com.googlecode.alliwant.client.rpc;
 
 public interface Manager {
   /**
@@ -26,13 +26,4 @@ public interface Manager {
    */
   void getCurrentUser(String currentURL);
   
-  /**
-   * Request a listing of all Accounts for the current User
-   */
-  void getAccounts();
-  
-  /**
-   * Request a listing of all Categories for the current User
-   */
-  void getCategories();
 } // Manager //

@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.logging;
+package com.googlecode.alliwant.client.logging;
 
 import java.util.logging.Logger;
 

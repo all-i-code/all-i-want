@@ -21,7 +21,7 @@
  *
 */
 
-package com.googlecode.jhb.gwt.client.model;
+package com.googlecode.alliwant.client.model;
 
 import java.util.ArrayList;
 import java.util.List;

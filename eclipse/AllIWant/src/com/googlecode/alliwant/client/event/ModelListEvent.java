@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.event;
+package com.googlecode.alliwant.client.event;
 
 import java.util.HashMap;
 import java.util.List;

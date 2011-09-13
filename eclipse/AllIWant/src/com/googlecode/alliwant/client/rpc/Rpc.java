@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.rpc;
+package com.googlecode.alliwant.client.rpc;
 
 public interface Rpc {
   String add(String name, String value);

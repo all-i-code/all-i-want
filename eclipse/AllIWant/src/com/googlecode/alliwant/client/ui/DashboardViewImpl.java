@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.ui;
+package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -25,9 +25,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.googlecode.jhb.gwt.client.i18n.JhbConstants;
-import com.googlecode.jhb.gwt.client.ui.widget.Table;
-import com.googlecode.jhb.gwt.client.ui.widget.smart.Header;
+import com.googlecode.alliwant.client.i18n.JhbConstants;
+import com.googlecode.alliwant.client.ui.widget.Table;
+import com.googlecode.alliwant.client.ui.widget.smart.Header;
 
 public class DashboardViewImpl extends Composite implements DashboardView {
 

@@ -17,15 +17,15 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.activity;
+package com.googlecode.alliwant.client.activity;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.googlecode.jhb.gwt.client.ClientFactory;
-import com.googlecode.jhb.gwt.client.logging.Logging;
-import com.googlecode.jhb.gwt.client.place.DashboardPlace;
-import com.googlecode.jhb.gwt.client.ui.DashboardView;
+import com.googlecode.alliwant.client.ClientFactory;
+import com.googlecode.alliwant.client.logging.Logging;
+import com.googlecode.alliwant.client.place.DashboardPlace;
+import com.googlecode.alliwant.client.ui.DashboardView;
 
 public class DashboardActivity implements Activity {
 

@@ -17,12 +17,12 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.mvp;
+package com.googlecode.alliwant.client.mvp;
 
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.WithTokenizers;
-import com.googlecode.jhb.gwt.client.place.DashboardPlace;
-import com.googlecode.jhb.gwt.client.place.GoodbyePlace;
+import com.googlecode.alliwant.client.place.DashboardPlace;
+import com.googlecode.alliwant.client.place.GoodbyePlace;
 
 /**
  * PlaceHistoryMapper interface is used to attach all places which the
@@ -34,6 +34,6 @@ import com.googlecode.jhb.gwt.client.place.GoodbyePlace;
   DashboardPlace.Tokenizer.class,
   GoodbyePlace.Tokenizer.class
 })
-public interface JhbPlaceHistoryMapper extends PlaceHistoryMapper {
+public interface AiwPlaceHistoryMapper extends PlaceHistoryMapper {
 
 }

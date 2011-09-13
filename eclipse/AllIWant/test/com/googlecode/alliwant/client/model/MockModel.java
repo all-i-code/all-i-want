@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.model;
+package com.googlecode.alliwant.client.model;
 
 import static org.mockito.Mockito.*;
 

@@ -17,14 +17,14 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.ui.widget.smart;
+package com.googlecode.alliwant.client.ui.widget.smart;
 
-import static com.googlecode.jhb.gwt.client.StringUtils.isEmpty;
+import static com.googlecode.alliwant.client.StringUtils.isEmpty;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.jhb.gwt.client.event.ModelEvent;
-import com.googlecode.jhb.gwt.client.model.User;
-import com.googlecode.jhb.gwt.client.rpc.Manager;
+import com.googlecode.alliwant.client.event.ModelEvent;
+import com.googlecode.alliwant.client.model.User;
+import com.googlecode.alliwant.client.rpc.Manager;
 
 public class HeaderPresenter implements Header {
 

@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.ui;
+package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.googlecode.jhb.gwt.client.i18n.JhbConstants;
+import com.googlecode.alliwant.client.i18n.JhbConstants;
 
 public class GoodbyeViewImpl extends Composite implements GoodbyeView {
 

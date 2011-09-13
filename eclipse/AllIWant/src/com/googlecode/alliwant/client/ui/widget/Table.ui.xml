@@ -19,7 +19,7 @@
 -->
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:gwt="urn:import:com.google.gwt.user.client.ui">
-	<ui:style field="css" type="com.googlecode.jhb.gwt.client.ui.widget.Table.Css">
+	<ui:style field="css" type="com.googlecode.alliwant.client.ui.widget.Table.Css">
 		.header {}
 		.alternate {}
 	</ui:style>

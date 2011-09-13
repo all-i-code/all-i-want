@@ -58,7 +58,7 @@ public class AllIWant implements EntryPoint {
     activityManager.setDisplay(appWidget);
     
     // Start PlaceHistoryHandler with our PlaceHistoryMapper
-    AiWPlaceHistoryMapper historyMapper = GWT.create(AiwPlaceHistoryMapper.class);
+    AiwPlaceHistoryMapper historyMapper = GWT.create(AiwPlaceHistoryMapper.class);
     PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
 	  historyHandler.register(placeController, eventBus, defaultPlace);
 	  

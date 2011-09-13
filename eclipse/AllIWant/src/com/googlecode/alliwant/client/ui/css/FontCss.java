@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.ui.css;
+package com.googlecode.alliwant.client.ui.css;
 
 import com.google.gwt.resources.client.CssResource;
 

@@ -17,9 +17,9 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.jhb.gwt.client.ui.widget.smart;
+package com.googlecode.alliwant.client.ui.widget.smart;
 
-import com.googlecode.jhb.gwt.client.ui.JhbView;
+import com.googlecode.alliwant.client.ui.JhbView;
 
 public interface HeaderView extends JhbView {
   void setNickname(String nickname);
