@@ -1,7 +1,7 @@
 '''
 #
 # File: util.py
-# Description: Utility methods for use in JHB 
+# Description: Utility methods for use in AllIWant 
 # 
 # Copyright 2011 Adam Meadows 
 #

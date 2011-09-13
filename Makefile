@@ -24,7 +24,7 @@ include dev.mk
 include codegen.mk
 
 pytest:
-	$(HIDE)for pt in `find -L jhb -path */tests/*.py`;\
+	$(HIDE)for pt in `find -L core -path */tests/*.py`;\
 		do\
 			echo "Running Python tests in $$pt";\
 			$(PYTHON) $$pt;\
@@ -69,7 +69,7 @@ CVRG_LONG := coverage.py
 CVRG_LINK := http://nedbatchelder.com/code/coverage/
 
 dev-env:
-	$(HIDE)echo "Packages required for JHB Development:"
+	$(HIDE)echo "Packages required for AllIWant Development:"
 	$(HIDE)echo "  $(PY): $(PY_LONG)"
 	$(HIDE)echo "    - $(PY_LINK)"
 	$(HIDE)echo "  $(GAE): $(GAE_LONG)"

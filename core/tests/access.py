@@ -1,7 +1,7 @@
 '''
 #
 # File: access.py
-# Description: Unit tests for jhb.core.access.MemoryAccess
+# Description: Unit tests for core.access.MemoryAccess
 # 
 # Copyright 2011 Adam Meadows 
 #
@@ -20,62 +20,36 @@
 '''
 
 import unittest
-from jhb.core.access import MemoryAccess
-from jhb.core.model import Account, Category, Data
+from core.access import MemoryAccess
+from core.model import Group, GroupMemeber, ListItem
 
 class MemoryAccessTest(unittest.TestCase):
     def setUp(self):
         self.access = MemoryAccess()
         
-        self.accounts = [
-            Account(id=1, name='Old Checking', description='', is_active=False),
-            Account(id=2, name='Savings', description='', is_active=True),
-            Account(id=3, name='Checking', description='', is_active=True),
-        ]
+        #self.accounts = [
+        #    Account(id=1, name='Old Checking', description='', is_active=False),
+        #    Account(id=2, name='Savings', description='', is_active=True),
+        #    Account(id=3, name='Checking', description='', is_active=True),
+        #]
 
-        self.categories = [
-            Category(id=1, aid=1, name='Food', description='',
-                balance=0.00, is_active=False),
-            Category(id=2, aid=1, name='Gas', description='',
-                balance=0.00, is_active=False),
-            Category(id=3, aid=2, name='Insurance', description='',
-                balance=200.00, is_active=True),
-            Category(id=4, aid=2, name='Taxes', description='',
-                balance=3000.00, is_active=True),
-            Category(id=5, aid=3, name='Food', description='',
-                balance=200.00, is_active=True),
-            Category(id=6, aid=3, name='Gas', description='',
-                balance=150.00, is_active=True),
-            Category(id=7, aid=3, name='Cable', description='',
-                balance=100.00, is_active=True),
-        ]
+        #self.categories = [
+        #    Category(id=1, aid=1, name='Food', description='',
+        #        balance=0.00, is_active=False),
+        #    Category(id=2, aid=1, name='Gas', description='',
+        #        balance=0.00, is_active=False),
+        #    Category(id=3, aid=2, name='Insurance', description='',
+        #        balance=200.00, is_active=True),
+        #    Category(id=4, aid=2, name='Taxes', description='',
+        #        balance=3000.00, is_active=True),
+        #    Category(id=5, aid=3, name='Food', description='',
+        #        balance=200.00, is_active=True),
+        #    Category(id=6, aid=3, name='Gas', description='',
+        #        balance=150.00, is_active=True),
+        #    Category(id=7, aid=3, name='Cable', description='',
+        #        balance=100.00, is_active=True),
+        #]
 
-        self.splits = []
-        self.transactions = []
-        self.payment_types = []
-        self.bills = []
-        self.budgets = []
-        self.budget_items = []
-
-    def _create_data(self):
-        return Data(accounts=self.accounts, categories=self.categories,
-            splits=self.splits, transactions=self.transactions,
-            payment_types=self.payment_types, bills=self.bills,
-            budgets=self.budgets, budget_items=self.budget_items)
-
-    def test_get_data(self):
-        '''Test the get_data method'''
-        d = self._create_data()
-        self.access.load_data(d)
-        data = self.access.get_data()
-
-        _ = data.accounts
-        for i,a in enumerate(d.accounts):
-            self.assertTrue(a.equals(_[i]))
-
-        _ = data.categories
-        for i,c in enumerate(d.categories):
-            self.assertTrue(c.equals(_[i]))
 
     def test_filter(self):
         pass

@@ -1,7 +1,7 @@
 '''
 #
 # File: meta.py
-# Description: Meta-class and base classes for JHB model objects
+# Description: Meta-class and base classes for AllIWant model objects
 # 
 # Copyright 2011 Adam Meadows 
 #
@@ -19,10 +19,10 @@
 #
 '''
 
-from jhb.core.util import camelize, uncamelize, pluralize
+from core.util import camelize, uncamelize, pluralize
 
-class JhbField(object):
-    '''Class to represent a field in a JHB object'''
+class Field(object):
+    '''Class to represent a field in a Model object'''
 
     @classmethod
     def get_extra_java_imports(cls):
@@ -43,10 +43,6 @@ class JhbField(object):
     @classmethod
     def get_java_iface_type(cls):
         return cls.get_java_type()
-
-    @classmethod
-    def get_ae_type(cls):
-        return getattr(cls, 'ae_type', None)
 
     @classmethod
     def get_java_test_getter_name(cls):
@@ -88,40 +84,40 @@ class JhbField(object):
     def get_default(self):
         return self.default
 
-class JhbFieldInt(JhbField):
+class FieldInt(Field):
     java_type = 'int'
-    ae_type = 'db.IntegerProperty()'
     default = -1
     java_test_getter = 'getInt'
     
-class JhbFieldString(JhbField):
+class FieldString(Field):
     java_type = 'String'
-    ae_type = 'db.StringProperty()'
     default = ''
     java_test_getter = 'getStr'
 
-class JhbFieldText(JhbField):
+class FieldText(Field):
     java_type = 'String'
-    ae_type = 'db.StringProperty(multiline=True)'
     default = ''
     java_test_getter = 'getStr'
 
-class JhbFieldFloat(JhbField):
+class FieldFloat(Field):
     java_type = 'double'
-    ae_type = 'db.FloatProperty()'
     default = 0.0
     java_test_getter = 'getDbl'
 
-class JhbFieldBoolean(JhbField):
+class FieldUser(Field):
+    java_type = 'String'
+    default = ''
+    java_test_getter = 'getStr'
+
+class FieldBoolean(Field):
     java_type = 'boolean'
-    ae_type = 'db.BooleanProperty()'
     default = True
     java_test_getter = 'getBool'
     
     def get_java_getter_name(self):
         return camelize(self.name, trailing=True)
 
-class JhbFieldModelArray(JhbField):
+class FieldModelArray(Field):
     java_test_getter = 'getArray'
     extra_iface_imports = (
         'java.util.List',
@@ -169,11 +165,11 @@ class JhbFieldModelArray(JhbField):
         getter = template % (it, gn, jt, hn)
         return '\n'.join((helper, getter))
 
-class JhbMeta(type):
-    '''Meta class for JHB object classes'''
+class ModelMeta(type):
+    '''Meta class for  object classes'''
     def __new__(cls, class_name, bases, class_dict):
         nc = type.__new__(cls, class_name, bases, class_dict)
-        JhbModelManager.register(nc)
+        ModelManager.register(nc)
         letters = 'abcdefghijklmnopqrstuvwxyz' 
         if len(nc.get_fields()) > len(letters):
             base = 'Class %s has too many fields, max of %s'
@@ -183,7 +179,7 @@ class JhbMeta(type):
         nc.field_dict = dict((f.get_name(), f) for f in nc.get_fields())
         return nc
 
-class JhbModelManager(object):
+class ModelManager(object):
     models = []
 
     @classmethod 
@@ -192,9 +188,9 @@ class JhbModelManager(object):
         assert(mc not in cls.models)
         cls.models.append(mc)
 
-class JhbModel(object):
-    '''Base class for all JHB model objects'''
-    __metaclass__ = JhbMeta
+class Model(object):
+    '''Base class for all model objects'''
+    __metaclass__ = ModelMeta
     abstract = True
 
     @classmethod
@@ -272,12 +268,6 @@ class JhbModel(object):
         j = lambda n: cls.get_json_name(n)
         v = lambda n: json_dict.get(j(n))
         return cls(dict((n, v(n)) for n in cls.get_field_names() ))
-
-    @classmethod
-    def from_db(cls, db):
-        v = lambda f: getattr(db, f, None)
-        params = dict( (n, v(n)) for n in cls.get_field_names() )
-        return cls(**params)
 
     def __init__(self, **kwargs):
         fields = ((f.get_name(), f.get_default()) for f in self.get_fields())

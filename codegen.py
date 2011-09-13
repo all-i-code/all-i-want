@@ -24,12 +24,7 @@ use_library('django', '1.2')
 from google.appengine.ext.webapp import template
 from optparse import OptionParser
 import os
-import jhb.core.model as model
-
-def gen_models(filename='models.py'):
-    path = os.path.join(os.path.dirname(__file__), 'templates/models.py')
-    with open(filename, 'w') as f:
-        f.write(template.render(path, dict(classes=model.get_db_classes())))
+import core.model as model
 
 def gen_json(cls, type, directory):
     t = lambda x: 'templates/json/%s.java' % x
@@ -51,7 +46,7 @@ def gen_makefile():
     i = lambda x: '%s.java' % x.__name__
     m = lambda x: '%sImpl.java' % x.__name__
     t = lambda x: '%sTestImpl.java' % x.__name__
-    dest = 'eclipse/JhbGwt/src/com/googlecode/jhb/gwt/client/model'
+    dest = 'eclipse/AllIWant/src/com/googlecode/alliwant/client/model'
     tdest = dest.replace('src', 'test')
     p = lambda x: (dest, x, x)
     pt = lambda x: (tdest, x, x)
@@ -61,14 +56,6 @@ def gen_makefile():
         print '\t test.codegen.%s \\' % _(cls)
     
     print '\t test.codegen.json.cleanup'
-    print ''
-    
-    print 'test.codegen.models:'
-    print '\t$(HIDE)echo "Checking models.py"'
-    print '\t$(HIDE). env.sh'
-    print '\t$(HIDE)$(PYTHON) codegen.py -m $@.out'
-    print '\t$(HIDE)diff models.py $@.out'
-    print '\t$(HIDE)rm -f $@.out'
     print ''
     
     print 'test.codegen.json.prep:'
@@ -93,17 +80,13 @@ def gen_makefile():
 
 if __name__ == "__main__":
     parser = OptionParser()
-    parser.add_option('-m', '--models', action='store_true', dest='models',
-        help='generate models file to models.py')
     parser.add_option('-j', '--json', dest='json_dir',
         help='generate json files in DIR', metavar='DIR')
-    parser.add_option('-k', '--makefile', action='store_true', dest='mk',
+    parser.add_option('-m', '--makefile', action='store_true', dest='mk',
         help='generate test makefile')
 
     (options, args) = parser.parse_args()
-    if options.models:
-        gen_models(args[0] if len(args) > 0 else 'models.py')
-    elif options.json_dir is not None:
+    if options.json_dir is not None:
         gen_all_json(options.json_dir)
     elif options.mk:
         gen_makefile()

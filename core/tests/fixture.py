@@ -1,7 +1,7 @@
 '''
 #
 # File: fixture.py
-# Description: Python fixture for JHB unit tests 
+# Description: Python fixture for AllIWant unit tests 
 # 
 # Copyright 2011 Adam Meadows 
 #
@@ -21,26 +21,26 @@
 
 from jhb.core.model import Account, Category
 
-ACCOUNTS = [
-    Account(id=1, name='Old Checking', description='', is_active=False),
-    Account(id=2, name='Checking', description='', is_active=True),
-    Account(id=3, name='Savings', description='', is_active=True),
-]
+#ACCOUNTS = [
+#    Account(id=1, name='Old Checking', description='', is_active=False),
+#    Account(id=2, name='Checking', description='', is_active=True),
+#    Account(id=3, name='Savings', description='', is_active=True),
+#]
 
-CATEGORIES = [
-    Category(id=1, aid=1, name='Food', description='', balance=0.00,
-        is_active=False),
-    Category(id=2, aid=1, name='Gas', description='', balance=0.00,
-        is_active=False),
-    Category(id=3, aid=3, name='Insurance', description='', balance=200.00,
-        is_active=True),
-    Category(id=4, aid=3, name='Taxes', description='', balance=3000.00,
-        is_active=True),
-    Category(id=5, aid=2, name='Food', description='', balance=200.00,
-        is_active=True),
-    Category(id=6, aid=2, name='Gas', description='', balance=150.00,
-        is_active=True),
-    Category(id=7, aid=2, name='Cable', description='', balance=100.00,
-        is_active=True),
-]
+#CATEGORIES = [
+#    Category(id=1, aid=1, name='Food', description='', balance=0.00,
+#        is_active=False),
+#    Category(id=2, aid=1, name='Gas', description='', balance=0.00,
+#        is_active=False),
+#    Category(id=3, aid=3, name='Insurance', description='', balance=200.00,
+#        is_active=True),
+#    Category(id=4, aid=3, name='Taxes', description='', balance=3000.00,
+#        is_active=True),
+#    Category(id=5, aid=2, name='Food', description='', balance=200.00,
+#        is_active=True),
+#    Category(id=6, aid=2, name='Gas', description='', balance=150.00,
+#        is_active=True),
+#    Category(id=7, aid=2, name='Cable', description='', balance=100.00,
+#        is_active=True),
+#]
 

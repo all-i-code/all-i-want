@@ -1,7 +1,7 @@
 '''
 #
 # File: exception.py
-# Description: JHB specific exceptions
+# Description: AllIWant specific exceptions
 # 
 # Copyright 2011 Adam Meadows 
 #
@@ -42,11 +42,4 @@ class OverrideError(Exception):
 
     def __str__(self):
         return 'The function "%s" should be overriden' % self.function
-
-class InactiveCategoryError(Exception):
-    def __init__(self, category):
-        self.category = category
-
-    def __str__(self):
-        return 'The Category %s is inactive' % self.category.name
 

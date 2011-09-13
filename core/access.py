@@ -1,7 +1,7 @@
 '''
 #
 # File: access.py
-# Description: JHB interface for accessing data (stored model objects)
+# Description: AllIWant interface for accessing data (stored model objects)
 # 
 # Copyright 2011 Adam Meadows 
 #
@@ -19,25 +19,21 @@
 #
 '''
 
-from jhb.core.exception import OverrideError
+from core.exception import OverrideError
 
-class JhbAccess(object):
-    '''Base class for all JHB Access interfaces. Should be overridden''' 
-
-    def get_data(self):
-        '''Retrieve all JHB data in a jhb.core.model.Data object'''
-        raise OverrideError('get_data')
+class Access(object):
+    '''Base class for all AllIWant Access interfaces. Should be overridden''' 
 
     def filter(self, cls, field=None, value=None):
-        '''Retrieve all JHB model objects by class and a field'''
+        '''Retrieve all model objects by class and a field'''
         raise OverrideError('filter')
 
     def get(self, cls, id):
-        '''Retrieve a particular JHB model object(s) by class and id'''
+        '''Retrieve a particular model object(s) by class and id'''
         raise OverrideError('get')
 
     def save(self, obj):
-        '''Save a jhb.core.model.* object.
+        '''Save a core.model.* object.
 
         All fields should already be validated, except id,
         which can None to autofill it with a sequence number.
@@ -45,43 +41,35 @@ class JhbAccess(object):
         ''' 
         raise OverrideError('save')
 
-class MemoryAccess(JhbAccess):
-    '''In-memory implementation of JhbAccess (currently for testing)''' 
+class MemoryAccess(Access):
+    '''In-memory implementation of Access (currently for testing)''' 
 
     def nm(self, cls):
         return cls.get_name()
 
     def pl(self, cls):
-        from jhb.core.util import uncamelize, pluralize
+        from core.util import uncamelize, pluralize
         return pluralize(uncamelize(self.nm(cls)))
 
     def load_data(self, data):
-        from jhb.core.model import get_db_classes
+        from core.model import get_db_classes
         g = lambda x: getattr(data, self.pl(x))
         _ = lambda x: (self.nm(x), [ n.clone() for n in g(x) ])
         self.data = dict( (_(cls) for cls in get_db_classes()) )
 
-    def get_data(self):
-        '''Retrieve all JHB data in a jhb.core.model.Data object'''
-        from jhb.core.model import get_db_classes, Data
-        d = lambda x: self.data.get(self.nm(x))
-        _ = lambda x: (self.pl(x), [ n.clone() for n in d(x) ])
-        args = dict( (_(cls) for cls in get_db_classes()) )
-        return Data(**args)
-
     def filter(self, cls, field=None, value=None):
-        '''Retrieve all JHB model objects by class and a field'''
+        '''Retrieve all model objects by class and a field'''
         e = lambda f,v: f is not None and v is not None
         _ = lambda r,f,v: getattr(r, f) == v if e(f,v) else True
         return [ r for r in self.data.get(self.nm(cls)) if _(r, field, value) ]
 
     def get(self, cls, id):
-        '''Retrieve a particular JHB model object(s) by class and id'''
+        '''Retrieve a particular  model object(s) by class and id'''
         r = self.filter(cls, 'id', id)
         return r[0] if len(r) > 0 else None
 
     def save(self, obj):
-        '''Save a jhb.core.model.* object.
+        '''Save a core.model.* object.
 
         All fields should already be validated, except id,
         which can None to autofill it with a sequence number.

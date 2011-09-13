@@ -1,7 +1,7 @@
 '''
 #
 # File: model.py
-# Description: JHB Model classes
+# Description: Model classes
 # 
 # Copyright 2011 Adam Meadows 
 #
@@ -19,132 +19,59 @@
 #
 '''
 
-from jhb.core.meta import JhbModel, JhbFieldInt, JhbFieldString, JhbFieldText, \
-    JhbFieldFloat, JhbFieldBoolean, JhbFieldModelArray
+from core.meta import Model, FieldInt, FieldString, FieldText
 
-class Account(JhbModel):
+class Group(Model):
     fields = (
-        JhbFieldInt(name='id'),
-        JhbFieldString(name='name'),
-        JhbFieldText(name='description'),
-        JhbFieldBoolean(name='is_active'),
+        FieldInt(name='id'),
+        FieldString(name='name'),
+        FieldText(name='description'),
     )
 
-class Category(JhbModel):
+class GroupInvitation(Model):
     fields = (
-        JhbFieldInt(name='id'),
-        JhbFieldInt(name='aid'),
-        JhbFieldString(name='name'),
-        JhbFieldText(name='description'),
-        JhbFieldFloat(name='balance'),
-        JhbFieldBoolean(name='is_active'),
+        FieldInt(name='id'),
+        FieldInt(name='group_id'),
+        FieldString(name='group_name'),
+        FieldString(name='owner_email'),
+        FieldString(name='member_email'),
     )
 
-class Split(JhbModel):
+class GroupMember(Model):
     fields = (
-        JhbFieldInt(name='id'),
-        JhbFieldInt(name='transaction_id'),
-        JhbFieldInt(name='from_id'),
-        JhbFieldInt(name='to_id'),
-        JhbFieldFloat(name='amount'),
+        FieldInt(name='id'),
+        FieldInt(name='group_id'),
+        FieldString(name='nickname'),
+        FieldString(name='email'),
     )
 
-class Transaction(JhbModel):
-    '''Base class for all transaction types'''
+class ListItem(Model):
     fields = (
-        JhbFieldInt(name='id'),
-        JhbFieldString(name='type'),
-        JhbFieldString(name='location'),
-        JhbFieldText(name='description'),
-        JhbFieldString(name='date'),
-        JhbFieldString(name='posting_date'),
-        JhbFieldBoolean(name='is_active'),
-        JhbFieldInt(name='reference_id'),
-        JhbFieldInt(name='payment_type_id'),
-        JhbFieldInt('bill_id'),
-        JhbFieldBoolean('is_recurring'),
+        FieldInt(name='id'),
+        FieldString(name='name'),
+        FieldText(name='description'),
+        FieldString(name='url'),
+        FieldString(name='reserved_by'),
+        FieldString(name='purchased_by'),
     )
 
-class PaymentType(JhbModel):
-    '''Base class for all Payment Types'''
-    types = (
-        'credit',
-        'debit',
-        'check',
-    )
-    
+class User(Model):
     fields = (
-        JhbFieldInt(name='id'),
-        JhbFieldString(name='type'),
-        JhbFieldString(name='name'),
-        JhbFieldString(name='number'),
-        JhbFieldInt(name='to_id'),
-        JhbFieldString(name='payable_to'),
+        FieldString(name='email'),
+        FieldString(name='nickname'),
+        FieldString(name='user_id'),
+        FieldString(name='login_url'),
+        FieldString(name='logout_url'),
     )
 
-class Bill(JhbModel):
+class FailureReport(Model):
     fields = (
-        JhbFieldInt(name='id'),
-        JhbFieldString(name='name'),
-        JhbFieldString(name='due'),
-        JhbFieldString(name='recurrence'),
-        JhbFieldString(name='last_paid'),
-        JhbFieldInt(name='transaction_id'),
-    )
-
-class Budget(JhbModel):
-    fields = (
-        JhbFieldInt(name='id'),
-        JhbFieldString(name='name'),
-        JhbFieldString(name='when_done'),
-        JhbFieldInt(name='overflow_category_id'),
-    )
-
-class BudgetItem(JhbModel):
-    fields = (
-        JhbFieldInt(name='id'),
-        JhbFieldInt(name='budget_id'),
-        JhbFieldInt(name='order'),
-        JhbFieldInt(name='category_id'),
-        JhbFieldFloat(name='amount'),
-    )
-
-class Data(JhbModel):
-    db = False 
-    fields = (
-        JhbFieldModelArray(type=Account),
-        JhbFieldModelArray(type=Category),
-        JhbFieldModelArray(type=Split),
-        JhbFieldModelArray(type=Transaction),
-        JhbFieldModelArray(type=PaymentType),
-        JhbFieldModelArray(type=Bill),
-        JhbFieldModelArray(type=Budget),
-        JhbFieldModelArray(type=BudgetItem),
-    )
-
-class User(JhbModel):
-    db = False
-    fields = (
-        JhbFieldString(name='email'),
-        JhbFieldString(name='nickname'),
-        JhbFieldString(name='user_id'),
-        JhbFieldString(name='login_url'),
-        JhbFieldString(name='logout_url'),
-    )
-
-class FailureReport(JhbModel):
-    db = False    
-    fields = (
-        JhbFieldString(name='error_type'),
-        JhbFieldString(name='message'),
-        JhbFieldString(name='traceback'),
+        FieldString(name='error_type'),
+        FieldString(name='message'),
+        FieldString(name='traceback'),
     )
 
 def get_all_classes():
-    from jhb.core.meta import JhbModelManager as manager
+    from core.meta import ModelManager as manager
     return manager.models
-
-def get_db_classes():
-    from jhb.core.meta import JhbModelManager as manager
-    return (cls for cls in manager.models if cls.in_db())
 
