@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
  * WARNING: This file is auto-generated, don't modify it directly,
- * instead modify jhb/core/model.py and re-generate
+ * instead modify core/model.py and re-generate
  *
 */
 
@@ -54,12 +54,12 @@ public class GroupInvitationImpl extends JavaScriptObject implements GroupInvita
   protected GroupInvitationImpl() {}
 
   @Override
-  public final native int getId() /*-{
+  public final native String getKey() /*-{
     return this.a;
   }-*/;
 
   @Override
-  public final native int getGroupId() /*-{
+  public final native String getGroupKey() /*-{
     return this.b;
   }-*/;
 

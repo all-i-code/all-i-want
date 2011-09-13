@@ -36,3 +36,15 @@ def pluralize(s):
     if s[-1] == 'y': return s[:-1] + 'ies'
     return s + 's'
 
+def prefetch_refprops(entities, *props):
+    '''
+    Wonderful little method provided by Nick Johnson at
+    http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
+    '''
+    fields = [(entity, prop) for entity in entities for prop in props]
+    ref_keys = [prop.get_value_for_datastore(x) for x, prop in fields]
+    ref_entities = dict((x.key(), x) for x in db.get(set(ref_keys)))
+    for (entity, prop), ref_key in zip(fields, ref_keys):
+        prop.__set__(entity, ref_entities.get(ref_key, None))
+    return entities
+

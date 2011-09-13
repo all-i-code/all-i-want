@@ -1,5 +1,5 @@
 /**
- * @file GroupInvitation.java
+ * @file {{ cls.get_java_iface }}.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -22,12 +22,9 @@
 */
 
 package com.googlecode.alliwant.client.model;
+{% for imp in cls.get_extra_iface_imports %}
+import {{ imp }};{% endfor %}
 
-
-public interface GroupInvitation {
-  String getKey();
-  String getGroupKey();
-  String getGroupName();
-  String getOwnerEmail();
-  String getMemberEmail();
+public interface {{ cls.get_java_iface }} {{% for f in cls.get_fields %}
+  {{ f.get_java_iface_type|safe }} {{ f.get_java_getter_name }}();{% endfor %}
 }

@@ -1,5 +1,5 @@
 /**
- * @file FailureReportImpl.java
+ * @file WishListImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -29,44 +29,48 @@ import java.util.List;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class FailureReportImpl extends JavaScriptObject implements FailureReport {
+public class WishListImpl extends JavaScriptObject implements WishList {
   
-  public static final List<FailureReport> decodeList(JsArray<FailureReportImpl> js_arr) {
-    List<FailureReport> arr = new ArrayList<FailureReport>();
+  public static final List<WishList> decodeList(JsArray<WishListImpl> js_arr) {
+    List<WishList> arr = new ArrayList<WishList>();
     for (int i = 0; i < js_arr.length(); i++) arr.add(js_arr.get(i));
     return arr; 
   }
 
-  public static final List<FailureReport> decodeList(String json) {
+  public static final List<WishList> decodeList(String json) {
     return decodeList(decodeArray(json)); 
   }
 
-  public static final native JsArray<FailureReportImpl> decodeArray(String json) /*-{
+  public static final native JsArray<WishListImpl> decodeArray(String json) /*-{
     eval('var js = ' + json);
     return js;
   }-*/;
   
-  public static final native FailureReportImpl decode(String json) /*-{
+  public static final native WishListImpl decode(String json) /*-{
     eval('var js = ' + json);
     return js;
   }-*/;
 
-  protected FailureReportImpl() {}
+  protected WishListImpl() {}
 
   @Override
-  public final native String getErrorType() /*-{
+  public final native int getKey() /*-{
     return this.a;
   }-*/;
 
   @Override
-  public final native String getMessage() /*-{
+  public final native String getName() /*-{
     return this.b;
   }-*/;
 
-  @Override
-  public final native String getTraceback() /*-{
+  private final native JsArray<ListItemImpl> getListItemsJs()/*-{
     return this.c;
   }-*/;
 
+  @Override
+  public final List<ListItem> getListItems() {
+    return ListItemImpl.decodeList(getListItemsJs());
+  }
 
-} // FailureReportImpl
+
+} // WishListImpl

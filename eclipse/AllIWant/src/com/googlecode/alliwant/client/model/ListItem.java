@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
  * WARNING: This file is auto-generated, don't modify it directly,
- * instead modify jhb/core/model.py and re-generate
+ * instead modify core/model.py and re-generate
  *
 */
 
@@ -25,7 +25,7 @@ package com.googlecode.alliwant.client.model;
 
 
 public interface ListItem {
-  int getId();
+  int getKey();
   String getName();
   String getDescription();
   String getUrl();

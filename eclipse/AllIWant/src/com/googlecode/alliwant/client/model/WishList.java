@@ -1,5 +1,5 @@
 /**
- * @file {{ cls.get_java_iface }}.java
+ * @file WishList.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -17,14 +17,16 @@
  *    limitations under the License.
  *
  * WARNING: This file is auto-generated, don't modify it directly,
- * instead modify jhb/core/model.py and re-generate
+ * instead modify core/model.py and re-generate
  *
 */
 
-package com.googlecode.jhb.gwt.client.model;
-{% for imp in cls.get_extra_iface_imports %}
-import {{ imp }};{% endfor %}
+package com.googlecode.alliwant.client.model;
 
-public interface {{ cls.get_java_iface }} {{% for f in cls.get_fields %}
-  {{ f.get_java_iface_type|safe }} {{ f.get_java_getter_name }}();{% endfor %}
+import java.util.List;
+
+public interface WishList {
+  int getKey();
+  String getName();
+  List<ListItem> getListItems();
 }

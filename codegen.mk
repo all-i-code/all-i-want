@@ -1,9 +1,10 @@
 CODEGEN_TARGETS += \
 	 test.codegen.models \
-	 test.codegen.group \
 	 test.codegen.groupinvitation \
 	 test.codegen.groupmember \
+	 test.codegen.group \
 	 test.codegen.listitem \
+	 test.codegen.list \
 	 test.codegen.user \
 	 test.codegen.failurereport \
 	 test.codegen.json.cleanup
@@ -12,14 +13,6 @@ test.codegen.json.prep:
 	$(HIDE). env.sh
 	$(HIDE)mkdir test.codegen.json
 	$(HIDE)$(PYTHON) codegen.py -j test.codegen.json
-
-test.codegen.group: test.codegen.json.prep
-	$(HIDE)echo "Checking eclipse/AllIWant/src/com/googlecode/alliwant/client/model/Group.java"
-	$(HIDE)diff eclipse/AllIWant/src/com/googlecode/alliwant/client/model/Group.java test.codegen.json/Group.java
-	$(HIDE)echo "Checking eclipse/AllIWant/src/com/googlecode/alliwant/client/model/GroupImpl.java"
-	$(HIDE)diff eclipse/AllIWant/src/com/googlecode/alliwant/client/model/GroupImpl.java test.codegen.json/GroupImpl.java
-	$(HIDE)echo "Checking eclipse/AllIWant/test/com/googlecode/alliwant/client/model/GroupTestImpl.java"
-	$(HIDE)diff eclipse/AllIWant/test/com/googlecode/alliwant/client/model/GroupTestImpl.java test.codegen.json/GroupTestImpl.java
 
 test.codegen.groupinvitation: test.codegen.json.prep
 	$(HIDE)echo "Checking eclipse/AllIWant/src/com/googlecode/alliwant/client/model/GroupInvitation.java"
@@ -37,6 +30,14 @@ test.codegen.groupmember: test.codegen.json.prep
 	$(HIDE)echo "Checking eclipse/AllIWant/test/com/googlecode/alliwant/client/model/GroupMemberTestImpl.java"
 	$(HIDE)diff eclipse/AllIWant/test/com/googlecode/alliwant/client/model/GroupMemberTestImpl.java test.codegen.json/GroupMemberTestImpl.java
 
+test.codegen.group: test.codegen.json.prep
+	$(HIDE)echo "Checking eclipse/AllIWant/src/com/googlecode/alliwant/client/model/Group.java"
+	$(HIDE)diff eclipse/AllIWant/src/com/googlecode/alliwant/client/model/Group.java test.codegen.json/Group.java
+	$(HIDE)echo "Checking eclipse/AllIWant/src/com/googlecode/alliwant/client/model/GroupImpl.java"
+	$(HIDE)diff eclipse/AllIWant/src/com/googlecode/alliwant/client/model/GroupImpl.java test.codegen.json/GroupImpl.java
+	$(HIDE)echo "Checking eclipse/AllIWant/test/com/googlecode/alliwant/client/model/GroupTestImpl.java"
+	$(HIDE)diff eclipse/AllIWant/test/com/googlecode/alliwant/client/model/GroupTestImpl.java test.codegen.json/GroupTestImpl.java
+
 test.codegen.listitem: test.codegen.json.prep
 	$(HIDE)echo "Checking eclipse/AllIWant/src/com/googlecode/alliwant/client/model/ListItem.java"
 	$(HIDE)diff eclipse/AllIWant/src/com/googlecode/alliwant/client/model/ListItem.java test.codegen.json/ListItem.java
@@ -44,6 +45,14 @@ test.codegen.listitem: test.codegen.json.prep
 	$(HIDE)diff eclipse/AllIWant/src/com/googlecode/alliwant/client/model/ListItemImpl.java test.codegen.json/ListItemImpl.java
 	$(HIDE)echo "Checking eclipse/AllIWant/test/com/googlecode/alliwant/client/model/ListItemTestImpl.java"
 	$(HIDE)diff eclipse/AllIWant/test/com/googlecode/alliwant/client/model/ListItemTestImpl.java test.codegen.json/ListItemTestImpl.java
+
+test.codegen.list: test.codegen.json.prep
+	$(HIDE)echo "Checking eclipse/AllIWant/src/com/googlecode/alliwant/client/model/List.java"
+	$(HIDE)diff eclipse/AllIWant/src/com/googlecode/alliwant/client/model/List.java test.codegen.json/List.java
+	$(HIDE)echo "Checking eclipse/AllIWant/src/com/googlecode/alliwant/client/model/ListImpl.java"
+	$(HIDE)diff eclipse/AllIWant/src/com/googlecode/alliwant/client/model/ListImpl.java test.codegen.json/ListImpl.java
+	$(HIDE)echo "Checking eclipse/AllIWant/test/com/googlecode/alliwant/client/model/ListTestImpl.java"
+	$(HIDE)diff eclipse/AllIWant/test/com/googlecode/alliwant/client/model/ListTestImpl.java test.codegen.json/ListTestImpl.java
 
 test.codegen.user: test.codegen.json.prep
 	$(HIDE)echo "Checking eclipse/AllIWant/src/com/googlecode/alliwant/client/model/User.java"

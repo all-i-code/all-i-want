@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
  * WARNING: This file is auto-generated, don't modify it directly,
- * instead modify jhb/core/model.py and re-generate
+ * instead modify core/model.py and re-generate
  *
 */
 
@@ -54,7 +54,7 @@ public class GroupImpl extends JavaScriptObject implements Group {
   protected GroupImpl() {}
 
   @Override
-  public final native int getId() /*-{
+  public final native int getKey() /*-{
     return this.a;
   }-*/;
 
@@ -67,6 +67,24 @@ public class GroupImpl extends JavaScriptObject implements Group {
   public final native String getDescription() /*-{
     return this.c;
   }-*/;
+
+  private final native JsArray<GroupInvitationImpl> getGroupInvitationsJs()/*-{
+    return this.d;
+  }-*/;
+
+  @Override
+  public final List<GroupInvitation> getGroupInvitations() {
+    return GroupInvitationImpl.decodeList(getGroupInvitationsJs());
+  }
+
+  private final native JsArray<GroupMemberImpl> getGroupMembersJs()/*-{
+    return this.e;
+  }-*/;
+
+  @Override
+  public final List<GroupMember> getGroupMembers() {
+    return GroupMemberImpl.decodeList(getGroupMembersJs());
+  }
 
 
 } // GroupImpl

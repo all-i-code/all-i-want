@@ -27,7 +27,7 @@ import os
 import core.model as model
 
 def gen_json(cls, type, directory):
-    t = lambda x: 'templates/json/%s.java' % x
+    t = lambda x: 'templates/%s.java' % x
     f = lambda x: dict(iface='', impl='Impl', test='TestImpl').get(x)
     filename = '%s%s.java' % (cls.__name__, f(type))
     t_path = os.path.join(os.path.dirname(__file__), t(type))

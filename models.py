@@ -23,45 +23,36 @@ from google.appengine.ext import db
 from models_meta import Db
 
 class Db(db.Model):
-    user = db.UserProperty(auto_current_user_add=True)
-    id = db.IntegerProperty()
     last_modified = db.DateTimeProperty(auto_now=True)
     
     @classmethod
     def all(cls, user):
         return super(Db, cls).all().filter('user =', user)
 
-    def put(self):
-        ''' Overriding put to auto-fill id if None'''
-        if self.id is None:
-            cls = self.__class__.__name__
-            q_str = 'SELECT * FROM %s ORDER BY id DESC LIMIT 1' % cls
-            q = db.GqlQuery(q_str)
-            r = q.fetch(1)
-            lid = r[0].id if len(r) > 0 else 0
-            self.id = lid + 1
-        
-        super(Db, self).put()
-
 class GroupDb(Db):
     name = db.StringProperty()
-    description = db.StringProperty(multiline=True)
-    is_active = db.BooleanProperty()
+    description = db.StringProperty(index=False, multiline=True)
+    owner = db.UserProperty(auto_current_user_add=True)
     
 class GroupInvitationDb(Db):
-    group_id = db.IntegerProperty()
-    group_name = db.StringProperty()
-    description = db.StringProperty(multiline=True)
-    member_email = db.StringProperty()
+    group = db.ReferenceProperty(GroupDb, collection_name='invitations')
+    email = db.StringProperty()
     
 class GroupMemberDb(Db):
-    group_id = db.IntegerProperty()
-    
+    member = db.UserProperty(auto_current_user_add=True)
+    group = db.ReferenceProperty(GroupDb, collection_name='members')
+
+class ListDb(Db):
+    name = db.StringProperty(index=False)
+    owner = db.UserProperty(auto_current_user_add=True)
+
 class ListItemDb(Db):
-    type = db.StringProperty()
-    name = db.StringProperty()
-    description = db.StringProperty(multiline=True)
-    url = db.StringProperty()
-    reserved_by = db.StringProperty()
-    purchased_by = db.StringProperty()
-    
+    list = db.ReferenceProperty(ListDb, collection_name='items')
+    name = db.StringProperty(index=False)
+    category = db.StringProperty(index=False)
+    description = db.StringProperty(index=False, multiline=True)
+    url = db.StringProperty(index=False)
+    reserved_by = db.UserProperty()
+    purchased_by = db.UserProperty()
+    owner = db.UserProperty(auto_current_user_add=True)
+

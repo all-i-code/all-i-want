@@ -1,5 +1,5 @@
 /**
- * @file GroupTestImpl.java
+ * @file WishListTestImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -32,28 +32,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GroupTestImpl extends ModelJson
- implements Group {
+public class WishListTestImpl extends ModelJson
+ implements WishList {
 
-  public static List<Group> parseArray(String json) {
-    List<Group> al = new ArrayList<Group>();
+  public static List<WishList> parseArray(String json) {
+    List<WishList> al = new ArrayList<WishList>();
     try {
       JSONArray arr = new JSONArray(json);
       for (int i = 0; i < arr.length(); i++) {
-        al.add(new GroupTestImpl(arr.getJSONObject(i))); 
+        al.add(new WishListTestImpl(arr.getJSONObject(i))); 
       }
     } catch (JSONException e) {
-      logger().severe("GroupTestImpl::parseArray: " +
+      logger().severe("WishListTestImpl::parseArray: " +
         e.getLocalizedMessage()); 
     }
     return al;
   } // parseArray //
 
-  public GroupTestImpl(String json) {
+  public WishListTestImpl(String json) {
     super(json);
   }
   
-  public GroupTestImpl(JSONObject obj) {
+  public WishListTestImpl(JSONObject obj) {
     super(obj);
   }
 
@@ -69,19 +69,9 @@ public class GroupTestImpl extends ModelJson
   }
 
   @Override
-  public String getDescription() {
-    return getStr("c");
-  }
-
-  @Override
-  public List<GroupInvitation> getGroupInvitations() {
-    return GroupInvitationTestImpl.parseArray(getArray("d"));
-  }
-
-  @Override
-  public List<GroupMember> getGroupMembers() {
-    return GroupMemberTestImpl.parseArray(getArray("e"));
+  public List<ListItem> getListItems() {
+    return ListItemTestImpl.parseArray(getArray("c"));
   }
 
 
-} // GroupTestImpl //
+} // WishListTestImpl //

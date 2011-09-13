@@ -17,7 +17,7 @@
  *    limitations under the License.
  *
  * WARNING: This file is auto-generated, don't modify it directly,
- * instead modify jhb/core/model.py and re-generate
+ * instead modify core/model.py and re-generate
  *
 */
 
@@ -59,12 +59,12 @@ public class GroupMemberTestImpl extends ModelJson
 
 
   @Override
-  public int getId() {
+  public int getKey() {
     return getInt("a");
   }
 
   @Override
-  public int getGroupId() {
+  public int getGroupKey() {
     return getInt("b");
   }
 
