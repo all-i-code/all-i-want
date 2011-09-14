@@ -19,15 +19,15 @@
 #
 '''
 
-class Db:
+class Db(object):
     def __init__(self, id=None):
         if id is None:
             import random
             id = random.Random().randint(1, 1000)
-        self.id = id
+        self.id_ = id
 
     def id(self):
-        return self.id
+        return self.id_
 
     def key(self):
         return self
@@ -40,32 +40,36 @@ class User:
         self.email = email
 
 class Group(Db):
-    def __init__(self, name='', description='', owner=None,\
-      invitations=[], members=[]):
+    def __init__(self, name='', description='', owner=None, **kwargs):
+        super(Group, self).__init__(**kwargs)
         self.name = name
         self.description = description
         self.owner = owner
-        self.invitations = invitations
-        self.members = members
+        self.invitations = []
+        self.members = []
     
 class GroupInvitation(Db):
-    def __init__(self, group=None, email=''):
+    def __init__(self, group=None, email='', **kwargs):
+        super(GroupInvitation, self).__init__(**kwargs)
         self.group = group
         self.email = email
     
 class GroupMember(Db):
-    def __init__(self, member=None, group=None):
+    def __init__(self, member=None, group=None, **kwargs):
+        super(GroupMember, self).__init__(**kwargs)
         self.member = member
         self.group = group
 
 class List(Db):
-    def __init__(self, name='', owner=None):
+    def __init__(self, name='', owner=None, **kwargs):
+        super(List, self).__init__(**kwargs)
         self.name = name
         self.owner = owner
 
 class ListItem(Db):
     def __init__(self, parent=None, name='', category='', description='',\
-      url='', reserved_by=None, purchased_by=None, owner=None):
+      url='', reserved_by=None, purchased_by=None, owner=None, **kwargs):
+        super(ListItem, self).__init__(**kwargs)
         self.parent = parent
         self.name = name
         self.category = category

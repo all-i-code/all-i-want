@@ -35,7 +35,7 @@ class GroupInvitation(Model):
         _ = lambda x: x.key().id()
         return cls(key=_(db), group_key=_(db.group),
             group_name=db.group.name, owner_email=db.group.owner.email,
-            member_email=db.member.email)
+            member_email=db.email)
 
 class GroupMember(Model):
     fields = (

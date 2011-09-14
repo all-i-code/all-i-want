@@ -47,18 +47,14 @@ class DbAccess:
         from models import GroupInvitationDb
         return GroupInvitationDb(group=group, email=email).put()
 
-    def get_group_invitations(self, keys):
+    def get_group_invitation(self, id):
         from models import GroupInvitationDb
-        return GroupInvitation.get(keys)
+        return GroupInvitationDb.get_by_id(id)
 
     def add_group_member(self, group):
         from models import GroupMemberDb
         return GroupMemberDb(group=group, member=self.user).put()
     
-    def get_group_members(self, keys):
-        from models import GroupMemberDb
-        return GroupMemberDb.get(keys)
-
     def save(self, obj):
         return obj.put()
     

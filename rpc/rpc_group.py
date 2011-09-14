@@ -83,15 +83,15 @@ class GroupRpcGroup(RpcGroupBase):
         return []
 
     def accept_invitation(self, invite_id):
-        i = GroupInvitationDb.get_by_id(invite_id)
-        m = GroupMemberDb(group=i.group)
-        m.put()
-        i.delete()
+        i = self.db.get_group_invitation(invite_id)
+        m = self.db.add_group_member(i.group)
+        self.db.save(m)
+        self.db.delete(i)
         return []
     
     def decline_invitation(self, invite_id):
-        i = GroupInvitationDb.get_by_id(invite_id)
-        i.delete()
+        i = self.db.get_group_invitation(invite_id)
+        self.db.delete(i)
         return []
   
 class GroupRpcReqHandler(RpcReqHandler):
