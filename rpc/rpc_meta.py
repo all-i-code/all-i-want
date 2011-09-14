@@ -23,8 +23,47 @@ import os.path
 from json import dumps
 from google.appengine.api import users
 from google.appengine.ext import webapp
-from jhb.core.model import FailureReport
-from jhb.core.util import camelize
+from core.model import FailureReport
+from core.util import camelize
+
+class DbAccess:
+    def __init__(self, user=None):
+        self.user = user
+
+    def add_group(self, name, description):
+        from models import GroupDb
+        g = GroupDb(name=name, description=description)
+        return g.put()
+
+    def get_group(self, id):
+        from models import GroupDb
+        return GroupDb.get_by_id(id)
+
+    def get_groups(self):
+        from models import GroupDb
+        return GroupDb.filter('user = %s' % self.user)
+
+    def add_group_invitation(self, group, email):
+        from models import GroupInvitationDb
+        return GroupInvitationDb(group=group, email=email).put()
+
+    def get_group_invitations(self, keys):
+        from models import GroupInvitationDb
+        return GroupInvitation.get(keys)
+
+    def add_group_member(self, group):
+        from models import GroupMemberDb
+        return GroupMemberDb(group=group, member=self.user).put()
+    
+    def get_group_members(self, keys):
+        from models import GroupMemberDb
+        return GroupMemberDb.get(keys)
+
+    def save(self, obj):
+        return obj.put()
+    
+    def delete(self, obj):
+        obj.delete()
 
 class RpcReqHandler(webapp.RequestHandler):
     
@@ -34,7 +73,7 @@ class RpcReqHandler(webapp.RequestHandler):
 
     def __init__(self):
         group_cls = self.get_rpc_group_cls()
-        self.rpc_group = group_cls()
+        self.rpc_group = group_cls(DbAccess())
         super(RpcReqHandler, self).__init__()
  
     def post(self):
@@ -48,16 +87,16 @@ class RpcReqHandler(webapp.RequestHandler):
         if self.user is None:
             self.dump([])
             return
+        
+        self.user.is_admin = users.is_current_user_admin()
+        self.rpc_group.db.user = self.user
 
-        from jhb.core.manager import Manager
-        from access import GaeAccess
-        self.rpc_group.manager = Manager(GaeAccess(self.user))
         rpc_name = os.path.basename(self.request.path)
         self.dump(self.rpc_group.call(rpc_name, self))
 
     def dump(self, result):
-        from jhb.core.meta import JhbModel
-        _ = lambda x: x.to_json_dict() if isinstance(x, JhbModel) else x
+        from core.meta import Model
+        _ = lambda x: x.to_json_dict() if isinstance(x, Model) else x
         is_list = result.__class__ == list
         result_json = [ _(o) for o in result ] if is_list else _(result)
         self.response.headers['Content-Type'] = 'application/json'
@@ -197,7 +236,10 @@ class RpcGroupBase(object):
     @classmethod
     def get_rpc(cls, name):
         return cls.rpc_dict.get(name, None)
-      
+    
+    def __init__(self, db):
+        self.db = db
+
     def call(self, rpc_name, handler):
         '''Call the given rpc with the given request object'''
         f = getattr(self, rpc_name)

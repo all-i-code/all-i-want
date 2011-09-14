@@ -54,12 +54,12 @@ public class GroupInvitationImpl extends JavaScriptObject implements GroupInvita
   protected GroupInvitationImpl() {}
 
   @Override
-  public final native String getKey() /*-{
+  public final native int getId() /*-{
     return this.a;
   }-*/;
 
   @Override
-  public final native String getGroupKey() /*-{
+  public final native int getGroupId() /*-{
     return this.b;
   }-*/;
 

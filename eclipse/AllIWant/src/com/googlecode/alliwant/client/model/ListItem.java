@@ -25,7 +25,7 @@ package com.googlecode.alliwant.client.model;
 
 
 public interface ListItem {
-  int getKey();
+  int getId();
   String getName();
   String getDescription();
   String getUrl();

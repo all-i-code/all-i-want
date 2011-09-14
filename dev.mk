@@ -25,9 +25,9 @@ GAE := gae
 GAE_LONG := Google App Engine for Python
 GAE_LINK := http://code.google.com/appengine/downloads.html\#Google_App_Engine_SDK_for_Python
 
-CVRG := coverage
-CVRG_LONG := coverage.py
-CVRG_LINK := http://nedbatchelder.com/code/coverage/
+NOSE := nose
+NOSE_LONG := nose: Python test runner
+NOSE_LINK := http://pypi.python.org/pypi/nose/1.1.2
 
 JVA := java
 JVA_LONG := Java JDK
@@ -45,8 +45,8 @@ envreq:
 	$(HIDE)echo "    - $(PY_LINK)\n"
 	$(HIDE)echo "  $(GAE): $(GAE_LONG)"
 	$(HIDE)echo "    - $(GAE_LINK)\n"
-	$(HIDE)echo "  $(CVRG): $(CVRG_LONG)"
-	$(HIDE)echo "    - $(CVRG_LINK)\n"
+	$(HIDE)echo "  $(NOSE): $(NOSE_LONG)"
+	$(HIDE)echo "    - $(NOSE_LINK)\n"
 	$(HIDE)echo "  $(JVA): $(JVA_LONG)"
 	$(HIDE)echo "    - $(JVA_LINK)\n"
 	$(HIDE)echo "  $(ANT): $(ANT_LONG)"
@@ -56,8 +56,8 @@ envtest:
 	$(HIDE)echo "Testing JHB Development Environment Requirements"
 	$(HIDE)echo "\n-Testing Python Module Imports"
 	$(HIDE)python utils/py_modules_test.py
-	$(HIDE)echo "\n-Testing $(CVRG) installed"
-	$(HIDE)coverage --version
+	$(HIDE)echo "\n-Testing $(NOSE) installed"
+	$(HIDE)nosetests --version
 	$(HIDE)echo "\n-Testing $(JVA) installed"
 	$(HIDE)java -version
 	$(HIDE)echo "\n-Testing $(ANT) installed"

@@ -59,12 +59,12 @@ public class GroupMemberTestImpl extends ModelJson
 
 
   @Override
-  public int getKey() {
+  public int getId() {
     return getInt("a");
   }
 
   @Override
-  public int getGroupKey() {
+  public int getGroupId() {
     return getInt("b");
   }
 

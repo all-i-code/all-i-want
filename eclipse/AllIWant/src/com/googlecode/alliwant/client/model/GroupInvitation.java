@@ -25,8 +25,8 @@ package com.googlecode.alliwant.client.model;
 
 
 public interface GroupInvitation {
-  String getKey();
-  String getGroupKey();
+  int getId();
+  int getGroupId();
   String getGroupName();
   String getOwnerEmail();
   String getMemberEmail();

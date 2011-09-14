@@ -20,7 +20,6 @@
 '''
 
 from google.appengine.ext import db
-from models_meta import Db
 
 class Db(db.Model):
     last_modified = db.DateTimeProperty(auto_now=True)
@@ -29,9 +28,13 @@ class Db(db.Model):
     def all(cls, user):
         return super(Db, cls).all().filter('user =', user)
 
+    def put(self):
+        super(Db, self).put()
+        return self
+
 class GroupDb(Db):
     name = db.StringProperty()
-    description = db.StringProperty(index=False, multiline=True)
+    description = db.StringProperty(indexed=False, multiline=True)
     owner = db.UserProperty(auto_current_user_add=True)
     
 class GroupInvitationDb(Db):
@@ -43,15 +46,15 @@ class GroupMemberDb(Db):
     group = db.ReferenceProperty(GroupDb, collection_name='members')
 
 class ListDb(Db):
-    name = db.StringProperty(index=False)
+    name = db.StringProperty(indexed=False)
     owner = db.UserProperty(auto_current_user_add=True)
 
 class ListItemDb(Db):
-    list = db.ReferenceProperty(ListDb, collection_name='items')
-    name = db.StringProperty(index=False)
-    category = db.StringProperty(index=False)
-    description = db.StringProperty(index=False, multiline=True)
-    url = db.StringProperty(index=False)
+    parent_list = db.ReferenceProperty(ListDb, collection_name='items')
+    name = db.StringProperty(indexed=False)
+    category = db.StringProperty(indexed=False)
+    description = db.StringProperty(indexed=False, multiline=True)
+    url = db.StringProperty(indexed=False)
     reserved_by = db.UserProperty()
     purchased_by = db.UserProperty()
     owner = db.UserProperty(auto_current_user_add=True)

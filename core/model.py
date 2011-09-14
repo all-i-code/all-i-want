@@ -23,8 +23,8 @@ from core.meta import Model, FieldInt, FieldString, FieldText, FieldModelArray
 
 class GroupInvitation(Model):
     fields = (
-        FieldString(name='key'),
-        FieldString(name='group_key'),
+        FieldInt(name='id'),
+        FieldInt(name='group_id'),
         FieldString(name='group_name'),
         FieldString(name='owner_email'),
         FieldString(name='member_email'),
@@ -32,27 +32,28 @@ class GroupInvitation(Model):
     
     @classmethod
     def from_db(cls, db):
-        _ = lambda x: str(x.key())
+        _ = lambda x: x.key().id()
         return cls(key=_(db), group_key=_(db.group),
-            group_name=db.group.name(), owner_email=db.group.owner.email(),
-            member_email=db.member.email())
+            group_name=db.group.name, owner_email=db.group.owner.email,
+            member_email=db.member.email)
 
 class GroupMember(Model):
     fields = (
-        FieldInt(name='key'),
-        FieldInt(name='group_key'),
+        FieldInt(name='id'),
+        FieldInt(name='group_id'),
         FieldString(name='nickname'),
         FieldString(name='email'),
     )
     
     @classmethod
     def from_db(cls, db):
-        return cls(key=str(db.key()), group_key=str(db.group.key()),
-            nickname=db.member.nickname(), email=db.member.email())
+        _ = lambda x: x.key().id()
+        return cls(id=_(db), group_id=_(db.group),
+            nickname=db.member.nickname, email=db.member.email)
 
 class Group(Model):
     fields = (
-        FieldInt(name='key'),
+        FieldInt(name='id'),
         FieldString(name='name'),
         FieldText(name='description'),
         FieldModelArray(type=GroupInvitation, name='invitations'),
@@ -63,13 +64,13 @@ class Group(Model):
     def from_db(cls, db):
         invitations = [ GroupInvitation.from_db(i) for i in db.invitations ]
         members = [ GroupMember.from_db(m) for m in db.members ]
-        return cls(key=str(db.key()), name=db.name(),
-            description=db.description(), invitations=invitations,
+        return cls(id=db.key().id(), name=db.name,
+            description=db.description, invitations=invitations,
             members=members)
 
 class ListItem(Model):
     fields = (
-        FieldInt(name='key'),
+        FieldInt(name='id'),
         FieldString(name='name'),
         FieldText(name='description'),
         FieldString(name='url'),
@@ -79,15 +80,15 @@ class ListItem(Model):
     
     @classmethod
     def from_db(cls, db):
-        l = lambda x: '%s (%s)' % (x.nickname(), x.email())
+        l = lambda x: '%s (%s)' % (x.nickname, x.email)
         _ = lambda x: l(x) if x is not None else ''
-        return cls(key=str(db.key()), name=db.name,
+        return cls(key=db.key().id(), name=db.name,
             description=db.description, url=db.url,
             reserved_by=_(db.reserved_by), purchased_by=_(db.purchased_by))
 
 class WishList(Model):
     fields = (
-        FieldInt(name='key'),
+        FieldInt(name='id'),
         FieldString(name='name'),
         FieldModelArray(type=ListItem, name='items'),
     )
@@ -95,7 +96,7 @@ class WishList(Model):
     @classmethod
     def from_db(cls, db):
         items = [ ListItem.from_db(i) for i in db.items ]
-        return cls(key=str(db.key()), name=db.name, items=items)
+        return cls(id=db.key().id(), name=db.name, items=items)
 
 class User(Model):
     fields = (

@@ -59,13 +59,13 @@ public class GroupInvitationTestImpl extends ModelJson
 
 
   @Override
-  public String getKey() {
-    return getStr("a");
+  public int getId() {
+    return getInt("a");
   }
 
   @Override
-  public String getGroupKey() {
-    return getStr("b");
+  public int getGroupId() {
+    return getInt("b");
   }
 
   @Override

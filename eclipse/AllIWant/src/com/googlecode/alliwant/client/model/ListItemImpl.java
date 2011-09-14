@@ -54,7 +54,7 @@ public class ListItemImpl extends JavaScriptObject implements ListItem {
   protected ListItemImpl() {}
 
   @Override
-  public final native int getKey() /*-{
+  public final native int getId() /*-{
     return this.a;
   }-*/;
 

@@ -54,7 +54,7 @@ public class GroupImpl extends JavaScriptObject implements Group {
   protected GroupImpl() {}
 
   @Override
-  public final native int getKey() /*-{
+  public final native int getId() /*-{
     return this.a;
   }-*/;
 

@@ -25,7 +25,7 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from urlparse import urlparse
 from urllib import urlencode
-from jhb.core.model import User as JhbUser
+from core.model import User
 
 class UserRpc(webapp.RequestHandler):
     def get(self):
@@ -46,7 +46,7 @@ class UserRpc(webapp.RequestHandler):
             e, n, ui  = user.email(), user.nickname(), user.user_id()
             lo = users.create_logout_url(base_url + '#Goodbye:')
         d = dict(email=e, nickname=n, user_id=ui, login_url=li, logout_url=lo)
-        self.dump(JhbUser(**d).to_json_dict())
+        self.dump(User(**d).to_json_dict())
 
     def dump(self, json_result):
         self.response.headers['Content-Type'] = 'application/json'

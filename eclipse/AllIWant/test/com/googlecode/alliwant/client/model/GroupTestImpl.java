@@ -59,7 +59,7 @@ public class GroupTestImpl extends ModelJson
 
 
   @Override
-  public int getKey() {
+  public int getId() {
     return getInt("a");
   }
 

@@ -54,7 +54,7 @@ public class WishListImpl extends JavaScriptObject implements WishList {
   protected WishListImpl() {}
 
   @Override
-  public final native int getKey() /*-{
+  public final native int getId() /*-{
     return this.a;
   }-*/;
 

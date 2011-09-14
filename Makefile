@@ -23,18 +23,6 @@ PYTHON ?= python
 include dev.mk
 include codegen.mk
 
-pytest:
-	$(HIDE)for pt in `find -L core -path */tests/*.py`;\
-		do\
-			echo "Running Python tests in $$pt";\
-			$(PYTHON) $$pt;\
-			ret=$$?;\
-			if [ "$$ret" != "0" ];\
-			then\
-				exit $$ret;\
-			fi;\
-		done
-
 test.codegen.mk: 
 	$(HIDE)$(PYTHON) codegen.py --makefile > $@.out
 	$(HIDE)diff codegen.mk $@.out
@@ -63,25 +51,4 @@ PY_LINK := http://www.python.org/getit/
 GAE := gae
 GAE_LONG := Google App Engine for Python
 GAE_LINK := http://code.google.com/appengine/downloads.html\#Google_App_Engine_SDK_for_Python
-
-CVRG := coverage
-CVRG_LONG := coverage.py
-CVRG_LINK := http://nedbatchelder.com/code/coverage/
-
-dev-env:
-	$(HIDE)echo "Packages required for AllIWant Development:"
-	$(HIDE)echo "  $(PY): $(PY_LONG)"
-	$(HIDE)echo "    - $(PY_LINK)"
-	$(HIDE)echo "  $(GAE): $(GAE_LONG)"
-	$(HIDE)echo "    - $(GAE_LINK)"
-	$(HIDE)echo "  $(CVRG): $(CVRG_LONG)"
-	$(HIDE)echo "    - $(CVRG_LINK)"
-
-dev-env-test:
-	$(HIDE)echo "Testing Python Module Imports"
-	$(HIDE)python utils/py_module_test.py
-	$(HIDE)echo "Testing ant installed"
-	$(HIDE)ant -version
-	$(HIDE)echo "Testing coverage installed"
-	$(HIDE)coverage --version
 

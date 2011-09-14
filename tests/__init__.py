@@ -1,7 +1,7 @@
 '''
 #
 # File: __init__.py
-# Description: jhb.core.tests module init
+# Description: jhb module init
 # 
 # Copyright 2011 Adam Meadows 
 #

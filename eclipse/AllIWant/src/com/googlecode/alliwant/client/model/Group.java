@@ -26,7 +26,7 @@ package com.googlecode.alliwant.client.model;
 import java.util.List;
 
 public interface Group {
-  int getKey();
+  int getId();
   String getName();
   String getDescription();
   List<GroupInvitation> getGroupInvitations();

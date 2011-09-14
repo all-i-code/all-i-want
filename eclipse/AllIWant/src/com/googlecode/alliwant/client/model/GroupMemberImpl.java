@@ -54,12 +54,12 @@ public class GroupMemberImpl extends JavaScriptObject implements GroupMember {
   protected GroupMemberImpl() {}
 
   @Override
-  public final native int getKey() /*-{
+  public final native int getId() /*-{
     return this.a;
   }-*/;
 
   @Override
-  public final native int getGroupKey() /*-{
+  public final native int getGroupId() /*-{
     return this.b;
   }-*/;
 

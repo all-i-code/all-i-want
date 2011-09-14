@@ -26,7 +26,7 @@ package com.googlecode.alliwant.client.model;
 import java.util.List;
 
 public interface WishList {
-  int getKey();
+  int getId();
   String getName();
   List<ListItem> getListItems();
 }
