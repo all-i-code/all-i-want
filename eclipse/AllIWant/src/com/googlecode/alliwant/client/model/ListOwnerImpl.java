@@ -1,5 +1,5 @@
 /**
- * @file UserImpl.java
+ * @file ListOwnerImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -29,59 +29,49 @@ import java.util.List;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class UserImpl extends JavaScriptObject implements User {
+public class ListOwnerImpl extends JavaScriptObject implements ListOwner {
   
-  public static final List<User> decodeList(JsArray<UserImpl> js_arr) {
-    List<User> arr = new ArrayList<User>();
+  public static final List<ListOwner> decodeList(JsArray<ListOwnerImpl> js_arr) {
+    List<ListOwner> arr = new ArrayList<ListOwner>();
     for (int i = 0; i < js_arr.length(); i++) arr.add(js_arr.get(i));
     return arr; 
   }
 
-  public static final List<User> decodeList(String json) {
+  public static final List<ListOwner> decodeList(String json) {
     return decodeList(decodeArray(json)); 
   }
 
-  public static final native JsArray<UserImpl> decodeArray(String json) /*-{
+  public static final native JsArray<ListOwnerImpl> decodeArray(String json) /*-{
     eval('var js = ' + json);
     return js;
   }-*/;
   
-  public static final native UserImpl decode(String json) /*-{
+  public static final native ListOwnerImpl decode(String json) /*-{
     eval('var js = ' + json);
     return js;
   }-*/;
 
-  protected UserImpl() {}
+  protected ListOwnerImpl() {}
 
   @Override
-  public final native String getEmail() /*-{
+  public final native int getId() /*-{
     return this.a;
   }-*/;
 
   @Override
-  public final native String getNickname() /*-{
+  public final native String getName() /*-{
     return this.b;
   }-*/;
 
   @Override
-  public final native String getUserId() /*-{
+  public final native String getNickname() /*-{
     return this.c;
   }-*/;
 
   @Override
-  public final native String getLoginUrl() /*-{
+  public final native String getEmail() /*-{
     return this.d;
   }-*/;
 
-  @Override
-  public final native String getLogoutUrl() /*-{
-    return this.e;
-  }-*/;
 
-  @Override
-  public final native int getOwnerId() /*-{
-    return this.f;
-  }-*/;
-
-
-} // UserImpl
+} // ListOwnerImpl

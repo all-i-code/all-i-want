@@ -34,8 +34,9 @@ class DummyAccess(object):
         self.member_ids = []
         self.user = user
 
-    def add_group(self, name, description):
-        g = DummyGroup(name=name, description=description, owner=self.user)
+    def add_group(self, name, description, owner=None):
+        if owner is None: owner = self.user
+        g = DummyGroup(name=name, description=description, owner=owner)
         self.groups[g.key().id()] = g
         self.group_ids.append(g.key().id())
         return g
@@ -43,8 +44,10 @@ class DummyAccess(object):
     def get_group(self, id):
         return self.groups[id]
 
-    def get_groups(self):
-        return (self.groups[id] for id in self.group_ids)
+    def get_groups(self, keys=None):
+        if keys is None:
+            return (self.groups[id] for id in self.group_ids)
+        return (self.gorups[key.id()] for key in keys)
 
     def add_group_invitation(self, group, email):
         invite = DummyInvitation(group, email)
@@ -56,12 +59,17 @@ class DummyAccess(object):
     def get_group_invitation(self, id):
         return self.invitations[id]
 
-    def add_group_member(self, group):
-        m = DummyMember(self.user, group)
+    def add_group_member(self, group, user=None):
+        if user is None:
+            user = self.user
+        m = DummyMember(user, group)
         group.members.append(m)
         self.members[m.key().id()] = m
         self.member_ids.append(m.key().id())
         return m
+
+    def get_group_members(self):
+        return (m for m in self.members.values() if m.member == self.user)
 
     def save(self, obj):
         return obj
@@ -176,5 +184,24 @@ class GroupRpcTest(unittest.TestCase):
         self.assertEquals(num_members, len(group.members))
         self.assertTrue(invite not in self.db.invitations.values())
 
+    def Xtest_get_common_users(self):
+        admin1 = DummyUser('a1', 'a1@email.com', is_admin=True)
+        admin2 = DummyUser('a2', 'a2@email.com', is_admin=True)
+        u1 = DummyUser('u1', 'u1@email.com')
+        u2 = DummyUser('u2', 'u2@email.com')
+        u3 = DummyUser('u3', 'u3@email.com')
+
+        g1 = self.add_group('g1', 'g1desc', admin1)
+        g2 = self.add_group('g2', 'g1desc', admin2)
+        self.db.add_group_member(g1, admin2)
+        self.db.add_group_member(g1, u1)
+        self.db.add_group_member(g1, u2)
+        self.db.add_group_member(g1, u3)
+        
+        self.db.add_group_member(g1, u1)
+        self.db.add_group_member(g1, u2)
+        self.db.add_group_member(g1, u3)
+        # ARM IS HERE
+        
 if __name__ == '__main__':
     unittest.main()

@@ -69,7 +69,7 @@ public class GroupInvitationImpl extends JavaScriptObject implements GroupInvita
   }-*/;
 
   @Override
-  public final native String getOwnerEmail() /*-{
+  public final native String getOwnerName() /*-{
     return this.d;
   }-*/;
 

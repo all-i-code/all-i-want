@@ -27,6 +27,8 @@ package com.googlecode.alliwant.client.model;
 public interface GroupMember {
   int getId();
   int getGroupId();
+  String getName();
   String getNickname();
   String getEmail();
+  String getUserId();
 }

@@ -39,9 +39,11 @@ class DbAccess:
         from models import GroupDb
         return GroupDb.get_by_id(id)
 
-    def get_groups(self):
+    def get_groups(self, keys=None):
         from models import GroupDb
-        return GroupDb.filter('user = %s' % self.user)
+        if keys is None:
+            return GroupDb.all().filter('user = ', self.user)
+        return GroupDb.get(keys)
 
     def add_group_invitation(self, group, email):
         from models import GroupInvitationDb
@@ -54,7 +56,24 @@ class DbAccess:
     def add_group_member(self, group):
         from models import GroupMemberDb
         return GroupMemberDb(group=group, member=self.user).put()
-    
+  
+    def get_group_members(self):
+        from models import GroupMemberDb
+        return GroupMemberDb.all().filter('member = ', self.user)
+
+    def confirm_owner(self, user):
+        from models import ListOwnerDb as LO
+        from core.util import extract_name as extract
+        e, n = (user.email(), user.nickname())
+        owner = LO.all().filter('user = ', user).get()
+        if owner is None:
+            owner = LO(user=user, name=extract(e), nickname=n, email=e).put()
+        return owner.key().id()
+
+    def get_owner(self, owner_id):
+        from models import ListOwnerDb
+        return ListOwnerDb.get_by_id(owner_id)
+
     def save(self, obj):
         return obj.put()
     
@@ -79,15 +98,17 @@ class RpcReqHandler(webapp.RequestHandler):
         self.process_req()
 
     def process_req(self):
+        rpc_name = os.path.basename(self.request.path)
         self.user = users.get_current_user()
         if self.user is None:
-            self.dump([])
-            return
+            # A bit of a hack to let first get the user
+            if rpc_name != 'get_current_user':
+                self.dump([])
+                return
+        else:
+            self.user.is_admin = users.is_current_user_admin()
         
-        self.user.is_admin = users.is_current_user_admin()
         self.rpc_group.db.user = self.user
-
-        rpc_name = os.path.basename(self.request.path)
         self.dump(self.rpc_group.call(rpc_name, self))
 
     def dump(self, result):

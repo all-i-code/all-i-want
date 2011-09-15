@@ -32,12 +32,32 @@ class Db(object):
     def key(self):
         return self
 
-class User:
+class User(Db):
     def __init__(self, nickname='Jobber', email='jobber@email.com', \
-      is_admin=False):
+      is_admin=False, **kwargs):
+        super(User, self).__init__(**kwargs)
         self.is_admin = is_admin
-        self.nickname = nickname
-        self.email = email
+        self._nickname = nickname
+        self._email = email
+        self._user_id = self.id
+
+    def email(self):
+        return self._email
+
+    def nickname(self):
+        return self._nickname
+
+    def user_id(self):
+        return self._user_id
+
+class ListOwner(Db):
+    def __init__(self, user, **kwargs):
+        super(ListOwner, self).__init__(**kwargs)
+        from core.util import extract_name
+        self.user = user
+        self.name = extract_name(user.email())
+        self.nickname = user.nickname()
+        self.email = user.email()
 
 class Group(Db):
     def __init__(self, name='', description='', owner=None, **kwargs):

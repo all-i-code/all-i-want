@@ -69,13 +69,23 @@ public class GroupMemberTestImpl extends ModelJson
   }
 
   @Override
-  public String getNickname() {
+  public String getName() {
     return getStr("c");
   }
 
   @Override
-  public String getEmail() {
+  public String getNickname() {
     return getStr("d");
+  }
+
+  @Override
+  public String getEmail() {
+    return getStr("e");
+  }
+
+  @Override
+  public String getUserId() {
+    return getStr("f");
   }
 
 

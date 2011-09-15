@@ -74,7 +74,7 @@ public class GroupInvitationTestImpl extends ModelJson
   }
 
   @Override
-  public String getOwnerEmail() {
+  public String getOwnerName() {
     return getStr("d");
   }
 

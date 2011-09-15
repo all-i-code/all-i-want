@@ -19,37 +19,55 @@
 #
 '''
 
+# TODO: update these to user Model.property.get_value_for_datastore(instance)
+# to get ids for reference properties
+
 from core.meta import Model, FieldInt, FieldString, FieldText, FieldModelArray
+
+class ListOwner(Model):
+    fields = (
+        FieldInt(name='id'),
+        FieldString(name='name'),
+        FieldString(name='nickname'),
+        FieldString(name='email'),
+    )
+    @classmethod
+    def from_db(cls, db):
+        _ = lambda x: x.key().id()
+        return cls(id=_(db), name=db.name, nickname=db.nickname, email=db.email)
 
 class GroupInvitation(Model):
     fields = (
         FieldInt(name='id'),
         FieldInt(name='group_id'),
         FieldString(name='group_name'),
-        FieldString(name='owner_email'),
+        FieldString(name='owner_name'),
         FieldString(name='member_email'),
     )
     
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.key().id()
-        return cls(key=_(db), group_key=_(db.group),
-            group_name=db.group.name, owner_email=db.group.owner.email,
+        return cls(id=_(db), group_id=_(db.group),
+            group_name=db.group.name, owner_name=db.group.owner.name,
             member_email=db.email)
 
 class GroupMember(Model):
     fields = (
         FieldInt(name='id'),
         FieldInt(name='group_id'),
+        FieldString(name='name'),
         FieldString(name='nickname'),
         FieldString(name='email'),
+        FieldString(name='user_id'),
     )
     
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.key().id()
         return cls(id=_(db), group_id=_(db.group),
-            nickname=db.member.nickname, email=db.member.email)
+            user_id=db.member.user_id(), nickname=db.member.nickname,
+            email=db.member.email)
 
 class Group(Model):
     fields = (
@@ -105,6 +123,7 @@ class User(Model):
         FieldString(name='user_id'),
         FieldString(name='login_url'),
         FieldString(name='logout_url'),
+        FieldInt(name='owner_id'),
     )
 
 class FailureReport(Model):

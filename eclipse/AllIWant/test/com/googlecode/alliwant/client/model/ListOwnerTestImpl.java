@@ -1,5 +1,5 @@
 /**
- * @file UserTestImpl.java
+ * @file ListOwnerTestImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -32,61 +32,51 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UserTestImpl extends ModelJson
- implements User {
+public class ListOwnerTestImpl extends ModelJson
+ implements ListOwner {
 
-  public static List<User> parseArray(String json) {
-    List<User> al = new ArrayList<User>();
+  public static List<ListOwner> parseArray(String json) {
+    List<ListOwner> al = new ArrayList<ListOwner>();
     try {
       JSONArray arr = new JSONArray(json);
       for (int i = 0; i < arr.length(); i++) {
-        al.add(new UserTestImpl(arr.getJSONObject(i))); 
+        al.add(new ListOwnerTestImpl(arr.getJSONObject(i))); 
       }
     } catch (JSONException e) {
-      logger().severe("UserTestImpl::parseArray: " +
+      logger().severe("ListOwnerTestImpl::parseArray: " +
         e.getLocalizedMessage()); 
     }
     return al;
   } // parseArray //
 
-  public UserTestImpl(String json) {
+  public ListOwnerTestImpl(String json) {
     super(json);
   }
   
-  public UserTestImpl(JSONObject obj) {
+  public ListOwnerTestImpl(JSONObject obj) {
     super(obj);
   }
 
 
   @Override
-  public String getEmail() {
-    return getStr("a");
+  public int getId() {
+    return getInt("a");
   }
 
   @Override
-  public String getNickname() {
+  public String getName() {
     return getStr("b");
   }
 
   @Override
-  public String getUserId() {
+  public String getNickname() {
     return getStr("c");
   }
 
   @Override
-  public String getLoginUrl() {
+  public String getEmail() {
     return getStr("d");
   }
 
-  @Override
-  public String getLogoutUrl() {
-    return getStr("e");
-  }
 
-  @Override
-  public int getOwnerId() {
-    return getInt("f");
-  }
-
-
-} // UserTestImpl //
+} // ListOwnerTestImpl //

@@ -28,6 +28,6 @@ public interface GroupInvitation {
   int getId();
   int getGroupId();
   String getGroupName();
-  String getOwnerEmail();
+  String getOwnerName();
   String getMemberEmail();
 }

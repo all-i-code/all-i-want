@@ -1,5 +1,5 @@
 /**
- * @file User.java
+ * @file ListOwner.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -24,11 +24,9 @@
 package com.googlecode.alliwant.client.model;
 
 
-public interface User {
-  String getEmail();
+public interface ListOwner {
+  int getId();
+  String getName();
   String getNickname();
-  String getUserId();
-  String getLoginUrl();
-  String getLogoutUrl();
-  int getOwnerId();
+  String getEmail();
 }

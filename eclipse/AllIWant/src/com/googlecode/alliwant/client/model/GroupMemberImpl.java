@@ -64,13 +64,23 @@ public class GroupMemberImpl extends JavaScriptObject implements GroupMember {
   }-*/;
 
   @Override
-  public final native String getNickname() /*-{
+  public final native String getName() /*-{
     return this.c;
   }-*/;
 
   @Override
-  public final native String getEmail() /*-{
+  public final native String getNickname() /*-{
     return this.d;
+  }-*/;
+
+  @Override
+  public final native String getEmail() /*-{
+    return this.e;
+  }-*/;
+
+  @Override
+  public final native String getUserId() /*-{
+    return this.f;
   }-*/;
 
 

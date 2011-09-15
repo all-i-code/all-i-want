@@ -21,43 +21,32 @@
 '''
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
-from rpc.rpc_params import RpcParamString, RpcParamInt, RpcParamBoolean,\
-    RpcParamFloat
+from rpc.rpc_params import RpcParamString, RpcParamInt
 from core.model import Group, GroupInvitation, GroupMember
 from core.exception import DuplicateNameError
 
 class GroupRpcGroup(RpcGroupBase):
     rpcs = (
-        Rpc(name='add_group',
-            params = (
-                RpcParamString('name'),
-                RpcParamString('desc'),
-            ),
-        ),
+        Rpc(name='add_group', params=(
+            RpcParamString('name'),
+            RpcParamString('desc'),
+        )),
         Rpc(name='get_groups'),
-        Rpc(name='update_group',
-            params = (
-                RpcParamInt('id'),
-                RpcParamString('name'),
-                RpcParamString('desc'),
-            ),
-        ),
-        Rpc(name='invite_member',
-            params = (
-                RpcParamInt('group_id'),
-                RpcParamString('email'),
-            ),
-        ),
-        Rpc(name='accept_invitation',
-            params = (
-                RpcParamInt('invite_id'),
-            ),
-        ),
-        Rpc(name='decline_invitation',
-            params = (
-                RpcParamInt('invite_id'),
-            ),
-        ),
+        Rpc(name='update_group', params=(
+            RpcParamInt('id'),
+            RpcParamString('name'),
+            RpcParamString('desc'),
+        )),
+        Rpc(name='invite_member', params=(
+            RpcParamInt('group_id'),
+            RpcParamString('email'),
+        )),
+        Rpc(name='accept_invitation',params=(
+            RpcParamInt('invite_id'),
+        )),
+        Rpc(name='decline_invitation',params=(
+            RpcParamInt('invite_id'),
+        )),
     )
 
     def add_group(self, name, desc):
@@ -93,7 +82,11 @@ class GroupRpcGroup(RpcGroupBase):
         i = self.db.get_group_invitation(invite_id)
         self.db.delete(i)
         return []
-  
+    
+    def get_common_users(self):
+        groups = self.db.get_groups()
+
+
 class GroupRpcReqHandler(RpcReqHandler):
     group_cls = GroupRpcGroup
 

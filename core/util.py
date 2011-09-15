@@ -36,6 +36,20 @@ def pluralize(s):
     if s[-1] == 'y': return s[:-1] + 'ies'
     return s + 's'
 
+def extract_name(email):
+    '''
+    Extracts a name from an email assuming the email is in the form:
+        first.last@domain.com
+    '''
+    username = email.split('@')[0]
+    return ' '.join((w[0].upper() + w[1:] for w in username.split('.')))
+
+def get_base_url(url):
+    '''Extract the base (root) URL from a complete URL'''
+    from urlparse import urlparse
+    parts = urlparse(url)
+    return '%s://%s' % (parts.scheme, parts.netloc)
+
 def prefetch_refprops(entities, *props):
     '''
     Wonderful little method provided by Nick Johnson at

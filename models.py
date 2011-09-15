@@ -22,32 +22,34 @@
 from google.appengine.ext import db
 
 class Db(db.Model):
-    last_modified = db.DateTimeProperty(auto_now=True)
+    last_modified = db.DateTimeProperty(indexed=False, auto_now=True)
     
-    @classmethod
-    def all(cls, user):
-        return super(Db, cls).all().filter('user =', user)
-
     def put(self):
         super(Db, self).put()
         return self
 
+class ListOwnerDb(Db):
+    name = db.StringProperty(indexed=False)
+    nickname = db.StringProperty(indexed=False)
+    email = db.StringProperty(indexed=False)
+    user = db.UserProperty(auto_current_user_add=True)
+
 class GroupDb(Db):
     name = db.StringProperty()
     description = db.StringProperty(indexed=False, multiline=True)
-    owner = db.UserProperty(auto_current_user_add=True)
+    owner = db.ReferenceProperty(ListOwnerDb, collection_name='groups')
     
 class GroupInvitationDb(Db):
     group = db.ReferenceProperty(GroupDb, collection_name='invitations')
     email = db.StringProperty()
     
 class GroupMemberDb(Db):
-    member = db.UserProperty(auto_current_user_add=True)
+    member = db.ReferenceProperty(ListOwnerDb, collection_name='memberships')
     group = db.ReferenceProperty(GroupDb, collection_name='members')
 
 class ListDb(Db):
     name = db.StringProperty(indexed=False)
-    owner = db.UserProperty(auto_current_user_add=True)
+    owner = db.ReferenceProperty(ListOwnerDb, collection_name='lists')
 
 class ListItemDb(Db):
     parent_list = db.ReferenceProperty(ListDb, collection_name='items')
@@ -57,5 +59,4 @@ class ListItemDb(Db):
     url = db.StringProperty(indexed=False)
     reserved_by = db.UserProperty()
     purchased_by = db.UserProperty()
-    owner = db.UserProperty(auto_current_user_add=True)
 
