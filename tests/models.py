@@ -32,6 +32,15 @@ class Db(object):
     def key(self):
         return self
 
+    def saved(self):
+        return getattr(self, '_saved', False)
+
+class AccessReq(Db):
+    def __init__(self, user, denied=False, **kwargs):
+        super(AccessReq, self).__init__(**kwargs)
+        self.user = user
+        self.denied = denied
+
 class User(Db):
     def __init__(self, nickname='Jobber', email='jobber@email.com', \
       is_admin=False, **kwargs):
@@ -58,6 +67,8 @@ class ListOwner(Db):
         self.name = extract_name(user.email())
         self.nickname = user.nickname()
         self.email = user.email()
+        self.groups = []
+        self.memberships = []
 
 class Group(Db):
     def __init__(self, name='', description='', owner=None, **kwargs):

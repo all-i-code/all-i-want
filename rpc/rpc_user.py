@@ -21,7 +21,7 @@
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import RpcParamString, RpcParamInt
-from core.model import User, ListOwner
+from core.model import User, ListOwner, AccessReq
 
 class AeWrapper:
     def create_login_url(self, url):
@@ -40,7 +40,49 @@ class UserRpcGroup(RpcGroupBase):
         Rpc(name='get_owner', params=(
             RpcParamInt('owner_id'),
         )),
+        Rpc(name='update_owner', params=(
+            RpcParamInt('owner_id'),
+            RpcParamString('name'),
+            RpcParamString('nickname'),
+        )),
+        Rpc(name='get_requests'),
+        Rpc(name='approve_request', params=(
+            RpcParamInt('req_id'),
+        )),
+        Rpc(name='deny_request', params=(
+            RpcParamInt('req_id'),
+        )),
     )
+
+    ACCESS_ADDR = 'All I Want Access <access.all.i.want@gmail.com>'
+    APPROVE_TEMPLATE = '''
+Dear %s,
+
+Your All I Want account has been activated. You can now visit
+http://all-i-want.appspot.com/ and sign in using your Google Account
+to access All I Want.
+
+Please let us know if you have any questions.
+
+Sincerely,
+
+All I Want Access
+'''
+    
+    DENY_TEMPLATE = '''
+Dear %s,
+
+We're sorry to inform you that your All I Want account cannot be activated 
+at this time. We are currently in a beta state and can only support limited
+active accounts.
+
+When more accounts can be supported, you will be notified at this address.
+We're sorry that we cannot accomodate you at this time.
+
+Sincerely,
+
+All I Want Access
+'''
 
     def __init__(self, db, ae_wrapper=None):
         super(UserRpcGroup, self).__init__(db)
@@ -63,7 +105,15 @@ class UserRpcGroup(RpcGroupBase):
         else:
             e, n, ui = user.email(), user.nickname(), user.user_id()
             # make sure ListOwnerDb record exists
-            oid = self.db.confirm_owner(user)
+            owner = self.db.get_owner_by_user(user)
+            if owner is None:
+                if not user.is_admin:
+                    if self.db.get_req_by_user(user) is None:
+                        self.db.add_req(user)
+                else:
+                    owner = self.db.add_owner(user)
+            oid = owner.key().id() if owner is not None else -1
+            
             from core.util import get_base_url
             base = get_base_url(url)
             lo = self.ae.create_logout_url('%s/#Goodbye:' % base)
@@ -75,13 +125,62 @@ class UserRpcGroup(RpcGroupBase):
         Return the ListOwner object with the given owner_id
         '''
         return ListOwner.from_db(self.db.get_owner(owner_id))
-    
+   
     def update_owner(self, owner_id, name, nickname):
         '''
         Update the name and nickname of the ListOwner object with the given
         owner_id and return the updated object.
         '''
-        return ListOwner.from_db(self.db.get_owner(owner_id))
+        owner = self.db.get_owner(owner_id)
+        owner.name = name
+        owner.nickname = nickname
+        return ListOwner.from_db(self.db.save(owner))
+
+    def get_requests(self):
+        '''
+        Return a list of all requests
+        '''
+        if not self.db.user.is_admin:
+            raise Exception('Not Authorized')
+        
+        return [ AccessReq.from_db(db) for db in self.db.get_reqs() ]
+
+    def approve_request(self, req_id):
+        '''
+        Approve the given AccessRequestDb
+        '''
+        if not self.db.user.is_admin:
+            raise Exception('Not Authorized')
+        
+        from core.util import extract_name
+        req = self.db.get_req(req_id)
+        self.db.add_owner(req.user)
+        self.db.delete(req)
+        sender = self.ACCESS_ADDR
+        to = req.user.email()
+        subject = 'Account Activated' 
+        message_body = self.APPROVE_TEMPLATE % extract_name(to)
+        self.db.send_mail(sender, to, subject, message_body)
+        return []
+
+    def deny_request(self, req_id):
+        '''
+        Deny the given AccessRequestDb
+        '''
+        
+        if not self.db.user.is_admin:
+            raise Exception('Not Authorized')
+        
+        from core.util import extract_name
+        req = self.db.get_req(req_id)
+        req.denied = True
+        self.db.save(req)
+        sender = self.ACCESS_ADDR
+        to = req.user.email()
+        subject = 'Account Not Activated' 
+        message_body = self.DENY_TEMPLATE % extract_name(to)
+        self.db.send_mail(sender, to, subject, message_body)
+        return []
 
 class UserRpcReqHandler(RpcReqHandler):
     group_cls = UserRpcGroup

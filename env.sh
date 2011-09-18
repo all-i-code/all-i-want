@@ -22,4 +22,4 @@ then
     export GAE=/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine
 fi
 
-export PYTHONPATH=${PWD}:${GAE}/lib/webob:${GAE}/lib/django_1_2:${GAE}
+export PYTHONPATH=${PWD}:${GAE}/lib/yaml/lib:${GAE}/lib/webob:${GAE}/lib/django_1_2:${GAE}

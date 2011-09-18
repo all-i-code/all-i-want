@@ -21,90 +21,22 @@
 
 import unittest
 from rpc.rpc_group import GroupRpcGroup
-from tests.dummy_models import Group as DummyGroup, User as DummyUser,\
-    GroupInvitation as DummyInvitation, GroupMember as DummyMember
-
-class DummyAccess(object):
-    def __init__(self, user=None):
-        self.groups = {}
-        self.group_ids = []
-        self.invitations = {}
-        self.invitation_ids = []
-        self.members = {}
-        self.member_ids = []
-        self.user = user
-
-    def add_group(self, name, description, owner=None):
-        if owner is None: owner = self.user
-        g = DummyGroup(name=name, description=description, owner=owner)
-        self.groups[g.key().id()] = g
-        self.group_ids.append(g.key().id())
-        return g
-
-    def get_group(self, id):
-        return self.groups[id]
-
-    def get_groups(self, keys=None):
-        if keys is None:
-            return (self.groups[id] for id in self.group_ids)
-        return (self.gorups[key.id()] for key in keys)
-
-    def add_group_invitation(self, group, email):
-        invite = DummyInvitation(group, email)
-        group.invitations.append(invite)
-        self.invitations[invite.key().id()] = invite
-        self.invitation_ids.append(invite.key().id())
-        return invite
-
-    def get_group_invitation(self, id):
-        return self.invitations[id]
-
-    def add_group_member(self, group, user=None):
-        if user is None:
-            user = self.user
-        m = DummyMember(user, group)
-        group.members.append(m)
-        self.members[m.key().id()] = m
-        self.member_ids.append(m.key().id())
-        return m
-
-    def get_group_members(self):
-        return (m for m in self.members.values() if m.member == self.user)
-
-    def save(self, obj):
-        return obj
-
-    def delete(self, obj):
-        if isinstance(obj, DummyGroup):
-            self._delete_group(obj)
-        elif isinstance(obj, DummyInvitation):
-            self._delete_invitation(obj)
-        elif isinstance(obj, DummyMember):
-            self._delete_member(obj)
-
-    def _delete_group(self, group):
-        for i in group.invitations:
-            self._delete_invitation(i)
-        for m in group.members:
-            self._delete_member(m)
-        del self.groups[group.key().id()]
-        self.group_ids.remove(group.key().id())
-
-    def _delete_invitation(self, invite):
-        invite.group.invitations.remove(invite)
-        del self.invitations[invite.key().id()]
-        self.invitation_ids.remove(invite.key().id())
-        
-    def _delete_member(self, member):
-        member.group.members.remove(member)
-        del self.members[member.key().id()]
-        self.member_ids.remove(member.key().id())
+from tests.access import DummyAccess
+from tests.models import Group, User, GroupInvitation as Invite,\
+    GroupMember as Member, ListOwner as Owner
 
 class GroupRpcTest(unittest.TestCase):
     
     def setUp(self):
-        self.db = DummyAccess(DummyUser())
+        self.db = DummyAccess(User(), add_owner=True)
         self.rpc = GroupRpcGroup(self.db)
+
+    def set_user(self, user):
+        self.db.user = user
+
+    def set_owner(self, owner):
+        self.db.owner = owner
+        self.db.user = owner.user
 
     def add_groups(self, count, include_invites=False):
         for i in xrange(1, count+1):
@@ -112,15 +44,35 @@ class GroupRpcTest(unittest.TestCase):
             self.assertEquals([], g.invitations)
             self.assertEquals([], g.members)
             if include_invites:
-                self.db.add_group_invitation(g, 'email_%s@domain.com' % i)
+                self.db.add_group_invite(g, 'email_%s@domain.com' % i)
 
     def compare_group(self, db, group):
         self.assertEquals(db.key().id(), group.id)
         self.assertEquals(db.name, group.name)
         self.assertEquals(db.description, group.description)
+    
+    def setup_groups(self):
+        O = self.db.add_owner
+        self.a1 = O(User('a1', 'a1@email.com', is_admin=True))
+        self.a2 = O(User('a2', 'a2@email.com', is_admin=True))
+        self.u1 = O(User('u1', 'u1@email.com'))
+        self.u2 = O(User('u2', 'u2@email.com'))
+        self.u3 = O(User('u3', 'u3@email.com'))
+
+        self.g1 = self.db.add_group('g1', 'g1desc', self.a1)
+        self.g2 = self.db.add_group('g2', 'g1desc', self.a2)
+        self.db.add_group_member(self.g1, self.a1)
+        self.db.add_group_member(self.g1, self.u1)
+        self.db.add_group_member(self.g1, self.u3)
+        
+        self.db.add_group_member(self.g2, self.a2)
+        self.db.add_group_member(self.g2, self.u2)
+        self.db.add_group_member(self.g2, self.u3)
 
     def test_add_group(self):
-        '''Confirm that add_group actually adds a group'''
+        '''
+        Confirm that add_group actually adds a group
+        '''
         self.db.user.is_admin = True
         self.rpc.add_group('Group Name', 'Group Desc')
         self.assertEquals(1, len(self.db.groups))
@@ -130,11 +82,15 @@ class GroupRpcTest(unittest.TestCase):
         self.assertEquals('Group Desc', g.description)
 
     def test_add_group_requires_admin(self):
-        '''Confirm trying to add group with non admin user raised Exception''' 
+        '''
+        Confirm trying to add group with non admin user raised Exception
+        ''' 
         self.assertRaises(Exception, self.rpc.add_group, 'Name', 'Desc')
 
     def test_get_groups(self):
-        '''Confirm group retrieval'''
+        '''
+        Confirm group retrieval
+        '''
         self.add_groups(5)
         groups = self.rpc.get_groups()
         self.assertEquals(5, len(groups))
@@ -142,7 +98,9 @@ class GroupRpcTest(unittest.TestCase):
             self.compare_group(g, group)
 
     def test_update_group(self):
-        '''Confirm ability to change group name/desc'''
+        '''
+        Confirm ability to change group name/desc
+        '''
         self.add_groups(1)
         id = self.db.group_ids[0]
         self.rpc.update_group(id, 'New Name', 'New Desc')
@@ -151,7 +109,9 @@ class GroupRpcTest(unittest.TestCase):
         self.assertEquals('New Desc', g.description)
 
     def test_invite_member(self):
-        '''Confirm ability to invite someone to a group'''
+        '''
+        Confirm ability to invite someone to a group
+        '''
         self.add_groups(1)
         id = self.db.group_ids[0]
         group = self.db.groups[id]
@@ -162,7 +122,9 @@ class GroupRpcTest(unittest.TestCase):
         self.assertEquals('address@email.com', invite.email)
 
     def test_accept_invitation(self):
-        '''Confirm ability to accept a group invite'''
+        '''
+        Confirm ability to accept a group invite
+        '''
         self.add_groups(1, include_invites=True)
         invite = self.db.invitations.values()[0]
         group = invite.group
@@ -170,10 +132,12 @@ class GroupRpcTest(unittest.TestCase):
         self.rpc.accept_invitation(invite.key().id())
         self.assertEquals(num_invites - 1, len(group.invitations))
         self.assertEquals(1, len(group.members))
-        self.assertEquals(self.db.user, group.members[0].member)
+        self.assertEquals(self.db.owner, group.members[0].member)
 
     def test_decline_invitation(self):
-        '''Confirm ability to decline a group invitation'''
+        '''
+        Confirm ability to decline a group invitation
+        '''
         self.add_groups(1, include_invites=True)
         invite = self.db.invitations.values()[0]
         group = invite.group
@@ -184,24 +148,72 @@ class GroupRpcTest(unittest.TestCase):
         self.assertEquals(num_members, len(group.members))
         self.assertTrue(invite not in self.db.invitations.values())
 
-    def Xtest_get_common_users(self):
-        admin1 = DummyUser('a1', 'a1@email.com', is_admin=True)
-        admin2 = DummyUser('a2', 'a2@email.com', is_admin=True)
-        u1 = DummyUser('u1', 'u1@email.com')
-        u2 = DummyUser('u2', 'u2@email.com')
-        u3 = DummyUser('u3', 'u3@email.com')
+    def test_get_available_owners_a1(self):
+        '''
+        Confirm lookup of all available users for a1 owner
+        '''
+        self.setup_groups()
+        self.set_owner(self.a1)
 
-        g1 = self.add_group('g1', 'g1desc', admin1)
-        g2 = self.add_group('g2', 'g1desc', admin2)
-        self.db.add_group_member(g1, admin2)
-        self.db.add_group_member(g1, u1)
-        self.db.add_group_member(g1, u2)
-        self.db.add_group_member(g1, u3)
+        owners = self.rpc.get_available_owners(self.a1.key().id())
+        self.assertEquals(3, len(owners))
+        expected = set((o.email for o in (self.a1, self.u1, self.u3)))
+        actual = set((o.email for o in owners))
+        self.assertEquals(expected, actual)
+    
+    def test_get_available_owners_a2(self):
+        '''
+        Confirm lookup of all available users for a2 owner
+        '''
+        self.setup_groups()
+        self.set_owner(self.a2)
+
+        owners = self.rpc.get_available_owners(self.a2.key().id())
+        self.assertEquals(3, len(owners))
+        expected = set((o.email for o in (self.a2, self.u2, self.u3)))
+        actual = set((o.email for o in owners))
+        self.assertEquals(expected, actual)
         
-        self.db.add_group_member(g1, u1)
-        self.db.add_group_member(g1, u2)
-        self.db.add_group_member(g1, u3)
-        # ARM IS HERE
-        
+    def test_get_available_owners_u1(self):
+        '''
+        Confirm lookup of all available users for u1 owner
+        '''
+        self.setup_groups()
+        self.set_owner(self.u1)
+
+        owners = self.rpc.get_available_owners(self.u1.key().id())
+        self.assertEquals(3, len(owners))
+        expected = set((o.email for o in (self.a1, self.u1, self.u3)))
+        actual = set((o.email for o in owners))
+        self.assertEquals(expected, actual)
+    
+    def test_get_available_owners_u2(self):
+        '''
+        Confirm lookup of all available users for u2 owner
+        '''
+        self.setup_groups()
+        self.set_owner(self.u2)
+
+        owners = self.rpc.get_available_owners(self.u2.key().id())
+        self.assertEquals(3, len(owners))
+        expected = set((o.email for o in (self.a2, self.u2, self.u3)))
+        actual = set((o.email for o in owners))
+        self.assertEquals(expected, actual)
+
+    def test_get_available_owners_u3(self):
+        '''
+        Confirm lookup of all available users for u3 owner
+        '''
+        self.setup_groups()
+        self.set_owner(self.u3)
+
+        owners = self.rpc.get_available_owners(self.u3.key().id())
+        self.assertEquals(5, len(owners))
+        all = (self.a1, self.a2, self.u1, self.u2, self.u3)
+        expected = set((o.email for o in all))
+        actual = set((o.email for o in owners))
+        self.assertEquals(expected, actual)
+
+
 if __name__ == '__main__':
     unittest.main()

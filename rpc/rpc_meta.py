@@ -25,60 +25,7 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from core.model import FailureReport
 from core.util import camelize
-
-class DbAccess:
-    def __init__(self, user=None):
-        self.user = user
-
-    def add_group(self, name, description):
-        from models import GroupDb
-        g = GroupDb(name=name, description=description)
-        return g.put()
-
-    def get_group(self, id):
-        from models import GroupDb
-        return GroupDb.get_by_id(id)
-
-    def get_groups(self, keys=None):
-        from models import GroupDb
-        if keys is None:
-            return GroupDb.all().filter('user = ', self.user)
-        return GroupDb.get(keys)
-
-    def add_group_invitation(self, group, email):
-        from models import GroupInvitationDb
-        return GroupInvitationDb(group=group, email=email).put()
-
-    def get_group_invitation(self, id):
-        from models import GroupInvitationDb
-        return GroupInvitationDb.get_by_id(id)
-
-    def add_group_member(self, group):
-        from models import GroupMemberDb
-        return GroupMemberDb(group=group, member=self.user).put()
-  
-    def get_group_members(self):
-        from models import GroupMemberDb
-        return GroupMemberDb.all().filter('member = ', self.user)
-
-    def confirm_owner(self, user):
-        from models import ListOwnerDb as LO
-        from core.util import extract_name as extract
-        e, n = (user.email(), user.nickname())
-        owner = LO.all().filter('user = ', user).get()
-        if owner is None:
-            owner = LO(user=user, name=extract(e), nickname=n, email=e).put()
-        return owner.key().id()
-
-    def get_owner(self, owner_id):
-        from models import ListOwnerDb
-        return ListOwnerDb.get_by_id(owner_id)
-
-    def save(self, obj):
-        return obj.put()
-    
-    def delete(self, obj):
-        obj.delete()
+from access import DbAccess
 
 class RpcReqHandler(webapp.RequestHandler):
     

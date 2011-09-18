@@ -21,39 +21,13 @@
 
 import unittest
 from rpc.rpc_user import UserRpcGroup
-from tests.dummy_models import User as DummyUser, ListOwner as DummyOwner
-
-class DummyAccess(object):
-    def __init__(self, user=None):
-        self.user = user
-        self.owners = {}
-        self.user_owners = {}
-
-    def confirm_owner(self, user):
-        owner = self.user_owners.get(user, None)
-        if owner is None:
-            owner = DummyOwner(user)
-            self.user_owners[user] = owner
-            self.owners[owner.id] = owner
-        return owner.id
-
-    def get_owner(self, id):
-        return self.owners[id]
-
-    def save(self, obj):
-        return obj
-
-class DummyAeWrapper:
-    def create_login_url(self, url):
-        return 'LOGIN:%s' % url
-
-    def create_logout_url(self, url):
-        return 'LOGOUT:%s' % url
+from tests.access import DummyAccess, DummyAeWrapper
+from tests.models import User, ListOwner as Owner, AccessReq as Req
 
 class UserRpcTest(unittest.TestCase):
     
     def setUp(self):
-        self.set_user(DummyUser())
+        self.set_user(User())
 
     def set_user(self, user):
         self.user = user
@@ -87,6 +61,7 @@ class UserRpcTest(unittest.TestCase):
         '''
         from core.util import get_base_url, extract_name
 
+        self.set_user(User(is_admin=True))
         # Verify no owner exists before call
         self.assertEquals(None, self.db.user_owners.get(self.user, None))
         num_owners = len(self.db.owners)
@@ -106,7 +81,7 @@ class UserRpcTest(unittest.TestCase):
         owner = self.db.user_owners.get(self.user)
         self.assertEquals(num_owners+1, len(self.db.owners))
         self.assertEquals(self.user, owner.user)
-        self.assertEquals(owner.id, user.owner_id)
+        self.assertEquals(owner.key().id(), user.owner_id)
         self.assertEquals(self.user.nickname(), owner.nickname)
         self.assertEquals(self.user.email(), owner.email)
         self.assertEquals(extract_name(self.user.email()), owner.name)
@@ -117,9 +92,7 @@ class UserRpcTest(unittest.TestCase):
         is called
         '''
         # Make sure owner exists before call 
-        owner = DummyOwner(self.user)
-        self.db.owners[owner.id] = owner
-        self.db.user_owners[self.user] = owner
+        owner = self.db.add_owner(self.user)
         num_owners = len(self.db.owners)
 
         url = 'http://www.domain.com/some/extra/path/'
@@ -127,24 +100,152 @@ class UserRpcTest(unittest.TestCase):
 
         # verify still the same owner after the call
         self.assertEquals(num_owners, len(self.db.owners))
-        self.assertEquals(owner.id, user.owner_id)
+        self.assertEquals(owner.key().id(), user.owner_id)
         self.assertEquals(owner, self.db.user_owners[self.user])
+
+    def test_get_user_add_req(self):
+        '''
+        Verify that when non-admin user tries to log in, an Access Request is
+        created for them.
+        '''
+        from core.util import get_base_url
+        
+        # Verify no owner exists before call
+        self.assertEquals(None, self.db.user_owners.get(self.user, None))
+        num_owners = len(self.db.owners)
+
+        url = 'http://www.domain.com/some/extra/path/'
+        user = self.rpc.get_current_user(url)
+        
+        # Verify correct user details are returned
+        base = get_base_url(url)
+        goodbye = '%s/#Goodbye:' % base
+        self.assertEquals(self.ae.create_logout_url(goodbye), user.logout_url)
+        self.assertEquals(self.user.nickname(), user.nickname)
+        self.assertEquals(self.user.email(), user.email)
+        self.assertEquals(None, user.login_url)
+        self.assertEquals(-1, user.owner_id)
+        self.assertEquals(num_owners, len(self.db.owners))
+       
+        # Verify access request was created correctly
+        self.assertEquals(1, len(self.db.request_ids))
+        req = self.db.requests.values()[0]
+        self.assertEquals(self.user, req.user)
+    
+    def test_get_user_req_exists(self):
+        '''
+        Verify that the second time get_current_user is called, a second
+        AccessRequest is not created.
+        '''
+        from core.util import get_base_url
+        
+        # Verify no owner exists before call
+        self.assertEquals(None, self.db.user_owners.get(self.user, None))
+        num_owners = len(self.db.owners)
+
+        # Create the request that already exists
+        req = self.db.add_req(self.user)
+        self.assertEquals(1, len(self.db.request_ids))
+
+        url = 'http://www.domain.com/some/extra/path/'
+        user = self.rpc.get_current_user(url)
+        
+        # Verify correct user details are returned
+        self.assertEquals(None, user.login_url)
+        self.assertEquals(-1, user.owner_id)
+        self.assertEquals(num_owners, len(self.db.owners))
+       
+        # Verify no additional request was created correctly
+        self.assertEquals(1, len(self.db.request_ids))
 
     def test_get_owner(self):
         '''
         Verify ability to lookup owner by id 
         '''
         # Make sure the owner exists
-        owner = DummyOwner(self.user)
-        self.db.owners[owner.id] = owner
-        self.db.user_owners[self.user] = owner
-        
-        list_owner = self.rpc.get_owner(owner.id)
+        owner = self.db.add_owner(self.user)
+        oid = owner.key().id()
+        lo = self.rpc.get_owner(oid)
 
-        self.assertEquals(owner.key().id(), list_owner.id)
-        self.assertEquals(owner.email, list_owner.email)
-        self.assertEquals(owner.nickname, list_owner.nickname)
-        self.assertEquals(owner.name, list_owner.name)
+        self.assertEquals(oid, lo.id)
+        self.assertEquals(owner.email, lo.email)
+        self.assertEquals(owner.nickname, lo.nickname)
+        self.assertEquals(owner.name, lo.name)
+
+    def test_update_owner(self):
+        '''
+        Make sure user can change name and nickname of list owner
+        '''
+        # Make sure the owner exists
+        self.set_user(User('John Doe', 'Johnny'))
+        self.db.add_owner(self.user)
+        owner = self.db.add_owner(self.user)
+        self.assertFalse(owner.saved())
+
+        self.rpc.update_owner(owner.key().id(), 'Joe Smith', 'Joe')
+        
+        self.assertTrue(owner.saved())
+        self.assertEquals('Joe Smith', owner.name)
+        self.assertEquals('Joe', owner.nickname)
+
+    def test_approve_request_no_admin(self):
+        '''
+        Verify that attempting to approve a request as non admin user
+        raises an exception
+        '''
+        self.assertRaises(Exception, self.rpc.approve_request, 1)
+
+    def test_deny_request_no_admin(self):
+        '''
+        Verify that attempting to approve a request as non admin user
+        raises an exception
+        '''
+        self.assertRaises(Exception, self.rpc.approve_request, 1)
+
+    def test_approve_request(self):
+        '''
+        Confirm approving a request for access to all i want
+        '''
+        from core.util import extract_name
+        self.set_user(User(is_admin=True))
+        user = User(email='joe.smith@email.com')
+        req = self.db.add_req(user)
+        self.assertEquals({}, self.db.message)
+
+        self.rpc.approve_request(req.key().id())
+
+        self.assertEquals(0, len(self.db.request_ids))
+        owner = self.db.owners.values()[0]
+        self.assertEquals(user, owner.user)
+        msg = self.db.message
+        self.assertEquals(self.rpc.ACCESS_ADDR, msg['f'])
+        self.assertEquals(owner.email, msg['t'])
+        self.assertEquals('Account Activated', msg['s'])
+        body = self.rpc.APPROVE_TEMPLATE % extract_name(owner.email)
+        self.assertEquals(body, msg['b'])
+    
+    def test_deny_request(self):
+        '''
+        Confirm verifying a request for access to all i want
+        '''
+        from core.util import extract_name
+       
+        self.set_user(User(is_admin=True))
+        user = User(email='joe.smith@email.com')
+        req = self.db.add_req(user)
+        self.assertEquals({}, self.db.message)
+
+        self.rpc.approve_request(req.key().id())
+
+        self.assertEquals(0, len(self.db.request_ids))
+        owner = self.db.owners.values()[0]
+        self.assertEquals(user, owner.user)
+        msg = self.db.message
+        self.assertEquals(self.rpc.ACCESS_ADDR, msg['f'])
+        self.assertEquals(owner.email, msg['t'])
+        self.assertEquals('Account Activated', msg['s'])
+        body = self.rpc.APPROVE_TEMPLATE % extract_name(owner.email)
+        self.assertEquals(body, msg['b'])
 
 if __name__ == '__main__':
     unittest.main()

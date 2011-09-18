@@ -28,6 +28,10 @@ class Db(db.Model):
         super(Db, self).put()
         return self
 
+class AccessReqDb(Db):
+    user = db.UserProperty(auto_current_user_add=True)
+    denied = db.BooleanProperty(default=False)
+
 class ListOwnerDb(Db):
     name = db.StringProperty(indexed=False)
     nickname = db.StringProperty(indexed=False)

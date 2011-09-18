@@ -22,7 +22,19 @@
 # TODO: update these to user Model.property.get_value_for_datastore(instance)
 # to get ids for reference properties
 
-from core.meta import Model, FieldInt, FieldString, FieldText, FieldModelArray
+from core.meta import Model, FieldBoolean, FieldInt, FieldString, FieldText,\
+    FieldModelArray
+
+class AccessReq(Model):
+    fields = (
+        FieldInt(name='id'),
+        FieldBoolean(name='denied'),
+        FieldString(name='email'),
+    )
+
+    @classmethod
+    def from_db(cls, db):
+        return cls(id=db.key().id(), email=db.user.email())
 
 class ListOwner(Model):
     fields = (
@@ -31,6 +43,7 @@ class ListOwner(Model):
         FieldString(name='nickname'),
         FieldString(name='email'),
     )
+
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.key().id()
@@ -66,7 +79,7 @@ class GroupMember(Model):
     def from_db(cls, db):
         _ = lambda x: x.key().id()
         return cls(id=_(db), group_id=_(db.group),
-            user_id=db.member.user_id(), nickname=db.member.nickname,
+            user_id=db.member.user.user_id(), nickname=db.member.nickname,
             email=db.member.email)
 
 class Group(Model):
