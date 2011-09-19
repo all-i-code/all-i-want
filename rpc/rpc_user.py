@@ -22,15 +22,7 @@
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import RpcParamString, RpcParamInt
 from core.model import User, ListOwner, AccessReq
-
-class AeWrapper:
-    def create_login_url(self, url):
-        from google.appengine.api import users
-        return users.create_login_url(url)
-
-    def create_logout_url(self, url):
-        from google.appengine.api import users
-        return users.create_logout_url(url)
+from core.exception import PermissionDeniedError
 
 class UserRpcGroup(RpcGroupBase):
     rpcs = (
@@ -54,42 +46,6 @@ class UserRpcGroup(RpcGroupBase):
         )),
     )
 
-    ACCESS_ADDR = 'All I Want Access <access.all.i.want@gmail.com>'
-    APPROVE_TEMPLATE = '''
-Dear %s,
-
-Your All I Want account has been activated. You can now visit
-http://all-i-want.appspot.com/ and sign in using your Google Account
-to access All I Want.
-
-Please let us know if you have any questions.
-
-Sincerely,
-
-All I Want Access
-'''
-    
-    DENY_TEMPLATE = '''
-Dear %s,
-
-We're sorry to inform you that your All I Want account cannot be activated 
-at this time. We are currently in a beta state and can only support limited
-active accounts.
-
-When more accounts can be supported, you will be notified at this address.
-We're sorry that we cannot accomodate you at this time.
-
-Sincerely,
-
-All I Want Access
-'''
-
-    def __init__(self, db, ae_wrapper=None):
-        super(UserRpcGroup, self).__init__(db)
-        if ae_wrapper is None:
-            ae_wrapper = AeWrapper()
-        self.ae = ae_wrapper
-        
     def get_current_user(self, url):
         '''
         Return a User object with details of the current authenticated user,
@@ -134,14 +90,14 @@ All I Want Access
         owner = self.db.get_owner(owner_id)
         owner.name = name
         owner.nickname = nickname
-        return ListOwner.from_db(self.db.save(owner))
+        return ListOwner.from_db(owner.put())
 
     def get_requests(self):
         '''
         Return a list of all requests
         '''
         if not self.db.user.is_admin:
-            raise Exception('Not Authorized')
+            raise PermissionDeniedError()
         
         return [ AccessReq.from_db(db) for db in self.db.get_reqs() ]
 
@@ -150,17 +106,16 @@ All I Want Access
         Approve the given AccessRequestDb
         '''
         if not self.db.user.is_admin:
-            raise Exception('Not Authorized')
+            raise PermissionDeniedError()
         
         from core.util import extract_name
         req = self.db.get_req(req_id)
         self.db.add_owner(req.user)
         self.db.delete(req)
-        sender = self.ACCESS_ADDR
         to = req.user.email()
         subject = 'Account Activated' 
-        message_body = self.APPROVE_TEMPLATE % extract_name(to)
-        self.db.send_mail(sender, to, subject, message_body)
+        body = self.ae.APPROVE_TEMPLATE % extract_name(to)
+        self.ae.send_mail(to, subject, body)
         return []
 
     def deny_request(self, req_id):
@@ -169,17 +124,16 @@ All I Want Access
         '''
         
         if not self.db.user.is_admin:
-            raise Exception('Not Authorized')
+            raise PermissionDeniedError()
         
         from core.util import extract_name
         req = self.db.get_req(req_id)
         req.denied = True
-        self.db.save(req)
-        sender = self.ACCESS_ADDR
+        req.put()
         to = req.user.email()
         subject = 'Account Not Activated' 
-        message_body = self.DENY_TEMPLATE % extract_name(to)
-        self.db.send_mail(sender, to, subject, message_body)
+        body = self.ae.DENY_TEMPLATE % extract_name(to)
+        self.ae.send_mail(to, subject, body)
         return []
 
 class UserRpcReqHandler(RpcReqHandler):

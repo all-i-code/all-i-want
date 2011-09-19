@@ -21,7 +21,9 @@
 
 import unittest
 from rpc.rpc_group import GroupRpcGroup
+from core.exception import UserVisibleError, DuplicateNameError
 from tests.access import DummyAccess
+from tests.dummy_ae import DummyWrapper
 from tests.models import Group, User, GroupInvitation as Invite,\
     GroupMember as Member, ListOwner as Owner
 
@@ -29,7 +31,8 @@ class GroupRpcTest(unittest.TestCase):
     
     def setUp(self):
         self.db = DummyAccess(User(), add_owner=True)
-        self.rpc = GroupRpcGroup(self.db)
+        self.ae = DummyWrapper()
+        self.rpc = GroupRpcGroup(self.db, self.ae)
 
     def set_user(self, user):
         self.db.user = user
@@ -85,7 +88,18 @@ class GroupRpcTest(unittest.TestCase):
         '''
         Confirm trying to add group with non admin user raised Exception
         ''' 
-        self.assertRaises(Exception, self.rpc.add_group, 'Name', 'Desc')
+        self.assertRaises(UserVisibleError, self.rpc.add_group, 'Name', 'Desc')
+
+    def test_add_group_duplicate_name(self):
+        '''
+        Confirm that trying to add a group with a duplicate name raises
+        a DuplicateNameError
+        '''
+        self.db.user.is_admin = True
+        self.add_groups(1)
+        name = self.db.groups.values()[0].name
+        self.assertRaises(DuplicateNameError, self.rpc.add_group, name,
+            'Group Desc')
 
     def test_get_groups(self):
         '''
@@ -107,6 +121,26 @@ class GroupRpcTest(unittest.TestCase):
         g = self.db.get_group(id)
         self.assertEquals('New Name', g.name)
         self.assertEquals('New Desc', g.description)
+
+    def test_update_group_duplicate_name(self):
+        '''
+        Confirm that trying to update a group with a used name raises a
+        DuplicateNameError
+        '''
+        self.add_groups(2)
+        id = self.db.group_ids[0]
+        name = self.db.get_group(self.db.group_ids[1]).name
+        self.assertRaises(DuplicateNameError, self.rpc.update_group, id, name,
+            'New Desc')
+
+    def test_update_group_same_name(self):
+        '''
+        Confirm that trying to update a group with its own name and a new
+        description does NOT raise a DuplicateNameError
+        '''
+        self.add_groups(1)
+        g = self.db.groups.values()[0]
+        self.rpc.update_group(g.key().id(), g.name, 'New Desc')
 
     def test_invite_member(self):
         '''

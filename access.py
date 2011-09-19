@@ -20,7 +20,7 @@
 '''
 from core.util import extract_name as extract
 from models import AccessReqDb, ListOwnerDb, GroupDb, GroupInvitationDb,\
-    GroupMemberDb
+    GroupMemberDb, ListDb, ListItemDb
 
 class DbAccess:
     def __init__(self, user=None):
@@ -35,6 +35,12 @@ class DbAccess:
         message.subject = subject
         message.body = message_body
         message.send()
+
+    def is_group_name_unique(self, name, key=None):
+        q = GroupDb.all().filter('name =', name)
+        if key is not None:
+            q.filter('key !=', key)
+        return q.count(1) == 0
 
     def add_group(self, name, description):
         g = GroupDb(name=name, description=description)
@@ -84,9 +90,24 @@ class DbAccess:
     def get_reqs(self):
         return AccessReqDb.all()
 
-    def save(self, obj):
-        return obj.put()
-    
+    def add_list(self, owner_id, name, desc):
+        owner = self.get_owner(owner_id)
+        return ListDb(name=name, description=desc, owner=owner).put()
+
+    def is_list_name_unique(self, owner_id, name, key=None):
+        owner = self.get_owner(owner_id)
+        q = ListDb.all().filter('owner = ', owner).filter('name =', name)
+        if key is not None:
+            q.filter('key !=', key)
+        return q.count(1) == 0
+
+    def add_list_item(self, wlist, name, category, desc, url, is_surprise):
+        return ListItemDb(parent_list=wlist, name=name, category=category,
+            description=desc, url=url, is_surprise=is_surprise).put()
+
+    def get_item(self, item_id):
+        return ListItemDb.get_by_id(item_id)
+
     def delete(self, obj):
         obj.delete()
 

@@ -53,6 +53,7 @@ class GroupMemberDb(Db):
 
 class ListDb(Db):
     name = db.StringProperty(indexed=False)
+    description = db.StringProperty(indexed=False)
     owner = db.ReferenceProperty(ListOwnerDb, collection_name='lists')
 
 class ListItemDb(Db):
@@ -61,6 +62,9 @@ class ListItemDb(Db):
     category = db.StringProperty(indexed=False)
     description = db.StringProperty(indexed=False, multiline=True)
     url = db.StringProperty(indexed=False)
-    reserved_by = db.UserProperty()
-    purchased_by = db.UserProperty()
+    reserved_by = db.ReferenceProperty(ListOwnerDb,
+        collection_name='reservations', default=None)
+    purchased_by = db.ReferenceProperty(ListOwnerDb,
+        collection_name='purchases', default=None)
+    is_surprise = db.BooleanProperty(indexed=False, default=False)
 

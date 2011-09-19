@@ -29,7 +29,6 @@ class DummyAccess:
         self.requests = {}
         self.user_requests = {}
         self.request_ids = []
-        self.message = {}
 
         self.groups = {}
         self.group_ids = []
@@ -43,9 +42,6 @@ class DummyAccess:
         if add_owner:
             self.owner = self.add_owner(user)
 
-    def send_mail(self, sender, to, subject, body):
-        self.message = dict(f=sender, t=to, s=subject, b=body)
-
     def get_owner(self, owner_id):
         return self.owners.get(owner_id, None)
 
@@ -54,6 +50,12 @@ class DummyAccess:
         self.user_owners[user] = owner
         self.owners[owner.id] = owner
         return owner
+
+    def is_group_name_unique(self, name, key=None):
+        groups = [ g for g in self.groups.values() if g.name == name ]
+        if key is not None:
+            groups = [ g for g in groups if g.key() != key ]
+        return len(groups) == 0
 
     def add_group(self, name, description, owner=None):
         if owner is None: owner = self.owner

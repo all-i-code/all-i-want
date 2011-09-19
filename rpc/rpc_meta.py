@@ -26,6 +26,7 @@ from google.appengine.ext import webapp
 from core.model import FailureReport
 from core.util import camelize
 from access import DbAccess
+from ae import Wrapper
 
 class RpcReqHandler(webapp.RequestHandler):
     
@@ -35,7 +36,7 @@ class RpcReqHandler(webapp.RequestHandler):
 
     def __init__(self):
         group_cls = self.get_rpc_group_cls()
-        self.rpc_group = group_cls(DbAccess())
+        self.rpc_group = group_cls(DbAccess(), Wrapper())
         super(RpcReqHandler, self).__init__()
  
     def post(self):
@@ -201,8 +202,9 @@ class RpcGroupBase(object):
     def get_rpc(cls, name):
         return cls.rpc_dict.get(name, None)
     
-    def __init__(self, db):
+    def __init__(self, db, ae):
         self.db = db
+        self.ae = ae
 
     def call(self, rpc_name, handler):
         '''Call the given rpc with the given request object'''

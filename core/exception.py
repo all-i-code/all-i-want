@@ -19,7 +19,14 @@
 #
 '''
 
-class DuplicateNameError(Exception):
+class UserVisibleError(Exception):
+    pass
+
+class PermissionDeniedError(UserVisibleError):
+    def __init__(self):
+        super(PermissionDeniedError, self).__init__('Permission Denied')
+
+class DuplicateNameError(UserVisibleError):
     def __init__(self, cls, name):
         self.cls = cls
         self.name = name

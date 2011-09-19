@@ -21,8 +21,10 @@
 
 import unittest
 from rpc.rpc_user import UserRpcGroup
-from tests.access import DummyAccess, DummyAeWrapper
+from tests.access import DummyAccess
+from tests.dummy_ae import DummyWrapper
 from tests.models import User, ListOwner as Owner, AccessReq as Req
+from core.exception import PermissionDeniedError
 
 class UserRpcTest(unittest.TestCase):
     
@@ -32,7 +34,7 @@ class UserRpcTest(unittest.TestCase):
     def set_user(self, user):
         self.user = user
         self.db = DummyAccess(self.user)
-        self.ae = DummyAeWrapper()
+        self.ae = DummyWrapper()
         self.rpc = UserRpcGroup(self.db, self.ae)
 
     def test_get_user_none(self):
@@ -191,16 +193,16 @@ class UserRpcTest(unittest.TestCase):
     def test_approve_request_no_admin(self):
         '''
         Verify that attempting to approve a request as non admin user
-        raises an exception
+        raises a PermissionDeniedError
         '''
-        self.assertRaises(Exception, self.rpc.approve_request, 1)
+        self.assertRaises(PermissionDeniedError, self.rpc.approve_request, 1)
 
     def test_deny_request_no_admin(self):
         '''
         Verify that attempting to approve a request as non admin user
-        raises an exception
+        raises a PermissionDeniedError
         '''
-        self.assertRaises(Exception, self.rpc.approve_request, 1)
+        self.assertRaises(PermissionDeniedError, self.rpc.approve_request, 1)
 
     def test_approve_request(self):
         '''
@@ -210,18 +212,18 @@ class UserRpcTest(unittest.TestCase):
         self.set_user(User(is_admin=True))
         user = User(email='joe.smith@email.com')
         req = self.db.add_req(user)
-        self.assertEquals({}, self.db.message)
+        self.assertEquals({}, self.ae.msg)
 
         self.rpc.approve_request(req.key().id())
 
         self.assertEquals(0, len(self.db.request_ids))
         owner = self.db.owners.values()[0]
         self.assertEquals(user, owner.user)
-        msg = self.db.message
-        self.assertEquals(self.rpc.ACCESS_ADDR, msg['f'])
+        msg = self.ae.msg
+        self.assertEquals(self.ae.FROM_ADDRESS, msg['f'])
         self.assertEquals(owner.email, msg['t'])
         self.assertEquals('Account Activated', msg['s'])
-        body = self.rpc.APPROVE_TEMPLATE % extract_name(owner.email)
+        body = self.ae.APPROVE_TEMPLATE % extract_name(owner.email)
         self.assertEquals(body, msg['b'])
     
     def test_deny_request(self):
@@ -233,18 +235,18 @@ class UserRpcTest(unittest.TestCase):
         self.set_user(User(is_admin=True))
         user = User(email='joe.smith@email.com')
         req = self.db.add_req(user)
-        self.assertEquals({}, self.db.message)
+        self.assertEquals({}, self.ae.msg)
 
         self.rpc.approve_request(req.key().id())
 
         self.assertEquals(0, len(self.db.request_ids))
         owner = self.db.owners.values()[0]
         self.assertEquals(user, owner.user)
-        msg = self.db.message
-        self.assertEquals(self.rpc.ACCESS_ADDR, msg['f'])
+        msg = self.ae.msg
+        self.assertEquals(self.ae.FROM_ADDRESS, msg['f'])
         self.assertEquals(owner.email, msg['t'])
         self.assertEquals('Account Activated', msg['s'])
-        body = self.rpc.APPROVE_TEMPLATE % extract_name(owner.email)
+        body = self.ae.APPROVE_TEMPLATE % extract_name(owner.email)
         self.assertEquals(body, msg['b'])
 
 if __name__ == '__main__':

@@ -32,6 +32,10 @@ class Db(object):
     def key(self):
         return self
 
+    def put(self):
+        self._saved = True
+        return self
+
     def saved(self):
         return getattr(self, '_saved', False)
 

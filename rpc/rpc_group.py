@@ -23,7 +23,7 @@
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import RpcParamString, RpcParamInt
 from core.model import Group, GroupInvitation, GroupMember, ListOwner
-from core.exception import DuplicateNameError
+from core.exception import PermissionDeniedError, DuplicateNameError
 
 class GroupRpcGroup(RpcGroupBase):
     rpcs = (
@@ -54,8 +54,11 @@ class GroupRpcGroup(RpcGroupBase):
 
     def add_group(self, name, desc):
         if not self.db.user.is_admin:
-            raise Exception('Not Authorized')
-        # TODO: check for duplicate names
+            raise PermissionDeniedError()
+        
+        if not self.db.is_group_name_unique(name):
+            raise DuplicateNameError(Group, name)
+
         g = self.db.add_group(name, desc)
         self.db.add_group_member(g)
         return Group.from_db(g)
@@ -65,11 +68,13 @@ class GroupRpcGroup(RpcGroupBase):
   
     def update_group(self, id, name, desc):
         g = self.db.get_group(id)
-      
-        # TODO: check for duplicate names
+     
+        if not self.db.is_group_name_unique(name, g.key()):
+            raise DuplicateNameError(Group, name)
+
         g.name = name
         g.description = desc
-        return Group.from_db(self.db.save(g))
+        return Group.from_db(g.put())
 
     def invite_member(self, group_id, email):
         g = self.db.get_group(group_id)
@@ -79,7 +84,7 @@ class GroupRpcGroup(RpcGroupBase):
     def accept_invitation(self, invite_id):
         i = self.db.get_group_invite(invite_id)
         m = self.db.add_group_member(i.group)
-        self.db.save(m)
+        m.put()
         self.db.delete(i)
         return []
     
@@ -92,12 +97,10 @@ class GroupRpcGroup(RpcGroupBase):
         # TODO: optimize this to minimize queries 
         owner = self.db.get_owner(owner_id)
         _ = lambda x: ListOwner.from_db(x)
+        gs, gms = (owner.groups, owner.memberships)
         owners = []
-        for g in owner.groups:
-            owners.extend(m.member for m in g.members)
-        for gm in owner.memberships:
-            owners.extend(m.member for m in gm.group.members)
-
+        owners.extend(m.member for g in gs for m in g.members)
+        owners.extend(m.member for gm in gms for m in gm.group.members)
         return [ ListOwner.from_db(o) for o in set(owners) ]
 
 class GroupRpcReqHandler(RpcReqHandler):
