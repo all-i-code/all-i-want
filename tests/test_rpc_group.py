@@ -22,9 +22,9 @@
 import unittest
 from rpc.rpc_group import GroupRpcGroup
 from core.exception import UserVisibleError, DuplicateNameError
-from tests.access import DummyAccess
-from tests.dummy_ae import DummyWrapper
-from tests.models import Group, User, GroupInvitation as Invite,\
+from tests.ut_access import DummyAccess
+from tests.ut_ae import DummyWrapper
+from tests.ut_models import Group, User, GroupInvitation as Invite,\
     GroupMember as Member, ListOwner as Owner
 
 class GroupRpcTest(unittest.TestCase):

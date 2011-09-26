@@ -18,6 +18,7 @@
 #    limitations under the License.
 #
 '''
+from google.appengine.ext.db import Key
 from core.util import extract_name as extract
 from models import AccessReqDb, ListOwnerDb, GroupDb, GroupInvitationDb,\
     GroupMemberDb, ListDb, ListItemDb
@@ -101,8 +102,9 @@ class DbAccess:
             q.filter('key !=', key)
         return q.count(1) == 0
 
-    def add_list_item(self, wlist, name, category, desc, url, is_surprise):
-        return ListItemDb(parent_list=wlist, name=name, category=category,
+    def add_list_item(self, list_id, name, category, desc, url, is_surprise):
+        key = Key.from_path('ListDb', list_id)
+        return ListItemDb(parent_list=key, name=name, category=category,
             description=desc, url=url, is_surprise=is_surprise).put()
 
     def get_item(self, item_id):

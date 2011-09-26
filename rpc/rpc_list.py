@@ -22,7 +22,7 @@
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import RpcParamString, RpcParamInt, RpcParamBoolean
-from core.model import Group, GroupInvitation, GroupMember, ListOwner
+from core.model import ListOwner, WishList, ListItem
 from core.exception import PermissionDeniedError, DuplicateNameError
 
 class ListRpcGroup(RpcGroupBase):
@@ -75,7 +75,7 @@ class ListRpcGroup(RpcGroupBase):
     )
 
     def _verify_owner(self):
-        self.owner = self.db.get_owner_by_user(self.user)
+        self.owner = self.db.get_owner_by_user(self.db.user)
         if self.owner is None:
             raise PermissionDeniedError()
 
@@ -93,6 +93,9 @@ class ListRpcGroup(RpcGroupBase):
         return owner_id in oids
 
     def add_list(self, owner_id, name, desc):
+        '''
+        Add a new wish list for the given owner, ensuring a unique name
+        '''
         if not self._can_add_to_list(owner_id):
             raise PermissionDeniedError()
 
@@ -103,6 +106,10 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(l)
 
     def update_list(self, owner_id, list_id, name, desc):
+        '''
+        Update the name/description of an existing wish list for 
+        the given owner, ensuring a unique name
+        '''
         if not self._can_add_to_list(owner_id):
             raise PermissionDeniedError()
         
@@ -115,6 +122,9 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(l.put())
 
     def get_lists(self, owner_id):
+        '''
+        Retrieve all the wish lists for the given owner
+        '''
         if not self._can_read_list(owner_id):
             raise PermissionDeniedError()
         
@@ -122,6 +132,9 @@ class ListRpcGroup(RpcGroupBase):
         return [ WishList.from_db(l) for l in owner.lists ]
    
     def add_item(self, list_id, name, cat, desc, url, surprise):
+        '''
+        Add an item to the given wish list
+        '''
         l = self.db.get_list(list_id)
         if not self._can_add_to_list(l.owner.key().id()):
             raise PermissionDeniedError()
@@ -130,6 +143,9 @@ class ListRpcGroup(RpcGroupBase):
         return ListItem.from_db(item)
 
     def update_item(self, item_id, name, cat, desc, url):
+        '''
+        Update the name, category, description and url of an existing item
+        '''
         item = self.db.get_item(item_id)
         if not self._can_add_to_list(item.parent_list.owner.key().id()):
             raise PermissionDeniedError()
@@ -141,37 +157,59 @@ class ListRpcGroup(RpcGroupBase):
         return ListItem.from_db(item.put())
 
     def remove_item(self, item_id):
+        '''
+        Remove the given item. If the item has been reserved/purchased, send
+        an email notification to the the reserver/purchaser
+        '''
         item = self.db.get_item(item_id)
         if not self._can_add_to_list(item.parent_list.owner.key().id()):
             raise PermissionDeniedError()
 
         if item.reserved_by is not None:
             # TODO: email reserver
+            pass
         elif item.purchased_by is not None:
             # TODO: email purchaser 
+            pass
 
-        # What should I do in this instance? Should we just mark the item
-        # as surprised and notify the purchaser/reserer? Or delete it and
-        # notify the purchaser/reserver?
+        self.db.delete(item)
 
-    # TODO: ARM IS HERE
+    def reserve_item(self, item_id):
+        '''
+        Mark the given item as reserved
+        '''
+        # TODO: implement this
+        pass
 
-        Rpc(name='remove_item', params=(
-            RpcParamInt('item_id'),
-        )),
-        Rpc(name='reserve_item', params=(
-            RpcParamInt('item_id'),
-        )),
-        Rpc(name='unreserve_item', params=(
-            RpcParamInt('item_id'),
-        )),
-        Rpc(name='purchase_item', params=(
-            RpcParamInt('item_id'),
-        )),
-        Rpc(name='unpurchase_item', params=(
-            RpcParamInt('item_id'),
-        )),
-        Rpc(name='get_reserved_and_purchased_items'),
+    def unreserve_item(self, item_id):
+        '''
+        Mark the given item as not reserved if you were the one who reserved it
+        '''
+        # TODO: implement this
+        pass
+    
+    def purchase_item(self, item_id):
+        '''
+        Mark the given item as purchased
+        '''
+        # TODO: implement this
+        pass
+    
+    def unpurchase_item(self, item_id):
+        '''
+        Mark the given item as not purchased if you were the one who
+        purchased it
+        '''
+        # TODO: implement this
+        pass
+
+    def get_reserved_and_purchased_items(self, item_id):
+        '''
+        Retrieve all items which have been reserved or purchased by you 
+        '''
+        # TODO: implement this
+        pass
+
 
 class ListRpcReqHandler(RpcReqHandler):
     group_cls = ListRpcGroup

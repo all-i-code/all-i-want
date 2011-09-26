@@ -19,8 +19,8 @@
 #
 '''
 from core.util import extract_name as extract
-from tests.models import AccessReq as Req, ListOwner as Owner, Group,\
-    GroupInvitation as Invite, GroupMember as Member
+from tests.ut_models import AccessReq as Req, ListOwner as Owner, Group,\
+    GroupInvitation as Invite, GroupMember as Member, List, ListItem as Item
 
 class DummyAccess:
     def __init__(self, user=None, add_owner=False):
@@ -36,7 +36,12 @@ class DummyAccess:
         self.invitation_ids = []
         self.members = {}
         self.member_ids = []
-        
+
+        self.lists = {}
+        self.list_ids = []
+        self.items = {}
+        self.item_ids = []
+
         self.user = user
         self.owner = None 
         if add_owner:
@@ -123,6 +128,37 @@ class DummyAccess:
 
     def get_reqs(self):
         return (self.get_request(rid) for rid in self.request_ids)
+
+    def add_list(self, owner_id, name, desc):
+        owner = self.get_owner(owner_id)
+        l = List(name=name, description=desc, owner=owner)
+        lid = l.key().id()
+        owner.lists.append(l)
+        self.lists[lid] = l
+        self.list_ids.append(lid)
+        return l
+
+    def is_list_name_unique(self, owner_id, name, key=None):
+        owner = self.get_owner(owner_id)
+        _ = lambda l: l.owner == owner and l.name == name
+        lists = [ l for l in self.lists.values() if _(l) ]
+        if key is not None:
+            lists = [ l for l in lists if l.key() != key ]
+        return len(lists) == 0
+
+    def add_list_item(self, list_id, name, category, desc, url, is_surprise):
+        parent = self.lists[list_id]
+        item = Item(parent_list=parent, name=name,
+            category=category, description=desc, url=url,
+            is_surprise=is_surprise)
+        iid = item.key().id()
+        parent.items.append(item)
+        self.items[iid] = item
+        self.item_ids.append(iid)
+        return item
+
+    def get_item(self, item_id):
+        return self.items[item_id]
 
     def save(self, obj):
         obj._saved = True

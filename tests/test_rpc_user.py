@@ -21,9 +21,9 @@
 
 import unittest
 from rpc.rpc_user import UserRpcGroup
-from tests.access import DummyAccess
-from tests.dummy_ae import DummyWrapper
-from tests.models import User, ListOwner as Owner, AccessReq as Req
+from tests.ut_access import DummyAccess
+from tests.ut_ae import DummyWrapper
+from tests.ut_models import User, ListOwner as Owner, AccessReq as Req
 from core.exception import PermissionDeniedError
 
 class UserRpcTest(unittest.TestCase):

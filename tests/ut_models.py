@@ -1,6 +1,6 @@
 '''
 #
-# File: dummy_models.py
+# File: models.py
 # Description: Dummy Model objects
 # 
 # Copyright 2011 Adam Meadows 
@@ -73,6 +73,7 @@ class ListOwner(Db):
         self.email = user.email()
         self.groups = []
         self.memberships = []
+        self.lists = []
 
 class Group(Db):
     def __init__(self, name='', description='', owner=None, **kwargs):
@@ -96,10 +97,12 @@ class GroupMember(Db):
         self.group = group
 
 class List(Db):
-    def __init__(self, name='', owner=None, **kwargs):
+    def __init__(self, name='', description='', owner=None, **kwargs):
         super(List, self).__init__(**kwargs)
         self.name = name
+        self.description = description
         self.owner = owner
+        self.items = []
 
 class ListItem(Db):
     def __init__(self, parent=None, name='', category='', description='',\
