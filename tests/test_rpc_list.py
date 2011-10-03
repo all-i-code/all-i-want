@@ -224,7 +224,86 @@ class ListRpcTest(unittest.TestCase):
         Confirm that get_lists works for an owner who is a member of 
         a group current owner is also in
         '''
+        o1 = self.db.add_owner(User('foo', 'foo@email.com'))
+        o2 = self.db.add_owner(User('bar', 'bar@email.com'))
+        self.create_lists(o1, 5)
+        self.create_group(o2, [o1, self.db.owner])
+        oid = o1.key().id()
+        wls = self.rpc.get_lists(oid)
+        self.compare_all_lists(o1.lists, wls)
         pass
+
+    def test_get_lists_from_owner_of_group_im_in(self):
+        '''
+        Confirm that get_lists works for an owner who is the owner of 
+        a group current owner is in
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        oid = o.key().id()
+        wls = self.rpc.get_lists(oid)
+        self.compare_all_lists(o.lists, wls)
+
+    def test_add_item_to_invalid_owner(self):
+        '''
+        Confirm that trying to add an item to the list of an invalid owner
+        raises PermissionDeniedError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        lid = o.lists[0].key().id()
+        self.assertRaises(PermissionDeniedError, self.rpc.add_item, lid,
+            'item', 'cat', 'desc', 'url', False)
+    
+    def test_add_surprise_item_to_invalid_owner(self):
+        '''
+        Confirm that trying to add a surprise item to the list of an invalid
+        owner raises PermissionDeniedError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        lid = o.lists[0].key().id()
+        self.assertRaises(PermissionDeniedError, self.rpc.add_item, lid,
+            'item', 'cat', 'desc', 'url', True)
+
+    def test_add_surprise_item_for_fellow_group_memeber(self):
+        '''
+        Confirm ability to add a surprise item to a list you have access to 
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        l = o.lists[2]
+        count = len(l.items)
+        lid = l.key().id()
+        witem = self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', True)
+        self.assertEquals(count+1, len(o.lists[2].items))
+        self.assertEquals('item', witem.name)
+        self.assertEquals('cat', witem.category)
+        self.assertEquals('desc', witem.description)
+        self.assertEquals('url', witem.url)
+        self.assertEquals(True, witem.is_surprise)
+        self.assertEquals(self.db.owner.label(), witem.reserved_by)
+
+    def test_add_item_to_own_list(self):
+        '''
+        Confirm ability to add an item to your own list 
+        '''
+        self.create_lists(self.db.owner, 1)
+        l = self.db.owner.lists[0]
+        count = len(l.items)
+        lid = l.key().id()
+        witem = self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', False)
+        self.assertEquals(count+1, len(self.db.owner.lists[0].items))
+        self.assertEquals('item', witem.name)
+        self.assertEquals('cat', witem.category)
+        self.assertEquals('desc', witem.description)
+        self.assertEquals('url', witem.url)
+        self.assertEquals(False, witem.is_surprise)
+        self.assertEquals('', witem.reserved_by)
+        self.assertEquals('', witem.purchased_by)
 
 if __name__ == '__main__':
     unittest.main()

@@ -88,7 +88,9 @@ class ListRpcGroup(RpcGroupBase):
         self._verify_owner()
         oids = [ self.owner.key().id() ]
         groups, memberships = (self.owner.groups, self.owner.memberships)
+        oids.extend(g.owner.key().id() for g in groups)
         oids.extend(_(m) for g in groups for m in g.members)
+        oids.extend(gm.group.owner.key().id() for gm in memberships)
         oids.extend(_(m) for gm in memberships for m in gm.group.members)
         return owner_id in oids
 
@@ -137,10 +139,15 @@ class ListRpcGroup(RpcGroupBase):
         Add an item to the given wish list
         '''
         l = self.db.get_list(list_id)
-        if not self._can_add_to_list(l.owner.key().id()):
-            raise PermissionDeniedError()
+        can_read = self._can_read_list(l.owner.key().id())
+        can_add = self._can_add_to_list(l.owner.key().id())
+        if not (can_add or (can_read and surprise)):
+                raise PermissionDeniedError()
 
-        item = self.db.add_item(l, name, cat, desc, url, surprise)
+        item = self.db.add_list_item(list_id, name, cat, desc, url, surprise)
+        if surprise:
+            item.reserved_by = self.owner
+            item.put()
         return ListItem.from_db(item)
 
     def update_item(self, item_id, name, cat, desc, url):
