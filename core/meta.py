@@ -124,8 +124,9 @@ class FieldModelArray(Field):
     )
 
     def __init__(self, type=None, name=None, default=[]):
+        _ = lambda x: pluralize(uncamelize(x.__name__))
         self.type = type
-        self.name = pluralize(uncamelize(type.__name__))
+        self.name = name if name is not None else _(x)
         self.default = default
 
     def get_java_test_type(self):

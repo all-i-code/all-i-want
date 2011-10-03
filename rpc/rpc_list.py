@@ -86,7 +86,7 @@ class ListRpcGroup(RpcGroupBase):
     def _can_read_list(self, owner_id):
         _ = lambda x: x.member.key().id()
         self._verify_owner()
-        oids = []
+        oids = [ self.owner.key().id() ]
         groups, memberships = (self.owner.groups, self.owner.memberships)
         oids.extend(_(m) for g in groups for m in g.members)
         oids.extend(_(m) for gm in memberships for m in gm.group.members)
@@ -105,16 +105,17 @@ class ListRpcGroup(RpcGroupBase):
         l = self.db.add_list(owner_id, name, desc)
         return WishList.from_db(l)
 
-    def update_list(self, owner_id, list_id, name, desc):
+    def update_list(self, list_id, name, desc):
         '''
         Update the name/description of an existing wish list for 
         the given owner, ensuring a unique name
         '''
-        if not self._can_add_to_list(owner_id):
+        l = self.db.get_list(list_id)
+        oid = l.owner.key().id()
+        if not self._can_add_to_list(oid):
             raise PermissionDeniedError()
         
-        l = self.db.get_list(list_id)
-        if not self.db.is_list_name_unique(owner_id, name, l.key()):
+        if not self.db.is_list_name_unique(oid, name, l.key()):
             raise DuplicateNameError(WishList, name)
 
         l.name = name
@@ -161,16 +162,27 @@ class ListRpcGroup(RpcGroupBase):
         Remove the given item. If the item has been reserved/purchased, send
         an email notification to the the reserver/purchaser
         '''
+        self._verify_owner()
         item = self.db.get_item(item_id)
         if not self._can_add_to_list(item.parent_list.owner.key().id()):
             raise PermissionDeniedError()
 
         if item.reserved_by is not None:
-            # TODO: email reserver
-            pass
+            to = self.reserved_by.email
+            subject = 'Wish List Item Deleted'
+            name, email = self.owner.nickname, self.owner.email
+            body = self.ae.DELETED_ITEM_TEMPLATE % (self.reserved_by.nickname,
+                name, email, item.name, item.parent_list.name, 'Reserved',
+                name, email)
+            self.ae.send_mail(to, subject, body)
         elif item.purchased_by is not None:
-            # TODO: email purchaser 
-            pass
+            to = self.purchased_by.email
+            subject = 'Wish List Item Deleted'
+            name, email = self.owner.nickname, self.owner.email
+            body = self.ae.DELETED_ITEM_TEMPLATE % (self.puchased_by.nickname,
+                name, email, item.name, item.parent_list.name, 'Purchased',
+                name, email)
+            self.ae.send_mail(to, subject, body)
 
         self.db.delete(item)
 

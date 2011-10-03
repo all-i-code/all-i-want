@@ -50,6 +50,20 @@ Sincerely,
 
 All I Want Mail
 '''
+    
+    DELETED_ITEM_TEMPLATE = '''
+Dear %s,
+
+This message is to inform you that %s <%s> has removed the
+item "%s" from the list "%s"
+
+Since you marked this item as %s, we thought you ought to know that
+%s <%s> doesn't seem to want it anymore.
+
+Sincerely,
+
+All I Want Mail
+'''
   
     def create_login_url(self, url):
         from google.appengine.api import users

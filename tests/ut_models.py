@@ -74,6 +74,9 @@ class ListOwner(Db):
         self.groups = []
         self.memberships = []
         self.lists = []
+    
+    def label(self):
+        return '%s (%s)' % (self.nickname, self.email)
 
 class Group(Db):
     def __init__(self, name='', description='', owner=None, **kwargs):
@@ -105,15 +108,17 @@ class List(Db):
         self.items = []
 
 class ListItem(Db):
-    def __init__(self, parent=None, name='', category='', description='',\
-      url='', reserved_by=None, purchased_by=None, owner=None, **kwargs):
+    def __init__(self, parent_list=None, name='', category='', description='',\
+      url='', reserved_by=None, purchased_by=None, is_surprise=False,\
+      owner=None, **kwargs):
         super(ListItem, self).__init__(**kwargs)
-        self.parent = parent
+        self.parent_list = parent_list
         self.name = name
         self.category = category
         self.description = description
         self.url = url
         self.reserved_by = reserved_by
         self.purchased_by = purchased_by
+        self.is_surprise = is_surprise
         self.owner = owner
 

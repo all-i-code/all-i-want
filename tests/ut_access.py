@@ -138,6 +138,9 @@ class DummyAccess:
         self.list_ids.append(lid)
         return l
 
+    def get_list(self, list_id):
+        return self.lists[list_id]
+
     def is_list_name_unique(self, owner_id, name, key=None):
         owner = self.get_owner(owner_id)
         _ = lambda l: l.owner == owner and l.name == name
@@ -173,6 +176,8 @@ class DummyAccess:
             self._delete_invite(obj, from_group=True)
         elif isinstance(obj, Member):
             self._delete_member(obj, from_group=True)
+        elif isinstance(obj, Owner):
+            self._delete_owner(obj)
 
     def _delete_req(self, req):
         rid = req.key().id()
@@ -202,6 +207,10 @@ class DummyAccess:
             member.group.members.remove(member)
         del self.members[mid]
         self.member_ids.remove(mid)
+
+    def _delete_owner(self, owner):
+        del self.user_owners[owner.user]
+        del self.owners[owner.key().id()]
 
 class DummyAeWrapper:
     def create_login_url(self, url):

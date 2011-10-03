@@ -38,6 +38,9 @@ class ListOwnerDb(Db):
     email = db.StringProperty(indexed=False)
     user = db.UserProperty(auto_current_user_add=True)
 
+    def label(self):
+        return '%s (%s)' % (self.nickname, self.email)
+
 class GroupDb(Db):
     name = db.StringProperty()
     description = db.StringProperty(indexed=False, multiline=True)
