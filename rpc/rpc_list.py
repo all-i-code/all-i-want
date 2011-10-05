@@ -191,7 +191,9 @@ class ListRpcGroup(RpcGroupBase):
                 name, email)
             self.ae.send_mail(to, subject, body)
 
+        l = item.parent_list
         self.db.delete(item)
+        return WishList.from_db(l)
 
     def reserve_item(self, item_id):
         '''

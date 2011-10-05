@@ -178,6 +178,9 @@ class DummyAccess:
             self._delete_member(obj, from_group=True)
         elif isinstance(obj, Owner):
             self._delete_owner(obj)
+        elif isinstance(obj, Item):
+            self._delete_item(obj)
+
 
     def _delete_req(self, req):
         rid = req.key().id()
@@ -211,6 +214,10 @@ class DummyAccess:
     def _delete_owner(self, owner):
         del self.user_owners[owner.user]
         del self.owners[owner.key().id()]
+
+    def _delete_item(self, item):
+        del self.items[item.key().id()]
+        item.parent_list.items.remove(item)
 
 class DummyAeWrapper:
     def create_login_url(self, url):

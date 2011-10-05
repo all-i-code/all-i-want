@@ -305,5 +305,75 @@ class ListRpcTest(unittest.TestCase):
         self.assertEquals('', witem.reserved_by)
         self.assertEquals('', witem.purchased_by)
 
+    def test_update_item_in_own_list(self):
+        '''
+        Confirm ability to update an existing item in your own list
+        '''
+        self.create_lists(self.db.owner, 2)
+        l = self.db.owner.lists[1]
+        count = len(l.items)
+        item = l.items[0]
+        iid = item.key().id()
+        n, c, d, u = ('New Name', 'New Cat', 'New Desc', 'New URL')
+        witem = self.rpc.update_item(iid, n, c, d, u)
+        self.assertEquals(count, len(self.db.owner.lists[1].items))
+        self.assertEquals(n, witem.name)
+        self.assertEquals(c, witem.category)
+        self.assertEquals(d, witem.description)
+        self.assertEquals(u, witem.url)
+
+    def test_update_item_in_invalid_list(self):
+        ''''
+        Confirm that trying to update an item in someone else's list
+        raises PermissionDeniedError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[2].items[1]
+        iid = item.key().id()
+        self.assertRaises(PermissionDeniedError, self.rpc.update_item, iid,
+            'item', 'cat', 'desc', 'url')
+
+    def test_remove_item_from_own_list(self):
+        '''
+        Confirm ability to remove an item from your own list
+        '''
+        self.create_lists(self.db.owner, 5)
+        l = self.db.owner.lists[3]
+        count = len(l.items)
+        item = l.items[0]
+        iid = item.key().id()
+        wlist = self.rpc.remove_item(iid)
+        self.assertEquals(count-1, len(self.db.owner.lists[3].items))
+        self.assertTrue(item not in self.db.owner.lists[3].items)
+
+    def test_remove_reserved_item_from_own_list(self):
+        '''
+        Confirm ability to remove an item from your own list
+        which has previously been marked as reserved, and that an
+        email is sent to the reserver
+        '''
+        pass
+
+    def test_remove_purchased_item_from_own_list(self):
+        '''
+        Confirm ability to remove an item from your own list
+        which has previously been marked as purchased, and that an
+        email is sent to the purchaser
+        '''
+        pass
+
+    def test_remove_item_from_invalid_list(self):
+        '''
+        Confirm that trying to remove an item from someone else's
+        list raises PermissionDeniedError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        iid = o.lists[2].items[1].key().id()
+        self.assertRaises(PermissionDeniedError, self.rpc.remove_item, iid)
+
 if __name__ == '__main__':
     unittest.main()
