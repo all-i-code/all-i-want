@@ -219,10 +219,4 @@ class DummyAccess:
         del self.items[item.key().id()]
         item.parent_list.items.remove(item)
 
-class DummyAeWrapper:
-    def create_login_url(self, url):
-        return 'LOGIN:%s' % url
-
-    def create_logout_url(self, url):
-        return 'LOGOUT:%s' % url
 

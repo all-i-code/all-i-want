@@ -20,14 +20,15 @@
 '''
 
 class Db(object):
+    _id_map = {}
     def __init__(self, id=None):
         if id is None:
-            import random
-            id = random.Random().randint(1, 1000)
-        self.id_ = id
+            id = self._id_map.setdefault(self.__class__, 1)
+            self._id_map[self.__class__] += 1
+        self._id = id
 
     def id(self):
-        return self.id_
+        return self._id
 
     def key(self):
         return self
@@ -122,3 +123,34 @@ class ListItem(Db):
         self.is_surprise = is_surprise
         self.owner = owner
 
+if '__main__' ==  __name__:
+    import unittest
+    from tests.ut_models import GroupInvitation as Invite,\
+        GroupMember as Member, ListItem as Item, ListOwner as Owner,\
+        AccessReq as Req
+
+    class DummyModelTest(unittest.TestCase):
+
+        def test_increasing_ids(self):
+            '''
+            Make sure that ids are increasing with each object
+            '''
+            eq = lambda id, obj: self.assertEquals(id, obj.key().id())
+            ids = range(1, 100)
+            
+            classes = ( User, Group, Invite, Member, List, Item )
+            for cls in classes:
+                objs = [ cls() for i in ids ]
+                [ eq(id, o) for id, o in zip(ids, objs) ]
+            
+            u = User()
+            u_classes = ( Req, Owner )
+            for cls in u_classes:
+                objs = [ cls(u) for i in ids ]
+                [ eq(id, o) for id, o in zip(ids, objs) ]
+            
+
+
+
+
+    unittest.main()
