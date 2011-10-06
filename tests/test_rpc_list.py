@@ -354,7 +354,23 @@ class ListRpcTest(unittest.TestCase):
         which has previously been marked as reserved, and that an
         email is sent to the reserver
         '''
-        pass
+        self.create_lists(self.db.owner, 5)
+        l = self.db.owner.lists[-1]
+        count = len(l.items)
+        item = l.items[0]
+        iid = item.key().id()
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        item.reserved_by = o
+        item.put()
+        wlist = self.rpc.remove_item(iid)
+        self.assertEquals(count-1, len(self.db.owner.lists[-1].items))
+        owner = self.db.owner
+        subject = 'Wish List Item Deleted'
+        body = self.ae.DELETED_ITEM_TEMPLATE % (item.reserved_by.nickname,
+            owner.nickname, owner.email, item.name, l.name, 'Reserved',
+            owner.nickname, owner.email)
+        msg = dict(f=self.ae.FROM_ADDRESS, t=o.email, s=subject, b=body)
+        self.assertEquals(msg, self.ae.msg)
 
     def test_remove_purchased_item_from_own_list(self):
         '''
@@ -362,7 +378,23 @@ class ListRpcTest(unittest.TestCase):
         which has previously been marked as purchased, and that an
         email is sent to the purchaser
         '''
-        pass
+        self.create_lists(self.db.owner, 5)
+        l = self.db.owner.lists[-1]
+        count = len(l.items)
+        item = l.items[0]
+        iid = item.key().id()
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        item.purchased_by = o
+        item.put()
+        wlist = self.rpc.remove_item(iid)
+        self.assertEquals(count-1, len(self.db.owner.lists[-1].items))
+        owner = self.db.owner
+        subject = 'Wish List Item Deleted'
+        body = self.ae.DELETED_ITEM_TEMPLATE % (item.purchased_by.nickname,
+            owner.nickname, owner.email, item.name, l.name, 'Purchased',
+            owner.nickname, owner.email)
+        msg = dict(f=self.ae.FROM_ADDRESS, t=o.email, s=subject, b=body)
+        self.assertEquals(msg, self.ae.msg)
 
     def test_remove_item_from_invalid_list(self):
         '''
@@ -374,6 +406,201 @@ class ListRpcTest(unittest.TestCase):
         self.create_group(o, [self.db.owner])
         iid = o.lists[2].items[1].key().id()
         self.assertRaises(PermissionDeniedError, self.rpc.remove_item, iid)
+
+    def test_reserve_item(self):
+        '''
+        Confirm ability to reserve an item from list you can access
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        iid = item.key().id()
+        self.assertEquals(None, item.reserved_by)
+        self.assertEquals(None, item.purchased_by)
+        self.rpc.reserve_item(iid)
+        self.assertEquals(self.db.owner, item.reserved_by)
+        self.assertEquals(None, item.purchased_by)
+
+    def test_reserve_reserved_item(self):
+        '''
+        Confirm trying to reserve a reserved item raises UserVisibleError 
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        o2 = self.db.add_owner(User('bar', 'bar@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        iid = item.key().id()
+        item.reserved_by = o2
+        item.put()
+        self.assertRaises(UserVisibleError, self.rpc.reserve_item, iid)
+    
+    def test_reserve_puchased_item(self):
+        '''
+        Confirm trying to reserve a purchased item raises UserVisibleError 
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        o2 = self.db.add_owner(User('bar', 'bar@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        iid = item.key().id()
+        item.purchased_by = o2
+        item.put()
+        self.assertRaises(UserVisibleError, self.rpc.reserve_item, iid)
+    
+    def test_unreserve_item(self):
+        '''
+        Confirm ability to unreserve and item previously reserved by you 
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        item.reserved_by = self.db.owner
+        item.put()
+        iid = item.key().id()
+        self.assertEquals(self.db.owner, item.reserved_by)
+        self.assertEquals(None, item.purchased_by)
+        self.rpc.unreserve_item(iid)
+        self.assertEquals(None, item.reserved_by)
+        self.assertEquals(None, item.purchased_by)
+    
+    def test_unreserve_item_not_reserved_by_you(self):
+        '''
+        Confirm that trying to unrserve an item reserved by someone else
+        raises a UserVisibleError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        o2 = self.db.add_owner(User('bar', 'bar@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        iid = item.key().id()
+        item.reserved_by = o2
+        item.put()
+        self.assertRaises(UserVisibleError, self.rpc.unreserve_item, iid)
+    
+    def test_reserve_invalid_item(self):
+        '''
+        Confirm trying to reserve an item you don't have access to raises
+        PermissionDeniedError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        item = o.lists[2].items[1]
+        iid = item.key().id()
+        self.assertRaises(PermissionDeniedError, self.rpc.reserve_item, iid)
+
+    def test_unreserve_invalid_item(self):
+        '''
+        Confirm trying to unreserve an item you don't have access to raises
+        PermissionDeniedError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        item = o.lists[2].items[1]
+        iid = item.key().id()
+        self.assertRaises(PermissionDeniedError, self.rpc.unreserve_item, iid)
+
+    def test_purchase_item(self):
+        '''
+        Confirm ability to purchase an item from list you can access
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        iid = item.key().id()
+        self.assertEquals(None, item.reserved_by)
+        self.assertEquals(None, item.purchased_by)
+        self.rpc.purchase_item(iid)
+        self.assertEquals(None, item.reserved_by)
+        self.assertEquals(self.db.owner, item.purchased_by)
+    
+    def test_purchase_reserved_item(self):
+        '''
+        Confirm trying to purchase a reserved item raises UserVisibleError 
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        o2 = self.db.add_owner(User('bar', 'bar@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        iid = item.key().id()
+        item.reserved_by = o2
+        item.put()
+        self.assertRaises(UserVisibleError, self.rpc.purchase_item, iid)
+    
+    def test_purchase_puchased_item(self):
+        '''
+        Confirm trying to purchase a purchased item raises UserVisibleError 
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        o2 = self.db.add_owner(User('bar', 'bar@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        iid = item.key().id()
+        item.purchased_by = o2
+        item.put()
+        self.assertRaises(UserVisibleError, self.rpc.purchase_item, iid)
+    
+    def test_purchase_invalid_item(self):
+        '''
+        Confirm trying to purchase an item you don't have access to raises
+        PermissionDeniedError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        item = o.lists[2].items[1]
+        iid = item.key().id()
+        self.assertRaises(PermissionDeniedError, self.rpc.purchase_item, iid)
+
+    def test_unpurchase_invalid_item(self):
+        '''
+        Confirm trying to unpurchase an item you don't have access to raises
+        PermissionDeniedError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        item = o.lists[2].items[1]
+        iid = item.key().id()
+        self.assertRaises(PermissionDeniedError, self.rpc.unpurchase_item, iid)
+
+    def test_unpurchase_item(self):
+        '''
+        Confirm ability to unpurchase an item you previously purchased
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        item.purchased_by = self.db.owner
+        item.put()
+        iid = item.key().id()
+        self.assertEquals(None, item.reserved_by)
+        self.assertEquals(self.db.owner, item.purchased_by)
+        self.rpc.unpurchase_item(iid)
+        self.assertEquals(None, item.reserved_by)
+        self.assertEquals(None, item.purchased_by)
+    
+    def test_unpurchase_item_purchased_by_someone_else(self):
+        '''
+        Confirm trying to unpurchase an item purchased by someone else
+        raises a UserVisibleError
+        '''
+        o = self.db.add_owner(User('foo', 'foo@email.com'))
+        o2 = self.db.add_owner(User('bar', 'bar@email.com'))
+        self.create_lists(o, 5)
+        self.create_group(o, [self.db.owner])
+        item = o.lists[-1].items[-1]
+        iid = item.key().id()
+        item.purchased_by = o2
+        item.put()
+        self.assertRaises(UserVisibleError, self.rpc.unpurchase_item, iid)
+    
 
 if __name__ == '__main__':
     unittest.main()

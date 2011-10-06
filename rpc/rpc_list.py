@@ -23,7 +23,8 @@
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import RpcParamString, RpcParamInt, RpcParamBoolean
 from core.model import ListOwner, WishList, ListItem
-from core.exception import PermissionDeniedError, DuplicateNameError
+from core.exception import PermissionDeniedError, DuplicateNameError,\
+    UserVisibleError
 
 class ListRpcGroup(RpcGroupBase):
     rpcs = (
@@ -93,6 +94,10 @@ class ListRpcGroup(RpcGroupBase):
         oids.extend(gm.group.owner.key().id() for gm in memberships)
         oids.extend(_(m) for gm in memberships for m in gm.group.members)
         return owner_id in oids
+
+    def _item_already_taken(self, taken, by):
+        msg = 'Item has been %s by %s<%s>' % (taken, by.nickname, by.email)
+        raise UserVisibleError(msg)
 
     def add_list(self, owner_id, name, desc):
         '''
@@ -175,18 +180,18 @@ class ListRpcGroup(RpcGroupBase):
             raise PermissionDeniedError()
 
         if item.reserved_by is not None:
-            to = self.reserved_by.email
+            to = item.reserved_by.email
             subject = 'Wish List Item Deleted'
             name, email = self.owner.nickname, self.owner.email
-            body = self.ae.DELETED_ITEM_TEMPLATE % (self.reserved_by.nickname,
+            body = self.ae.DELETED_ITEM_TEMPLATE % (item.reserved_by.nickname,
                 name, email, item.name, item.parent_list.name, 'Reserved',
                 name, email)
             self.ae.send_mail(to, subject, body)
         elif item.purchased_by is not None:
-            to = self.purchased_by.email
+            to = item.purchased_by.email
             subject = 'Wish List Item Deleted'
             name, email = self.owner.nickname, self.owner.email
-            body = self.ae.DELETED_ITEM_TEMPLATE % (self.puchased_by.nickname,
+            body = self.ae.DELETED_ITEM_TEMPLATE % (item.purchased_by.nickname,
                 name, email, item.name, item.parent_list.name, 'Purchased',
                 name, email)
             self.ae.send_mail(to, subject, body)
@@ -199,30 +204,76 @@ class ListRpcGroup(RpcGroupBase):
         '''
         Mark the given item as reserved
         '''
-        # TODO: implement this
-        pass
+        self._verify_owner()
+        item = self.db.get_item(item_id)
+        if not self._can_read_list(item.parent_list.owner.key().id()):
+            raise PermissionDeniedError()
+
+        if item.purchased_by is not None and item.purchased_by != self.owner:
+            self._item_already_taken('purchased', item.purchased_by)
+            
+        if item.reserved_by is not None and item.reserved_by != self.owner:
+            self._item_already_taken('reserved', item.reserved_by)
+
+        item.reserved_by = self.owner
+        item.purchased_by = None
+        return ListItem.from_db(item.put())
 
     def unreserve_item(self, item_id):
         '''
         Mark the given item as not reserved if you were the one who reserved it
         '''
-        # TODO: implement this
-        pass
-    
+        self._verify_owner()
+        item = self.db.get_item(item_id)
+        if not self._can_read_list(item.parent_list.owner.key().id()):
+            raise PermissionDeniedError()
+
+        if item.purchased_by is not None and item.purchased_by != self.owner:
+            self._item_already_taken('purchased', item.purchased_by)
+            
+        if item.reserved_by is not None and item.reserved_by != self.owner:
+            self._item_already_taken('reserved', item.reserved_by)
+
+        item.reserved_by = None
+        return ListItem.from_db(item.put())
+
     def purchase_item(self, item_id):
         '''
         Mark the given item as purchased
         '''
-        # TODO: implement this
-        pass
+        self._verify_owner()
+        item = self.db.get_item(item_id)
+        if not self._can_read_list(item.parent_list.owner.key().id()):
+            raise PermissionDeniedError()
+
+        if item.purchased_by is not None and item.purchased_by != self.owner:
+            self._item_already_taken('purchased', item.purchased_by)
+            
+        if item.reserved_by is not None and item.reserved_by != self.owner:
+            self._item_already_taken('reserved', item.reserved_by)
+
+        item.reserved_by = None
+        item.purchased_by = self.owner
+        return ListItem.from_db(item.put())
     
     def unpurchase_item(self, item_id):
         '''
         Mark the given item as not purchased if you were the one who
         purchased it
         '''
-        # TODO: implement this
-        pass
+        self._verify_owner()
+        item = self.db.get_item(item_id)
+        if not self._can_read_list(item.parent_list.owner.key().id()):
+            raise PermissionDeniedError()
+
+        if item.purchased_by is not None and item.purchased_by != self.owner:
+            self._item_already_taken('purchased', item.purchased_by)
+            
+        if item.reserved_by is not None and item.reserved_by != self.owner:
+            self._item_already_taken('reserved', item.reserved_by)
+
+        item.purchased_by = None
+        return ListItem.from_db(item.put())
 
     def get_reserved_and_purchased_items(self, item_id):
         '''
