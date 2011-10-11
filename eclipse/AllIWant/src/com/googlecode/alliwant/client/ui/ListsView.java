@@ -1,5 +1,5 @@
 /**
- * @file JhbMessages.java
+ * @file ListsView.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -17,18 +17,9 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.alliwant.client.i18n;
+package com.googlecode.alliwant.client.ui;
 
-import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.user.client.ui.IsWidget;
 
-public interface JhbMessages extends Messages {
-  @DefaultMessage("${0}")
-  String currency(String amount);
-  
-  @DefaultMessage("$({0})")
-  String negatedCurrency(String amount);
-  
-  @DefaultMessage("RPC Error: request: [{0}] error: [{1}]")
-  String rpcError(String request, String error);
-  
-} // JhbMessages //
+public interface ListsView extends IsWidget {
+}

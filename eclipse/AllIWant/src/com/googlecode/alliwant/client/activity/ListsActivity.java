@@ -1,5 +1,5 @@
 /**
- * @file DashboardActivity.java
+ * @file ListsActivity.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -23,16 +23,15 @@ import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.alliwant.client.ClientFactory;
-import com.googlecode.alliwant.client.logging.Logging;
-import com.googlecode.alliwant.client.place.DashboardPlace;
-import com.googlecode.alliwant.client.ui.DashboardView;
+import com.googlecode.alliwant.client.place.ListsPlace;
+import com.googlecode.alliwant.client.ui.ListsView;
 
-public class DashboardActivity implements Activity {
+public class ListsActivity implements Activity {
 
   private ClientFactory cf;
-  private DashboardView view;
+  private ListsView view;
   
-  public DashboardActivity(DashboardPlace place, ClientFactory cf) {
+  public ListsActivity(ListsPlace place, ClientFactory cf) {
     this.cf = cf;
     view = cf.getDashboardView();
   }
@@ -56,7 +55,6 @@ public class DashboardActivity implements Activity {
 
   @Override
   public void start(AcceptsOneWidget panel, EventBus eventBus) {
-    Logging.logger().info("DashboardActiviy::start()");
     panel.setWidget(view.asWidget());
     addEventBusHandlers(eventBus);
     cf.getHeader().getUser();
@@ -68,7 +66,9 @@ public class DashboardActivity implements Activity {
   
   
   private void addEventBusHandlers(EventBus eventBus) {
-    
+    {
+      
+    }
   } // addEventBusHandlers //
 
-} // DashboardActivity //
+} // ListsActivity //

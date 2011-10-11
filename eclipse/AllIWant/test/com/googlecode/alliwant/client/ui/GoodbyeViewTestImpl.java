@@ -19,14 +19,14 @@
 */
 package com.googlecode.alliwant.client.ui;
 
-import com.googlecode.alliwant.client.i18n.JhbConstants;
-import com.googlecode.alliwant.client.i18n.JhbConstantsTestImpl;
+import com.googlecode.alliwant.client.i18n.AiwConstants;
+import com.googlecode.alliwant.client.i18n.AiwConstantsTestImpl;
 
 public class GoodbyeViewTestImpl extends JhbViewTestImpl implements GoodbyeView {
 
   private String message = "", logoutURL = "", url = "TEST_URL";
   private boolean logoutVisible = false;
-  private JhbConstants jhbc = new JhbConstantsTestImpl();
+  private AiwConstants jhbc = new AiwConstantsTestImpl();
   
   // ================================================================
   // BEGIN: GoodbyeView methods
@@ -48,7 +48,7 @@ public class GoodbyeViewTestImpl extends JhbViewTestImpl implements GoodbyeView 
   }
 
   @Override
-  public JhbConstants getJhbc() {
+  public AiwConstants getJhbc() {
     return jhbc;
   }
   

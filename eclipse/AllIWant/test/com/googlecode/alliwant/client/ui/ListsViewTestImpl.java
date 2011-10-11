@@ -1,5 +1,5 @@
 /**
- * @file DefaultJhbFormat.java
+ * @file ListsViewTestImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -17,23 +17,16 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.alliwant.client.i18n;
+package com.googlecode.alliwant.client.ui;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.ui.Widget;
 
-public class DefaultJhbFormat implements JhbFormat {
+public class ListsViewTestImpl implements ListsView {
 
-  private final JhbMessages jhbm = GWT.create(JhbMessages.class);
-  private final NumberFormat nf = NumberFormat.getFormat("#0.00");
-  
-  public DefaultJhbFormat() {}
-  
   @Override
-  public String formatCurrency(double amount) {
-    boolean neg = (amount < 0);
-    String formatted = neg ? nf.format(amount) : nf.format(-1 * amount);
-    return neg ? jhbm.currency(formatted) : jhbm.negatedCurrency(formatted);
+  public Widget asWidget() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
-} // DefaultJhbFormat //
+} // ListsViewTestImpl //

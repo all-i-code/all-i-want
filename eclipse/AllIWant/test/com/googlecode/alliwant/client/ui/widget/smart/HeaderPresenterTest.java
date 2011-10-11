@@ -85,8 +85,8 @@ public class HeaderPresenterTest extends TestCase {
      "12345", "https://fine.leave.then");
     eventBus.fireEvent(new ModelEvent<User>(User.class, user));
     assertFalse(view.isProcessingOverlayShowing());
-    assertEquals(user.getNickname(), view.getNickname());
-    assertEquals(user.getEmail(), view.getEmail());
+    String label = view.getMsgs().user(user.getNickname(), user.getEmail());
+    assertEquals(label, view.getUser());
     assertEquals(user.getLogoutUrl(), view.getLogoutURL());
   } // testValidUser //
   

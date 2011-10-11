@@ -19,19 +19,16 @@
 */
 package com.googlecode.alliwant.client.ui.widget.smart;
 
+import com.googlecode.alliwant.client.i18n.AiwMessages;
 import com.googlecode.alliwant.client.ui.JhbView;
 
 public interface HeaderView extends JhbView {
-  void setNickname(String nickname);
-  void setEmail(String email);
+  void setUser(String user);
   void setLogoutURL(String url);
-  void setDashboardActive(boolean active);
-  void setBalanceActive(boolean active);
-  void setTransactionsActive(boolean active);
-  void setReportsActive(boolean active);
-  void setBillsActive(boolean active);
-  void setBudgetActive(boolean active);
+  void setListsActive(boolean active);
+  void setGroupsActive(boolean active);
   void setSettingsActive(boolean active);
   String getURL();
   void redirect(String url);
+  AiwMessages getMsgs();
 }

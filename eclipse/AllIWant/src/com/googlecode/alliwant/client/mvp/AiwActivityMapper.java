@@ -23,9 +23,9 @@ import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
 import com.googlecode.alliwant.client.ClientFactory;
-import com.googlecode.alliwant.client.activity.DashboardActivity;
+import com.googlecode.alliwant.client.activity.ListsActivity;
 import com.googlecode.alliwant.client.activity.GoodbyeActivity;
-import com.googlecode.alliwant.client.place.DashboardPlace;
+import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.place.GoodbyePlace;
 
 public class AiwActivityMapper implements ActivityMapper {
@@ -39,8 +39,8 @@ public class AiwActivityMapper implements ActivityMapper {
   
   @Override
   public Activity getActivity(Place place) {
-    if (place instanceof DashboardPlace) {
-      return new DashboardActivity((DashboardPlace)place, clientFactory);
+    if (place instanceof ListsPlace) {
+      return new ListsActivity((ListsPlace)place, clientFactory);
     } else if (place instanceof GoodbyePlace) {
       return new GoodbyeActivity((GoodbyePlace)place, clientFactory);
     }

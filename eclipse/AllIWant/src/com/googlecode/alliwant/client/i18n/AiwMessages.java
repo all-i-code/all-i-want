@@ -1,5 +1,5 @@
 /**
- * @file JhbFormat.java
+ * @file AiwMessages.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -19,6 +19,14 @@
 */
 package com.googlecode.alliwant.client.i18n;
 
-public interface JhbFormat {
-  String formatCurrency(double amount);
-}
+import com.google.gwt.i18n.client.Messages;
+
+public interface AiwMessages extends Messages {
+ 
+  @DefaultMessage("{0} <{1}>")
+  String user(String nickname, String email);
+  
+  @DefaultMessage("RPC Error: request: [{0}] error: [{1}]")
+  String rpcError(String request, String error);
+  
+} // AiwMessages //

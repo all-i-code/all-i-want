@@ -30,8 +30,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.alliwant.client.mvp.AiwActivityMapper;
 import com.googlecode.alliwant.client.mvp.AiwPlaceHistoryMapper;
-import com.googlecode.alliwant.client.place.DashboardPlace;
+import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.place.PlaceHistoryHandler;
+import com.googlecode.alliwant.client.ui.css.CSS;
 
 
 /**
@@ -39,7 +40,7 @@ import com.googlecode.alliwant.client.place.PlaceHistoryHandler;
  */
 public class AllIWant implements EntryPoint {
 	
-  private final Place defaultPlace = new DashboardPlace();
+  private final Place defaultPlace = new ListsPlace();
   private final SimplePanel appWidget = new SimplePanel();
 	
 	/**
@@ -48,6 +49,8 @@ public class AllIWant implements EntryPoint {
 	public void onModuleLoad() {
 	  // Create ClientFactory using deferred binding so we can replace with different
     // impls in gwt.xml
+	  CSS.ensureInjected();
+	  
     ClientFactory clientFactory = GWT.create(ClientFactory.class);
     EventBus eventBus = clientFactory.getEventBus();
     PlaceController placeController = clientFactory.getPlaceController();

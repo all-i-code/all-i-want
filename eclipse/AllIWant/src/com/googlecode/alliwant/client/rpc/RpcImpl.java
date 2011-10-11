@@ -26,14 +26,14 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.googlecode.alliwant.client.i18n.JhbMessages;
+import com.googlecode.alliwant.client.i18n.AiwMessages;
 import com.googlecode.alliwant.client.ui.widget.Alert;
 
 public class RpcImpl implements Rpc {
 
   private Alert alert;
   private Handler handler;
-  private JhbMessages jhbm = GWT.create(JhbMessages.class);
+  private AiwMessages jhbm = GWT.create(AiwMessages.class);
   private RequestCallback callback= new RequestCallback() {
     public void onResponseReceived(Request request, Response response) {
       if (response.getStatusCode() == Response.SC_OK) {

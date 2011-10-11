@@ -1,5 +1,5 @@
 /**
- * @file HeaderImpl.java
+ * @file HeaderViewImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -26,26 +26,23 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.googlecode.alliwant.client.i18n.AiwMessages;
 import com.googlecode.alliwant.client.ui.ProcessingOverlay;
 
 public class HeaderViewImpl extends Composite implements HeaderView {
 
   interface Binder extends UiBinder<FlowPanel, HeaderViewImpl> {}
   private Binder uiBinder = GWT.create(Binder.class);
+  private AiwMessages aiwm = GWT.create(AiwMessages.class);
   
   @UiField
-  Hyperlink dashboardLink, balanceLink, transactionsLink, budgetLink,
-   billsLink, reportsLink, settingsLink;
+  InlineLabel listsLabel, groupsLabel, user, settingsLabel;
   
   @UiField
-  InlineLabel dashboardLabel, balanceLabel, transactionsLabel,
-   budgetLabel, billsLabel, reportsLabel, user, account, settingsLabel;
+  Anchor listsLink, groupsLink, settingsLink, logout;
+
   
-  @UiField
-  Anchor logout;
- 
   public HeaderViewImpl() {
     initWidget(uiBinder.createAndBindUi(this));
   }
@@ -65,13 +62,8 @@ public class HeaderViewImpl extends Composite implements HeaderView {
   }
   
   @Override
-  public void setNickname(String user) {
+  public void setUser(String user) {
     this.user.setText(user);
-  }
-
-  @Override
-  public void setEmail(String account) {
-    this.account.setText(account);
   }
 
   @Override
@@ -80,39 +72,15 @@ public class HeaderViewImpl extends Composite implements HeaderView {
   }
 
   @Override
-  public void setDashboardActive(boolean active) {
-    dashboardLink.setVisible(!active);
-    dashboardLabel.setVisible(active);
+  public void setListsActive(boolean active) {
+    listsLink.setVisible(!active);
+    listsLabel.setVisible(active);
   }
 
   @Override
-  public void setBalanceActive(boolean active) {
-    balanceLink.setVisible(!active);
-    balanceLabel.setVisible(active);
-  }
-
-  @Override
-  public void setTransactionsActive(boolean active) {
-    transactionsLink.setVisible(!active);
-    transactionsLabel.setVisible(active);
-  }
-
-  @Override
-  public void setReportsActive(boolean active) {
-    reportsLink.setVisible(!active);
-    reportsLabel.setVisible(active);
-  }
-
-  @Override
-  public void setBillsActive(boolean active) {
-    billsLink.setVisible(!active);
-    billsLabel.setVisible(active);
-  }
-
-  @Override
-  public void setBudgetActive(boolean active) {
-    budgetLink.setVisible(!active);
-    budgetLabel.setVisible(active);
+  public void setGroupsActive(boolean active) {
+    groupsLink.setVisible(!active);
+    groupsLabel.setVisible(active);
   }
 
   @Override
@@ -129,6 +97,11 @@ public class HeaderViewImpl extends Composite implements HeaderView {
   @Override
   public void redirect(String url) {
     Window.Location.assign(url);
+  }
+ 
+  @Override
+  public AiwMessages getMsgs() {
+    return aiwm;
   }
   
   // ================================================================

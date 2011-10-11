@@ -21,13 +21,10 @@ package com.googlecode.alliwant.client.i18n;
 
 import com.google.gwt.i18n.client.Constants;
 
-public interface JhbConstants extends Constants {
+public interface AiwConstants extends Constants {
   
-  @DefaultStringValue("Jobber''s Home Budget")
-  String jobbersHomeBudget();
-  
-  @DefaultStringValue("$")
-  String currencySymbol();
+  @DefaultStringValue("All I Want")
+  String allIWant();
   
   @DefaultStringValue("OK")
   String ok();
@@ -38,14 +35,11 @@ public interface JhbConstants extends Constants {
   @DefaultStringValue("Logout")
   String logout();
   
-  @DefaultStringValue("Login")
-  String login();
+  @DefaultStringValue("Group")
+  String group();
   
-  @DefaultStringValue("Account")
-  String account();
-  
-  @DefaultStringValue("Accounts")
-  String accounts();
+  @DefaultStringValue("Groups")
+  String groups();
   
   @DefaultStringValue("Name")
   String name();
@@ -53,55 +47,37 @@ public interface JhbConstants extends Constants {
   @DefaultStringValue("Description")
   String description();
   
-  @DefaultStringValue("Balance")
-  String balance();
+  @DefaultStringValue("Owner")
+  String owner();
   
   @DefaultStringValue(" | ")
   String pipe();
   
-  @DefaultStringValue("Dashboard")
-  String dashboard();
+  @DefaultStringValue("List")
+  String list();
   
-  @DefaultStringValue("Transactions")
-  String transactions();
+  @DefaultStringValue("Lists")
+  String lists();
   
-  @DefaultStringValue("Budget")
-  String budget();
+  @DefaultStringValue("Purchased")
+  String purchased();
   
-  @DefaultStringValue("Bills")
-  String bills();
+  @DefaultStringValue("Reserved")
+  String reserved();
   
-  @DefaultStringValue("Settings")
-  String settings();
+  @DefaultStringValue("URL")
+  String url();
   
-  @DefaultStringValue("Reports")
-  String reports();
-  
-  @DefaultStringValue("Upcoming Bills")
-  String upcomingBills();
-  
-  @DefaultStringValue("Account Balances")
-  String accountBalances();
-  
-  @DefaultStringValue("Most Recent Transactions")
-  String mostRecentTransactions();
-  
-  @DefaultStringValue("Date")
-  String date();
-  
-  @DefaultStringValue("Amount")
-  String amount();
-  
-  @DefaultStringValue("Payment Type")
-  String paymentType();
-  
-  @DefaultStringValue("Split")
-  String split();
+  @DefaultStringValue("Category")
+  String category();
   
   @DefaultStringValue("You have been successfully logged out.")
   String logoutSuccess();
   
   @DefaultStringValue("You are still logged in.")
   String logoutFail();
+
+  @DefaultStringValue("Settings")
+  String settings();
   
-} // JhbConstants //
+} // AiwConstants //

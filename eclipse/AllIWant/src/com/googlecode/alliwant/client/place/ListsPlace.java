@@ -1,5 +1,5 @@
 /**
- * @file DashboardPlace.java
+ * @file ListsPlace.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -23,20 +23,20 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
 
-public class DashboardPlace extends Place {
+public class ListsPlace extends Place {
  
-  public static final String PREFIX = "Dashboard";
+  public static final String PREFIX = "Lists";
  
   @Prefix(PREFIX)
-  public static class Tokenizer implements PlaceTokenizer<DashboardPlace> {
+  public static class Tokenizer implements PlaceTokenizer<ListsPlace> {
     
     @Override
-    public DashboardPlace getPlace(String token) {
-      return new DashboardPlace();
+    public ListsPlace getPlace(String token) {
+      return new ListsPlace();
     }
 
     @Override
-    public String getToken(DashboardPlace place) {
+    public String getToken(ListsPlace place) {
       return "";
     }
     

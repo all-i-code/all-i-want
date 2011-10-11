@@ -19,28 +19,26 @@
 */
 package com.googlecode.alliwant.client.ui.widget.smart;
 
+import com.googlecode.alliwant.client.i18n.AiwMessages;
+import com.googlecode.alliwant.client.i18n.AiwMessagesTestImpl;
 import com.googlecode.alliwant.client.ui.JhbViewTestImpl;
 
 public class HeaderViewTestImpl extends JhbViewTestImpl implements HeaderView {
 
-  private String nickname = "", email = "", logoutURL = "", redirectTo = "", 
+  private String user = "", logoutURL = "", redirectTo = "", 
    url = "TEST_URL";
-  private boolean dashboardActive = false, balanceActive = false,
-   transactionsActive = false, reportsActive = false, billsActive = false,
-   budgetActive = false, settingsActive = false;
+  private boolean listsActive = false, groupsActive = false,
+   settingsActive = false;
+ 
+  private AiwMessagesTestImpl aiwm = new AiwMessagesTestImpl();
   
   // ================================================================
   // BEGIN: HeaderView methods 
   // ================================================================
   
   @Override
-  public void setNickname(String nickname) {
-    this.nickname = nickname;
-  }
-
-  @Override
-  public void setEmail(String email) {
-    this.email = email;
+  public void setUser(String user) {
+    this.user = user;
   }
 
   @Override
@@ -49,33 +47,13 @@ public class HeaderViewTestImpl extends JhbViewTestImpl implements HeaderView {
   }
 
   @Override
-  public void setDashboardActive(boolean active) {
-    dashboardActive = active;
+  public void setListsActive(boolean active) {
+    listsActive = active;
   }
 
   @Override
-  public void setBalanceActive(boolean active) {
-    balanceActive = active;
-  }
-
-  @Override
-  public void setTransactionsActive(boolean active) {
-    transactionsActive = active;
-  }
-
-  @Override
-  public void setReportsActive(boolean active) {
-    reportsActive = active;
-  }
-
-  @Override
-  public void setBillsActive(boolean active) {
-    billsActive = active;
-  }
-
-  @Override
-  public void setBudgetActive(boolean active) {
-    budgetActive = active;
+  public void setGroupsActive(boolean active) {
+    groupsActive = active;
   }
 
   @Override
@@ -93,16 +71,17 @@ public class HeaderViewTestImpl extends JhbViewTestImpl implements HeaderView {
     redirectTo = url;
   }
   
+  @Override
+  public AiwMessages getMsgs() {
+    return aiwm;
+  }
+  
   // ================================================================
   // END: HeaderView methods 
   // ================================================================
  
-  public String getNickname() {
-    return nickname;
-  }
-  
-  public String getEmail() {
-    return email;
+  public String getUser() {
+    return user;
   }
   
   public String getLogoutURL() {
@@ -113,28 +92,12 @@ public class HeaderViewTestImpl extends JhbViewTestImpl implements HeaderView {
     return redirectTo;
   }
   
-  public boolean isDashboardActive() {
-    return dashboardActive;
+  public boolean isListsActive() {
+    return listsActive;
   }
   
-  public boolean isBalanceActive() {
-    return balanceActive;
-  }
-  
-  public boolean isTransactionsActive() {
-    return transactionsActive;
-  }
-  
-  public boolean isReportsActive() {
-    return reportsActive;
-  }
-  
-  public boolean isBillsActive() {
-    return billsActive;
-  }
-  
-  public boolean isBudgetActive() {
-    return budgetActive;
+  public boolean isGroupsActive() {
+    return groupsActive;
   }
   
   public boolean isSettingsActive() {
@@ -144,5 +107,5 @@ public class HeaderViewTestImpl extends JhbViewTestImpl implements HeaderView {
   public void setURL(String url) {
     this.url = url;
   }
-  
+
 } // HeaderViewTestImpl //

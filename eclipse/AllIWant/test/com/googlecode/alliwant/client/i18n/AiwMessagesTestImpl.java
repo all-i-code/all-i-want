@@ -1,5 +1,5 @@
 /**
- * @file GoodbyeView.java
+ * @file AiwMessagesTestImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -17,15 +17,18 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.alliwant.client.ui;
+package com.googlecode.alliwant.client.i18n;
 
-import com.googlecode.alliwant.client.i18n.AiwConstants;
+public class AiwMessagesTestImpl implements AiwMessages {
 
+  @Override
+  public String user(String nickname, String email) {
+    return "user" + nickname + email;
+  }
 
-public interface GoodbyeView extends JhbView {
-  void setMessage(String message);
-  void setLogoutURL(String url);
-  void setLogoutVisible(boolean visible);
-  AiwConstants getJhbc();
-  String getURL();
-}
+  @Override
+  public String rpcError(String request, String error) {
+    return "rpcError" + request + error;
+  }
+
+} // AiwMessagesTestImpl //

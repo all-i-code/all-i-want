@@ -1,5 +1,5 @@
 /**
- * @file GoodbyeViewImpl.java
+ * @file ListsViewImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -22,71 +22,30 @@ package com.googlecode.alliwant.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.googlecode.alliwant.client.i18n.AiwConstants;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.googlecode.alliwant.client.ui.widget.smart.Header;
 
-public class GoodbyeViewImpl extends Composite implements GoodbyeView {
+public class ListsViewImpl extends Composite implements ListsView {
 
-  interface Binder extends UiBinder<FlowPanel, GoodbyeViewImpl> {}
+  interface Binder extends UiBinder<FlowPanel, ListsViewImpl> {}
   private static final Binder uiBinder = GWT.create(Binder.class);
   
   @UiField
-  Label message;
-
-  @UiField
-  Anchor logout;
+  SimplePanel headerWrapper;
   
-  private AiwConstants jhbc = GWT.create(AiwConstants.class);
-  
-  public GoodbyeViewImpl() {
+  public ListsViewImpl(Header header) {
     initWidget(uiBinder.createAndBindUi(this));
-  } 
+    headerWrapper.setWidget(header);
+  } // ListsViewImpl //
 
   // ================================================================
-  // BEGIN: GoodbyeView methods
+  // BEGIN: ListsView methods
   // ================================================================
   
-  @Override
-  public void showProcessingOverlay() {
-    ProcessingOverlay.show();
-  }
-
-  @Override
-  public void hideProcessingOverlay() {
-    ProcessingOverlay.hide();
-  }
-
-  @Override
-  public void setMessage(String message) {
-    this.message.setText(message);
-  }
-
-  @Override
-  public void setLogoutURL(String url) {
-    logout.setHref(url);
-  }
-  
-  @Override
-  public void setLogoutVisible(boolean visible) {
-    logout.setVisible(visible);
-  }
-  
-  @Override
-  public AiwConstants getJhbc() {
-    return jhbc;
-  }
- 
-  @Override
-  public String getURL() {
-    return Window.Location.getHref();
-  }
-  
   // ================================================================
-  // END: GoodbyeView methods
+  // END: ListsView methods
   // ================================================================
   
-} // GoodbyeViewImpl //
+} // RegisterViewImpl //

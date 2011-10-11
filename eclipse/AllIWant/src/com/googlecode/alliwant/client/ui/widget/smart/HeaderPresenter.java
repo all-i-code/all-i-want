@@ -24,6 +24,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.model.User;
+import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.rpc.Manager;
 
 public class HeaderPresenter implements Header {
@@ -76,10 +77,15 @@ public class HeaderPresenter implements Header {
     if (!isEmpty(user.getLoginUrl())) {
       view.redirect(user.getLoginUrl());
     } else {
-      view.setNickname(user.getNickname());
-      view.setEmail(user.getEmail());
+      String label = view.getMsgs().user(user.getNickname(), user.getEmail());
+      view.setUser(label);
       view.setLogoutURL(user.getLogoutUrl());
     }
+    
+    String url = view.getURL();
+    view.setListsActive(url.contains(ListsPlace.PREFIX));
+    view.setGroupsActive(url.contains("Groups"));
+    view.setSettingsActive(url.contains("Settings"));
   } // handleUser //
   
 } // HeaderPresenter //

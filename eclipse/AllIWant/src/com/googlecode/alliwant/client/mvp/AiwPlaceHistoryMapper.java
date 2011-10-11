@@ -21,7 +21,7 @@ package com.googlecode.alliwant.client.mvp;
 
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.WithTokenizers;
-import com.googlecode.alliwant.client.place.DashboardPlace;
+import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.place.GoodbyePlace;
 
 /**
@@ -31,7 +31,7 @@ import com.googlecode.alliwant.client.place.GoodbyePlace;
  * separate TokenizerFactory.
  */
 @WithTokenizers({ 
-  DashboardPlace.Tokenizer.class,
+  ListsPlace.Tokenizer.class,
   GoodbyePlace.Tokenizer.class
 })
 public interface AiwPlaceHistoryMapper extends PlaceHistoryMapper {

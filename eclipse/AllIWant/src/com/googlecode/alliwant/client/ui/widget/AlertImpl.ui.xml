@@ -21,7 +21,7 @@
        xmlns:gwt="urn:import:com.google.gwt.user.client.ui">
   
   <ui:with type="com.googlecode.alliwant.client.ui.css.CssBundle" field="css" />
-  <ui:with type="com.googlecode.alliwant.client.i18n.JhbConstants" field="jhbc" />
+  <ui:with type="com.googlecode.alliwant.client.i18n.AiwConstants" field="aiwc" />
   
   <ui:style>
     .msg { font-size: 1.25em; }
@@ -30,7 +30,7 @@
   <gwt:PopupPanel animationEnabled="true" modal="true" glassEnabled="true">
     <gwt:FlowPanel>
       <gwt:Label ui:field="message" styleName="{style.msg}" />
-      <gwt:Button ui:field="ok" text="{jhbc.ok}" />
+      <gwt:Button ui:field="ok" text="{aiwc.ok}" />
     </gwt:FlowPanel>
   </gwt:PopupPanel>
 </ui:UiBinder>

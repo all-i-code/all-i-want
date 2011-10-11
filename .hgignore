@@ -8,5 +8,5 @@ syntax: regexp
 ^.*\.orig$
 ^.*\.class$
 ^.*\.gwt.log$
-^appengine/eclipse/AllIWant/.settings
-^appengine/.coverage
+^eclipse/AllIWant/.settings
+^.coverage

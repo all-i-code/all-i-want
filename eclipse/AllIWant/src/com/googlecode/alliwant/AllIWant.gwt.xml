@@ -17,7 +17,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<module rename-to='jhbgwt'>
+<module rename-to='alliwant'>
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
   <inherits name="com.google.gwt.http.HTTP"/>
@@ -47,7 +47,7 @@
   <inherits name='com.allen_sauer.gwt.dnd.gwt-dnd'/>
 
   <!-- Specify the app entry point class.                         -->
-  <entry-point class='com.googlecode.alliwant.client.JhbGwt'/>
+  <entry-point class='com.googlecode.alliwant.client.AllIWant'/>
 
   <!-- Use ClientFactoryImpl by default -->
   <replace-with class="com.googlecode.alliwant.client.ClientFactoryImpl">
