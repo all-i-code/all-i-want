@@ -31,8 +31,8 @@
     .active { font-weight: bold; }
   </ui:style>
   
-  <gwt:FlowPanel addStyleNames="{s.main} {css.layout.containFloats}">
-    <gwt:FlowPanel styleName="{css.layout.left}">
+  <gwt:FlowPanel addStyleNames="{s.main} {css.main.containFloats}">
+    <gwt:FlowPanel styleName="{css.main.left}">
       <gwt:Anchor ui:field="listsLink" text="{aiwc.lists}" 
        href="javascript:;" />
       <gwt:InlineLabel ui:field="listsLabel" text="{aiwc.lists}" 
@@ -51,7 +51,7 @@
       <gwt:InlineLabel ui:field="reqsLabel" text="{aiwc.requests}" 
        styleName="{s.active}" visible="false" />
     </gwt:FlowPanel> 
-    <gwt:FlowPanel styleName="{css.layout.right}">
+    <gwt:FlowPanel styleName="{css.main.right}">
       <gwt:InlineLabel ui:field="user" styleName="{s.active}" />
       <gwt:InlineLabel text="{aiwc.pipe}" />
       

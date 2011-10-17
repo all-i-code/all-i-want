@@ -31,6 +31,8 @@ public class InfoEvent extends GwtEvent<InfoEvent.Handler> {
 
   public static final String REQ_APPROVED = "reqApproved";
   public static final String REQ_DENIED = "reqDenied";
+  public static final String INVITE_ACCEPTED = "inviteAccepted";
+  public static final String INVITE_DECLINED = "inviteDeclined";
   
   private static Map<String, Type<Handler>> TYPES =
     new HashMap<String, Type<Handler>>();

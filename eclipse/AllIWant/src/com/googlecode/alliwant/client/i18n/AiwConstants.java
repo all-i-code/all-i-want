@@ -1,5 +1,5 @@
 /**
- * @file JhbConstants.java
+ * @file AiwConstants.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -106,5 +106,17 @@ public interface AiwConstants extends Constants {
   
   @DefaultStringValue("No")
   String no();
+
+  @DefaultStringValue("Invitations")
+  String invitations();
+
+  @DefaultStringValue("Leave Group")
+  String leaveGroup();
+  
+  @DefaultStringValue("Accept")
+  String accept();
+  
+  @DefaultStringValue("Decline")
+  String decline();
   
 } // AiwConstants //

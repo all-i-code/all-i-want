@@ -25,6 +25,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.PlaceController;
 import com.googlecode.alliwant.client.rpc.Manager;
+import com.googlecode.alliwant.client.ui.GroupsViewTestImpl;
 import com.googlecode.alliwant.client.ui.ListsViewTestImpl;
 import com.googlecode.alliwant.client.ui.GoodbyeViewTestImpl;
 import com.googlecode.alliwant.client.ui.RequestsViewTestImpl;
@@ -40,6 +41,7 @@ public class ClientFactoryTestImpl implements ClientFactory {
   private AlertTestImpl alert = new AlertTestImpl();
   private HeaderTestImpl header = new HeaderTestImpl();
   private ListsViewTestImpl listsView = new ListsViewTestImpl();
+  private GroupsViewTestImpl groupsView = new GroupsViewTestImpl();
   private RequestsViewTestImpl reqsView = new RequestsViewTestImpl();
   private GoodbyeViewTestImpl goodbyeView = new GoodbyeViewTestImpl();
   
@@ -75,6 +77,11 @@ public class ClientFactoryTestImpl implements ClientFactory {
   @Override
   public ListsViewTestImpl getListsView() {
     return listsView;
+  }
+ 
+  @Override
+  public GroupsViewTestImpl getGroupsView() {
+    return groupsView;
   }
   
   @Override

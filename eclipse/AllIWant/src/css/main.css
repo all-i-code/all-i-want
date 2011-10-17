@@ -1,5 +1,5 @@
 /**
- * @file layout.css
+ * @file main.css
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -18,9 +18,26 @@
  *
 */
 
+@def titleSize 1.75em;
+@def headingSize 1.5em;
+@def subHeadingSize 1.25em;
+@def tblHeadColor white;
+@def tblHeadBgColor green;
+
+.title, .heading { font-weight: bold; }
+.subHeading, .instructions { font-style: italic; }
+
+.title { font-size: titleSize; }
+.heading { font-size: headingSize; }
+.subHeading { font-size: subHeadingSize; }
+.tableHeader { color: tblHeadColor; }
+.tableHeader { background-color: tblHeadBgColor; }
+.tableAlt { background-color: grey; }
+
 .containFloats { overflow: hidden; }
 .shrinkWrap { display: table; }
 .left { float: left; }
 .right { float: right; }
 .clear { clear: both; }
 .centered { margin: 0 auto; }
+

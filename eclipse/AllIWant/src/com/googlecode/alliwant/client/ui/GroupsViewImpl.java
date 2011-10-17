@@ -1,5 +1,5 @@
 /**
- * @file RequestsViewImpl.java
+ * @file GroupsViewImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -35,28 +35,43 @@ import com.googlecode.alliwant.client.i18n.AiwMessages;
 import com.googlecode.alliwant.client.ui.css.CSS;
 import com.googlecode.alliwant.client.ui.css.CssBundle;
 
-public class RequestsViewImpl extends Composite implements RequestsView {
+public class GroupsViewImpl extends Composite implements GroupsView {
 
-  interface Binder extends UiBinder<FlowPanel, RequestsViewImpl> {}
+  interface Binder extends UiBinder<FlowPanel, GroupsViewImpl> {}
   private static final Binder uiBinder = GWT.create(Binder.class);
 
   private Presenter presenter = null;
   private AiwConstants aiwc = GWT.create(AiwConstants.class);
   private AiwMessages aiwm = GWT.create(AiwMessages.class);
   private CssBundle css = CSS.getBundle();
+ 
+  private int gNameCol, gDescCol, gOwnerCol, gLeaveCol;
+  private int iNameCol, iOwnerCol, iEmailCol, iAcceptCol, iDeclineCol;
   
   @UiField
   SimplePanel headerWrapper;
 
   @UiField
-  Grid requests;
+  Grid groups, invites;
   
-  public RequestsViewImpl() {
+  public GroupsViewImpl() {
     initWidget(uiBinder.createAndBindUi(this));
-    requests.resize(1, 4);
-    requests.getRowFormatter().addStyleName(0, css.main().tableHeader());
-    requests.setText(0, 0, aiwc.email());
-    requests.setText(0, 1, aiwc.denied());
+    int col = 0;
+    groups.resize(1, 4);
+    groups.getRowFormatter().addStyleName(0, css.main().tableHeader());
+    groups.setText(0, gNameCol = col++, aiwc.name());
+    groups.setText(0, gDescCol = col++, aiwc.description());
+    groups.setText(0, gOwnerCol = col++, aiwc.owner());
+    groups.setText(0, gLeaveCol = col++, "");
+   
+    col = 0;
+    invites.resize(1, 4);
+    invites.getRowFormatter().addStyleName(0, css.main().tableHeader());
+    invites.setText(0, iNameCol = col++, aiwc.group());
+    invites.setText(0, iOwnerCol = col++, aiwc.owner());
+    invites.setText(0, iEmailCol = col++, aiwc.email());
+    invites.setText(0, iAcceptCol = col++, "");
+    invites.setText(0, iDeclineCol = col++, "");
   } // RequestsViewImpl //
 
   // ================================================================
@@ -79,38 +94,77 @@ public class RequestsViewImpl extends Composite implements RequestsView {
   }
 
   @Override
-  public void setNumRequests(int num) {
-    requests.resizeRows(num+1);
+  public void setNumGroups(int num) {
+    groups.resizeRows(num+1);
     for (int i = 1; i <= num; i++) {
       final int index = i-1;
-      Anchor approve = new Anchor(aiwc.approve());
-      approve.addClickHandler(new ClickHandler() {
+      Anchor leave = new Anchor(aiwc.leaveGroup());
+      leave.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {
-          presenter.approve(index);
+          presenter.leaveGroup(index);
         }
       });
-      requests.setWidget(i, 2, approve);
+      groups.setWidget(i, gLeaveCol, leave);
      
-      Anchor deny = new Anchor(aiwc.deny());
-      deny.addClickHandler(new ClickHandler() {
-        public void onClick(ClickEvent event) {
-          presenter.deny(index);
-        }
-      });
-      requests.setWidget(i, 3, deny);
       if (index % 2 != 0)
-        requests.getRowFormatter().addStyleName(i, css.main().tableAlt());
+        groups.getRowFormatter().addStyleName(i, css.main().tableAlt());
     } // for all requests //
-  } // setNumRequests //
+  } // setNumGroups //
  
   @Override
-  public void setEmail(int index, String email) {
-    requests.setText(index+1, 0, email);
+  public void setGroupName(int index, String name) {
+    groups.setText(index+1, gNameCol, name);
   }
   
   @Override
-  public void setDenied(int index, String denied) {
-    requests.setText(index+1, 1, denied);
+  public void setGroupDescription(int index, String description) {
+    groups.setText(index+1, gDescCol, description);
+  }
+  
+  @Override
+  public void setGroupOwner(int index, String owner) {
+    groups.setText(index+1, gOwnerCol, owner);
+  }
+  
+  @Override
+  public void setNumInvites(int num) {
+    invites.resizeRows(num+1);
+    for (int i = 1; i <= num; i++) {
+      final int index = i-1;
+      Anchor accept = new Anchor(aiwc.accept());
+      accept.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.acceptInvite(index);
+        }
+      });
+      invites.setWidget(i, iAcceptCol, accept);
+     
+      Anchor decline = new Anchor(aiwc.decline());
+      accept.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.declineInvite(index);
+        }
+      });
+      invites.setWidget(i, iDeclineCol, decline);
+     
+      if (index % 2 != 0)
+        groups.getRowFormatter().addStyleName(i, css.main().tableAlt());
+    } // for all requests //
+  } // setNumGroups //
+ 
+  @Override
+  public void setInviteName(int index, String name) {
+    invites.setText(index+1, iNameCol, name);
+  }
+  
+  @Override
+  public void setInviteOwner(int index, String owner) {
+    invites.setText(index+1, iOwnerCol, owner);
+  }
+  
+  @Override
+  public void setInviteEmail(int index, String email) {
+    invites.setText(index+1, iEmailCol, email);
   }
   
   @Override

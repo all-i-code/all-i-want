@@ -1,5 +1,5 @@
 /**
- * @file JhbPlaceHistoryMapper.java
+ * @file AiwPlaceHistoryMapper.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -21,6 +21,7 @@ package com.googlecode.alliwant.client.mvp;
 
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.WithTokenizers;
+import com.googlecode.alliwant.client.place.GroupsPlace;
 import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.place.GoodbyePlace;
 import com.googlecode.alliwant.client.place.RequestsPlace;
@@ -33,6 +34,7 @@ import com.googlecode.alliwant.client.place.RequestsPlace;
  */
 @WithTokenizers({ 
   ListsPlace.Tokenizer.class,
+  GroupsPlace.Tokenizer.class,
   RequestsPlace.Tokenizer.class,
   GoodbyePlace.Tokenizer.class
 })

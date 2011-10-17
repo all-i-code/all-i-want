@@ -1,5 +1,5 @@
 /**
- * @file LayoutCss.java
+ * @file MainCss.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -21,11 +21,17 @@ package com.googlecode.alliwant.client.ui.css;
 
 import com.google.gwt.resources.client.CssResource;
 
-public interface LayoutCss extends CssResource {
+public interface MainCss extends CssResource {
   String containFloats();
   String shrinkWrap();
   String left();
   String right();
   String centered();
   String clear();
+  String title();
+  String heading();
+  String subHeading();
+  String instructions();
+  String tableHeader();
+  String tableAlt();
 }

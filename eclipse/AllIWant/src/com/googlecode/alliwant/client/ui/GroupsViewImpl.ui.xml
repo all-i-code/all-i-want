@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <!--
-  File: GoodbyeViewImpl.ui.xml 
-  Description: UiBinder definition of DashboardViewImpl
+  File: GroupsViewImpl.ui.xml 
+  Description: UiBinder definition of ListsViewImpl
   
   Copyright 2011 Adam Meadows 
  
@@ -18,14 +18,19 @@
      limitations under the License.
 -->
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-       xmlns:gwt="urn:import:com.google.gwt.user.client.ui">
+       xmlns:gwt="urn:import:com.google.gwt.user.client.ui"
+       xmlns:jhb="urn:import:com.googlecode.alliwant.client.ui.widget">
   
   <ui:with type="com.googlecode.alliwant.client.i18n.AiwConstants" field="aiwc" />
   <ui:with type="com.googlecode.alliwant.client.ui.css.CssBundle" field="css" />
   
   <gwt:FlowPanel>
-    <gwt:Label ui:field="message" 
-     styleName="{css.main.title} {css.main.centered}" />
-    <gwt:Anchor ui:field="logout" text="{aiwc.logout}" visible="false" />
+    <gwt:SimplePanel ui:field="headerWrapper" addStyleNames="header" />
+    <gwt:Label styleName="{css.main.title} {css.main.centered}" 
+     text="{aiwc.groups}" />
+    <gwt:Label text="{aiwc.groups}" />
+    <gwt:Grid ui:field="groups" />
+    <gwt:Label text="{aiwc.invitations}" />
+    <gwt:Grid ui:field="invites" />
   </gwt:FlowPanel>
 </ui:UiBinder>

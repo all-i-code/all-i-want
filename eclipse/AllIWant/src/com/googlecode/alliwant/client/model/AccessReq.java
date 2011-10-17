@@ -26,6 +26,6 @@ package com.googlecode.alliwant.client.model;
 
 public interface AccessReq {
   int getId();
-  boolean denied();
+  boolean wasDenied();
   String getEmail();
 }

@@ -22,6 +22,7 @@ package com.googlecode.alliwant.client;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.PlaceController;
 import com.googlecode.alliwant.client.rpc.Manager;
+import com.googlecode.alliwant.client.ui.GroupsView;
 import com.googlecode.alliwant.client.ui.ListsView;
 import com.googlecode.alliwant.client.ui.GoodbyeView;
 import com.googlecode.alliwant.client.ui.RequestsView;
@@ -36,6 +37,7 @@ public interface ClientFactory {
   Header getHeader();
   
   ListsView getListsView();
+  GroupsView getGroupsView();
   RequestsView getRequestsView();
   GoodbyeView getGoodbyeView();
   

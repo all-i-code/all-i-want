@@ -26,8 +26,9 @@
   
   <gwt:FlowPanel>
     <gwt:SimplePanel ui:field="headerWrapper" addStyleNames="header" />
-    <gwt:Label styleName="{css.font.title} {css.layout.centered}" 
+    <gwt:Label styleName="{css.main.title} {css.main.centered}" 
      text="{aiwc.lists}" />
-     
+    <gwt:ListBox ui:field="owner" /> 
+    <gwt:Grid ui:field="items" />
   </gwt:FlowPanel>
 </ui:UiBinder>

@@ -23,10 +23,7 @@ import com.google.gwt.resources.client.ClientBundle;
 
 public interface CssBundle extends ClientBundle {
   
-  @Source("css/layout.css")
-  LayoutCss layout();
-  
-  @Source("css/font.css")
-  FontCss font();
+  @Source("css/main.css")
+  MainCss main();
   
 }

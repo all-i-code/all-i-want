@@ -1,5 +1,5 @@
 /**
- * @file JhbActivityMapper.java
+ * @file AiwActivityMapper.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -23,30 +23,34 @@ import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
 import com.googlecode.alliwant.client.ClientFactory;
+import com.googlecode.alliwant.client.activity.GroupsActivity;
 import com.googlecode.alliwant.client.activity.ListsActivity;
 import com.googlecode.alliwant.client.activity.GoodbyeActivity;
 import com.googlecode.alliwant.client.activity.RequestsActivity;
+import com.googlecode.alliwant.client.place.GroupsPlace;
 import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.place.GoodbyePlace;
 import com.googlecode.alliwant.client.place.RequestsPlace;
 
 public class AiwActivityMapper implements ActivityMapper {
 
-  private final ClientFactory clientFactory;
+  private final ClientFactory cf;
   
-  public AiwActivityMapper(final ClientFactory clientFactory) {
+  public AiwActivityMapper(final ClientFactory cf) {
     super();
-    this.clientFactory = clientFactory;
+    this.cf = cf;
   }
   
   @Override
   public Activity getActivity(Place place) {
     if (place instanceof ListsPlace) {
-      return new ListsActivity((ListsPlace)place, clientFactory);
+      return new ListsActivity((ListsPlace)place, cf);
+    } else if (place instanceof GroupsPlace) {
+      return new GroupsActivity((GroupsPlace)place, cf);
     } else if (place instanceof RequestsPlace) {
-      return new RequestsActivity((RequestsPlace)place, clientFactory);
+      return new RequestsActivity((RequestsPlace)place, cf);
     } else if (place instanceof GoodbyePlace) {
-      return new GoodbyeActivity((GoodbyePlace)place, clientFactory);
+      return new GoodbyeActivity((GoodbyePlace)place, cf);
     }
     return null;
   } // getActivity //

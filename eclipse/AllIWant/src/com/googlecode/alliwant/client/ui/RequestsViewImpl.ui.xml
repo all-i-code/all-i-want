@@ -26,7 +26,7 @@
   
   <gwt:FlowPanel>
     <gwt:SimplePanel ui:field="headerWrapper" />
-    <gwt:Label styleName="{css.font.title} {css.layout.centered}" 
+    <gwt:Label styleName="{css.main.title} {css.main.centered}" 
      text="{aiwc.requests}" />
 
     <gwt:Grid ui:field="requests" />

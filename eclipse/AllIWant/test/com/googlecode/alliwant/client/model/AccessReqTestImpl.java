@@ -64,7 +64,7 @@ public class AccessReqTestImpl extends ModelJson
   }
 
   @Override
-  public boolean denied() {
+  public boolean wasDenied() {
     return getBool("b");
   }
 

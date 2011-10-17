@@ -75,9 +75,9 @@ class DummyAccess:
         return self.groups.get(group_id, None)
 
     def get_groups(self, keys=None):
-        if keys is None:
-            return (self.groups[id] for id in self.group_ids)
-        return (self.groups[key.id()] for key in keys)
+        if keys is not None:
+            return (self.groups[key.id()] for key in keys)
+        return (self.groups[id] for id in self.group_ids)
 
     def add_group_invite(self, group, email):
         i = Invite(group, email)

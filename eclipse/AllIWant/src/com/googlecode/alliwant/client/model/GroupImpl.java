@@ -64,12 +64,17 @@ public class GroupImpl extends JavaScriptObject implements Group {
   }-*/;
 
   @Override
-  public final native String getDescription() /*-{
+  public final native String getOwner() /*-{
     return this.c;
   }-*/;
 
-  private final native JsArray<GroupInvitationImpl> getInvitationsJs()/*-{
+  @Override
+  public final native String getDescription() /*-{
     return this.d;
+  }-*/;
+
+  private final native JsArray<GroupInvitationImpl> getInvitationsJs()/*-{
+    return this.e;
   }-*/;
 
   @Override
@@ -78,7 +83,7 @@ public class GroupImpl extends JavaScriptObject implements Group {
   }
 
   private final native JsArray<GroupMemberImpl> getMembersJs()/*-{
-    return this.e;
+    return this.f;
   }-*/;
 
   @Override

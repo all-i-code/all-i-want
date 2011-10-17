@@ -63,7 +63,7 @@ class GroupInvitation(Model):
     def from_db(cls, db):
         _ = lambda x: x.key().id()
         return cls(id=_(db), group_id=_(db.group),
-            group_name=db.group.name, owner_name=db.group.owner.name,
+            group_name=db.group.name, owner_name=db.group.owner.label(),
             member_email=db.email)
 
 class GroupMember(Model):
@@ -87,6 +87,7 @@ class Group(Model):
     fields = (
         FieldInt(name='id'),
         FieldString(name='name'),
+        FieldString(name='owner'),
         FieldText(name='description'),
         FieldModelArray(type=GroupInvitation, name='invitations'),
         FieldModelArray(type=GroupMember, name='members'),
@@ -96,7 +97,7 @@ class Group(Model):
     def from_db(cls, db):
         invitations = [ GroupInvitation.from_db(i) for i in db.invitations ]
         members = [ GroupMember.from_db(m) for m in db.members ]
-        return cls(id=db.key().id(), name=db.name,
+        return cls(id=db.key().id(), name=db.name, owner=db.owner.label(),
             description=db.description, invitations=invitations,
             members=members)
 

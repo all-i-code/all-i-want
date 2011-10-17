@@ -31,6 +31,12 @@ import com.google.gwt.core.client.JsArray;
 
 public class AccessReqImpl extends JavaScriptObject implements AccessReq {
   
+  public static final List<AccessReq> decodeList(JsArray<AccessReqImpl> js_arr) {
+    List<AccessReq> arr = new ArrayList<AccessReq>();
+    for (int i = 0; i < js_arr.length(); i++) arr.add(js_arr.get(i));
+    return arr; 
+  }
+
   public static final List<AccessReq> decodeList(String json) {
     return decodeList(decodeArray(json)); 
   }
@@ -44,13 +50,6 @@ public class AccessReqImpl extends JavaScriptObject implements AccessReq {
     eval('var js = ' + json);
     return js;
   }-*/;
-  
-  private static final List<AccessReq> decodeList(JsArray<AccessReqImpl> js_arr) {
-    List<AccessReq> arr = new ArrayList<AccessReq>();
-    for (int i = 0; i < js_arr.length(); i++) arr.add(js_arr.get(i));
-    return arr; 
-  }
-
 
   protected AccessReqImpl() {}
 
@@ -60,7 +59,7 @@ public class AccessReqImpl extends JavaScriptObject implements AccessReq {
   }-*/;
 
   @Override
-  public final native boolean denied() /*-{
+  public final native boolean wasDenied() /*-{
     return this.b;
   }-*/;
 

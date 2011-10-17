@@ -28,6 +28,7 @@ import java.util.List;
 public interface Group {
   int getId();
   String getName();
+  String getOwner();
   String getDescription();
   List<GroupInvitation> getInvitations();
   List<GroupMember> getMembers();

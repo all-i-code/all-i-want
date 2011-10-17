@@ -51,15 +51,22 @@ class DbAccess:
         return GroupDb.get_by_id(id)
 
     def get_groups(self, keys=None):
-        if keys is None:
-            return GroupDb.all().filter('user = ', self.user)
-        return GroupDb.get(keys)
+        q = GroupDb.all()
+        if keys is not None:
+            q = q.get(keys)
+        return q
 
     def add_group_invite(self, group, email):
         return GroupInvitationDb(group=group, email=email).put()
 
     def get_group_invite(self, id):
         return GroupInvitationDb.get_by_id(id)
+
+    def get_group_invites(self, email=None):
+        q = GroupInvitationDb.all()
+        if email is not None:
+            return q.filter('email =', email)
+        return q
 
     def add_group_member(self, group):
         return GroupMemberDb(group=group, member=self.user).put()

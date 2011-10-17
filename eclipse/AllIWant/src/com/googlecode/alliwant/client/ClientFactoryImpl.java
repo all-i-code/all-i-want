@@ -26,6 +26,8 @@ import com.googlecode.alliwant.client.rpc.Manager;
 import com.googlecode.alliwant.client.rpc.ManagerImpl;
 import com.googlecode.alliwant.client.rpc.Rpc;
 import com.googlecode.alliwant.client.rpc.RpcImpl;
+import com.googlecode.alliwant.client.ui.GroupsView;
+import com.googlecode.alliwant.client.ui.GroupsViewImpl;
 import com.googlecode.alliwant.client.ui.ListsView;
 import com.googlecode.alliwant.client.ui.ListsViewImpl;
 import com.googlecode.alliwant.client.ui.GoodbyeView;
@@ -50,6 +52,7 @@ public class ClientFactoryImpl implements ClientFactory {
   private Header header = new HeaderPresenter(headerView, alert, getEventBus(), 
    getManager(), placeController);
   private ListsView listsView = new ListsViewImpl();
+  private GroupsView groupsView = new GroupsViewImpl();
   private RequestsView requestsView = new RequestsViewImpl();
   private GoodbyeView goodbyeView = new GoodbyeViewImpl();
   
@@ -81,6 +84,11 @@ public class ClientFactoryImpl implements ClientFactory {
   @Override
   public ListsView getListsView() {
     return listsView;
+  }
+  
+  @Override
+  public GroupsView getGroupsView() {
+    return groupsView;
   }
   
   @Override

@@ -1,5 +1,5 @@
 /**
- * @file RequestsActivity.java
+ * @file GroupsActivity.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -29,23 +29,24 @@ import com.googlecode.alliwant.client.ClientFactory;
 import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
-import com.googlecode.alliwant.client.model.AccessReq;
+import com.googlecode.alliwant.client.model.Group;
+import com.googlecode.alliwant.client.model.GroupInvitation;
 import com.googlecode.alliwant.client.model.User;
-import com.googlecode.alliwant.client.place.RequestsPlace;
+import com.googlecode.alliwant.client.place.GroupsPlace;
 import com.googlecode.alliwant.client.rpc.Manager;
-import com.googlecode.alliwant.client.ui.RequestsView;
+import com.googlecode.alliwant.client.ui.GroupsView;
 
-public class RequestsActivity implements Activity, RequestsView.Presenter {
+public class GroupsActivity implements Activity, GroupsView.Presenter {
 
   private ClientFactory cf;
-  private RequestsView view;
+  private GroupsView view;
   private Manager manager;
-  private List<AccessReq> reqs = new ArrayList<AccessReq>();
-  private int reqIndex = -1;
+  private List<Group> groups = new ArrayList<Group>();
+  private List<GroupInvitation> invites = new ArrayList<GroupInvitation>();
   
-  public RequestsActivity(RequestsPlace place, ClientFactory cf) {
+  public GroupsActivity(GroupsPlace place, ClientFactory cf) {
     this.cf = cf;
-    view = cf.getRequestsView();
+    view = cf.getGroupsView();
     manager = cf.getManager();
   }
   
@@ -80,25 +81,26 @@ public class RequestsActivity implements Activity, RequestsView.Presenter {
   // ==========================================================================
   
   // ==========================================================================
-  // BEGIN: RequestsView.Presenter methods
+  // BEGIN: GroupsView.Presenter methods
   // ==========================================================================
-    
+ 
   @Override
-  public void approve(int index) {
-    reqIndex = index;
-    view.showProcessingOverlay();
-    manager.approveRequest(reqs.get(index).getId());
+  public void leaveGroup(int index) {
+    // TODO: implement this
+  }
+  
+  @Override
+  public void acceptInvite(int index) {
+    // TODO: implement this
   }
     
   @Override
-  public void deny(int index) {
-    reqIndex = index;
-    view.showProcessingOverlay();
-    manager.denyRequest(reqs.get(index).getId());
+  public void declineInvite(int index) {
+    // TODO: implement this
   }
   
   // ==========================================================================
-  // END: RequestsView.Presenter methods
+  // END: GroupsView.Presenter methods
   // ==========================================================================
   
   private void addEventBusHandlers(EventBus eventBus) {
@@ -112,30 +114,40 @@ public class RequestsActivity implements Activity, RequestsView.Presenter {
     }
     
     {
-      ModelListEvent.Handler<AccessReq> handler = new ModelListEvent.Handler<AccessReq>() {
-        public void onModelList(ModelListEvent<AccessReq> event) {
-          handleRequests(event.getModelList());
+      ModelListEvent.Handler<Group> handler = new ModelListEvent.Handler<Group>() {
+        public void onModelList(ModelListEvent<Group> event) {
+          handleGroups(event.getModelList());
         }
       };
-      ModelListEvent.register(eventBus, AccessReq.class, handler);
+      ModelListEvent.register(eventBus, Group.class, handler);
+    }
+    
+    {
+      ModelListEvent.Handler<GroupInvitation> handler = 
+       new ModelListEvent.Handler<GroupInvitation>() {
+        public void onModelList(ModelListEvent<GroupInvitation> event) {
+          handleInvites(event.getModelList());
+        }
+      };
+      ModelListEvent.register(eventBus, Group.class, handler);
     }
     
     {
       InfoEvent.Handler handler = new InfoEvent.Handler() {
         public void onInfo(InfoEvent event) {
-          handleApproval();
+          handleAccept();
         }
       };
-      InfoEvent.register(eventBus, InfoEvent.REQ_APPROVED, handler);
+      InfoEvent.register(eventBus, InfoEvent.INVITE_ACCEPTED, handler);
     }
     
     {
       InfoEvent.Handler handler = new InfoEvent.Handler() {
         public void onInfo(InfoEvent event) {
-          handleDenial();
+          handleDecline();
         }
       };
-      InfoEvent.register(eventBus, InfoEvent.REQ_DENIED, handler);
+      InfoEvent.register(eventBus, InfoEvent.INVITE_DECLINED, handler);
     }
   } // addEventBusHandlers //
 
@@ -144,33 +156,38 @@ public class RequestsActivity implements Activity, RequestsView.Presenter {
     manager.getAccessRequests();
   }
   
-  private void handleRequests(List<AccessReq> requests) {
+  private void handleGroups(List<Group> groups) {
     view.hideProcessingOverlay();
-    reqs.clear();
-    reqs.addAll(requests);
-    view.setNumRequests(reqs.size());
-    for (int i = 0; i < reqs.size(); i++) {
-      view.setEmail(i, reqs.get(i).getEmail());
-      String denied = view.getAiwc().no();
-      if (reqs.get(i).wasDenied()) denied = view.getAiwc().yes();
-      view.setDenied(i, denied);
+    this.groups.clear();
+    this.groups.addAll(groups);
+    view.setNumGroups(groups.size());
+    for (int i = 0; i < groups.size(); i++) {
+      Group g = groups.get(i);
+      view.setGroupName(i, g.getName());
+      view.setGroupDescription(i, g.getDescription());
+      view.setGroupOwner(i, g.getOwner());
     }
-  } // handleRequests //
+  } // handleGroups //
+ 
+  private void handleInvites(List<GroupInvitation> invites) {
+    view.hideProcessingOverlay();
+    this.invites.clear();
+    this.invites.addAll(invites);
+    view.setNumInvites(invites.size());
+    for (int i = 0; i < invites.size(); i++) {
+      GroupInvitation invite = invites.get(i);
+      view.setInviteName(i, invite.getGroupName());
+      view.setInviteOwner(i, invite.getOwnerName());
+      view.setInviteEmail(i, invite.getMemberEmail());
+    }
+  } // handleInvites //
   
-  private void handleApproval() {
-    if (reqIndex < 0) return;
-    String msg = view.getAiwm().reqApproved(reqs.get(reqIndex).getEmail());
-    cf.getAlert().show(msg);
-    reqIndex = -1;
-    manager.getAccessRequests();
+  private void handleAccept() {
+    // TODO: implement this
   }
   
-  private void handleDenial() {
-    if (reqIndex < 0) return;
-    String msg = view.getAiwm().reqDenied(reqs.get(reqIndex).getEmail());
-    cf.getAlert().show(msg);
-    reqIndex = -1;
-    manager.getAccessRequests();
+  private void handleDecline() {
+    // TODO: implement this
   }
 
 } // RequestsActivity //

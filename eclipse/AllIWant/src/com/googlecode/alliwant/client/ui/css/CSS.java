@@ -10,8 +10,7 @@ public abstract class CSS {
   }
   
   public static void ensureInjected() {
-    css.font().ensureInjected();
-    css.layout().ensureInjected();
+    getBundle().main().ensureInjected();
   }
   
 } // CSS //

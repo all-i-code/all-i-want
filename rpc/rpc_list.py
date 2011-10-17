@@ -275,7 +275,7 @@ class ListRpcGroup(RpcGroupBase):
         item.purchased_by = None
         return ListItem.from_db(item.put())
 
-    def get_reserved_and_purchased_items(self, item_id):
+    def get_reserved_and_purchased_items(self):
         '''
         Retrieve all items which have been reserved or purchased by you 
         '''
