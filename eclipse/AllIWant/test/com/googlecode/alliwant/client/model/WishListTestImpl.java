@@ -69,7 +69,7 @@ public class WishListTestImpl extends ModelJson
   }
 
   @Override
-  public List<ListItem> getListItems() {
+  public List<ListItem> getItems() {
     return ListItemTestImpl.parseArray(getArray("c"));
   }
 

@@ -28,7 +28,9 @@ public interface ListItem {
   int getId();
   String getName();
   String getDescription();
+  String getCategory();
   String getUrl();
   String getReservedBy();
   String getPurchasedBy();
+  boolean isSurprise();
 }

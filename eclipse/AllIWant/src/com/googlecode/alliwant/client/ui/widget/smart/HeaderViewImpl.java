@@ -20,13 +20,16 @@
 package com.googlecode.alliwant.client.ui.widget.smart;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.googlecode.alliwant.client.i18n.AiwConstants;
 import com.googlecode.alliwant.client.i18n.AiwMessages;
 import com.googlecode.alliwant.client.ui.ProcessingOverlay;
 
@@ -34,19 +37,42 @@ public class HeaderViewImpl extends Composite implements HeaderView {
 
   interface Binder extends UiBinder<FlowPanel, HeaderViewImpl> {}
   private Binder uiBinder = GWT.create(Binder.class);
+  private Presenter presenter;
   private AiwMessages aiwm = GWT.create(AiwMessages.class);
+  private AiwConstants aiwc = GWT.create(AiwConstants.class);
+  private boolean reqsActive = false, reqsVisible = false;
   
   @UiField
-  InlineLabel listsLabel, groupsLabel, user, settingsLabel;
+  InlineLabel listsLabel, groupsLabel, reqsSep, reqsLabel, user, settingsLabel;
   
   @UiField
-  Anchor listsLink, groupsLink, settingsLink, logout;
+  Anchor listsLink, groupsLink, reqsLink, settingsLink, logout;
 
   
   public HeaderViewImpl() {
     initWidget(uiBinder.createAndBindUi(this));
   }
- 
+
+  @UiHandler("listsLink")
+  void onListsClick(ClickEvent event) {
+    presenter.lists();
+  }
+  
+  @UiHandler("groupsLink")
+  void onGroupsClick(ClickEvent event) {
+    presenter.groups();
+  }
+  
+  @UiHandler("reqsLink")
+  void onReqsClick(ClickEvent event) {
+    presenter.requests();
+  }
+  
+  @UiHandler("settingsLink")
+  void onSettingsClick(ClickEvent event) {
+    presenter.settings();
+  }
+  
   // ================================================================
   // BEGIN: HeaderView methods
   // ================================================================
@@ -84,24 +110,44 @@ public class HeaderViewImpl extends Composite implements HeaderView {
   }
 
   @Override
+  public void setRequestsActive(boolean active) {
+    reqsActive = active;
+    reqsLink.setVisible(!reqsActive && reqsVisible);
+    reqsLabel.setVisible(reqsActive && reqsVisible);
+  }
+
+  @Override
+  public void setRequestsVisible(boolean visible) {
+    reqsVisible = visible;
+    reqsSep.setVisible(reqsVisible);
+    reqsLink.setVisible(!reqsActive && reqsVisible);
+    reqsLabel.setVisible(reqsActive && reqsVisible);
+  }
+
+  @Override
   public void setSettingsActive(boolean active) {
     settingsLink.setVisible(!active);
     settingsLabel.setVisible(active);
   }
   
   @Override
-  public String getURL() {
-    return Window.Location.getHref();
-  }
-
-  @Override
   public void redirect(String url) {
     Window.Location.assign(url);
   }
  
   @Override
+  public AiwConstants getConsts() {
+    return aiwc;
+  }
+  
+  @Override
   public AiwMessages getMsgs() {
     return aiwm;
+  }
+  
+  @Override
+  public void setPresenter(Presenter presenter) {
+    this.presenter = presenter;
   }
   
   // ================================================================

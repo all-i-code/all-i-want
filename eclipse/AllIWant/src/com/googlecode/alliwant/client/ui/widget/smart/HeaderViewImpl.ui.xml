@@ -34,15 +34,23 @@
   <gwt:FlowPanel addStyleNames="{s.main} {css.layout.containFloats}">
     <gwt:FlowPanel styleName="{css.layout.left}">
       <gwt:Anchor ui:field="listsLink" text="{aiwc.lists}" 
-       href="javascrip:;" />
+       href="javascript:;" />
       <gwt:InlineLabel ui:field="listsLabel" text="{aiwc.lists}" 
        styleName="{s.active}" visible="false" />
+      
       <gwt:InlineLabel text="{aiwc.pipe}" /> 
+      
       <gwt:Anchor ui:field="groupsLink" text="{aiwc.groups}"
        href="javascript:;" />
       <gwt:InlineLabel ui:field="groupsLabel" text="{aiwc.groups}" 
        styleName="{s.active}" visible="false" />
-     </gwt:FlowPanel> 
+      
+      <gwt:InlineLabel ui:field="reqsSep" text="{aiwc.pipe}" visible="false" /> 
+      <gwt:Anchor ui:field="reqsLink" text="{aiwc.requests}"
+       href="javascript:;" visible="false" />
+      <gwt:InlineLabel ui:field="reqsLabel" text="{aiwc.requests}" 
+       styleName="{s.active}" visible="false" />
+    </gwt:FlowPanel> 
     <gwt:FlowPanel styleName="{css.layout.right}">
       <gwt:InlineLabel ui:field="user" styleName="{s.active}" />
       <gwt:InlineLabel text="{aiwc.pipe}" />

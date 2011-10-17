@@ -33,7 +33,7 @@ public class ListsActivity implements Activity {
   
   public ListsActivity(ListsPlace place, ClientFactory cf) {
     this.cf = cf;
-    view = cf.getDashboardView();
+    view = cf.getListsView();
   }
   
   // ==========================================================================
@@ -57,7 +57,8 @@ public class ListsActivity implements Activity {
   public void start(AcceptsOneWidget panel, EventBus eventBus) {
     panel.setWidget(view.asWidget());
     addEventBusHandlers(eventBus);
-    cf.getHeader().getUser();
+    view.setHeader(cf.getHeader());
+    cf.getManager().getCurrentUser();
   }
   
   // ==========================================================================
@@ -66,9 +67,6 @@ public class ListsActivity implements Activity {
   
   
   private void addEventBusHandlers(EventBus eventBus) {
-    {
-      
-    }
   } // addEventBusHandlers //
 
 } // ListsActivity //

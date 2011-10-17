@@ -20,10 +20,19 @@
 package com.googlecode.alliwant.client.rpc;
 
 public interface Manager {
+  
   /**
    * Request the currently logged in user, or a url for them to login
    * @param currentURL the current URL (used to redirect back after login)
    */
-  void getCurrentUser(String currentURL);
+  void getCurrentUser();
+ 
+  /**
+   * Request a listing of all AccessReq objects
+   */
+  void getAccessRequests();
+
+  void approveRequest(int reqId);
+  void denyRequest(int reqId);
   
 } // Manager //

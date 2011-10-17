@@ -28,13 +28,14 @@ from core.meta import Model, FieldBoolean, FieldInt, FieldString, FieldText,\
 class AccessReq(Model):
     fields = (
         FieldInt(name='id'),
-        FieldBoolean(name='denied'),
+        FieldBoolean(name='was_denied'),
         FieldString(name='email'),
     )
 
     @classmethod
     def from_db(cls, db):
-        return cls(id=db.key().id(), email=db.user.email())
+        return cls(id=db.key().id(), was_denied=db.denied,
+            email=db.user.email())
 
 class ListOwner(Model):
     fields = (
@@ -139,6 +140,8 @@ class User(Model):
         FieldString(name='login_url'),
         FieldString(name='logout_url'),
         FieldInt(name='owner_id'),
+        FieldBoolean(name='was_req_denied'),
+        FieldBoolean(name='is_admin'),
     )
 
 class FailureReport(Model):

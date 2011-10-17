@@ -19,19 +19,18 @@
 */
 package com.googlecode.alliwant.client.ui.widget;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT; 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-public class AlertImpl extends Composite implements Alert {
+public class AlertImpl implements Alert {
 
-  interface Binder extends UiBinder<PopupPanel, Alert> {}
+  interface Binder extends UiBinder<PopupPanel, AlertImpl> {}
   private Binder uiBinder = GWT.create(Binder.class);
   
   private PopupPanel popup;
@@ -41,6 +40,7 @@ public class AlertImpl extends Composite implements Alert {
   @UiField Button ok;
   
   public AlertImpl() {
+    message = new Label();
     popup = uiBinder.createAndBindUi(this);
   }
   

@@ -28,3 +28,10 @@
 .title { font-size: titleSize; }
 .heading { font-size: headingSize; }
 .subHeading { font-size: subHeadingSize; }
+.tableHeader {
+  color: white;
+  background-color: green;
+}
+.tableAlt {
+	background-color: grey;
+}

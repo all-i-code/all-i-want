@@ -24,6 +24,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.googlecode.alliwant.client.rpc.Manager;
 import com.googlecode.alliwant.client.ui.ListsView;
 import com.googlecode.alliwant.client.ui.GoodbyeView;
+import com.googlecode.alliwant.client.ui.RequestsView;
 import com.googlecode.alliwant.client.ui.widget.Alert;
 import com.googlecode.alliwant.client.ui.widget.smart.Header;
 
@@ -34,7 +35,8 @@ public interface ClientFactory {
   Manager getManager();
   Header getHeader();
   
-  ListsView getDashboardView();
+  ListsView getListsView();
+  RequestsView getRequestsView();
   GoodbyeView getGoodbyeView();
   
 } // ClientFactory //

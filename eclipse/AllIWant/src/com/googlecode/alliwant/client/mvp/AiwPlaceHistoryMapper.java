@@ -23,6 +23,7 @@ import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.WithTokenizers;
 import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.place.GoodbyePlace;
+import com.googlecode.alliwant.client.place.RequestsPlace;
 
 /**
  * PlaceHistoryMapper interface is used to attach all places which the
@@ -32,6 +33,7 @@ import com.googlecode.alliwant.client.place.GoodbyePlace;
  */
 @WithTokenizers({ 
   ListsPlace.Tokenizer.class,
+  RequestsPlace.Tokenizer.class,
   GoodbyePlace.Tokenizer.class
 })
 public interface AiwPlaceHistoryMapper extends PlaceHistoryMapper {

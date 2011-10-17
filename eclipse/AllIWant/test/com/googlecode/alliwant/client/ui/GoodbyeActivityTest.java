@@ -93,7 +93,7 @@ public class GoodbyeActivityTest extends TestCase {
     activity.start(panel, eventBus);
     assertEquals(view, panel.getWidget());
     assertTrue(view.isProcessingOverlayShowing());
-    verify(manager).getCurrentUser(view.getURL());
+    verify(manager).getCurrentUser();
     eventBus.fireEvent(new ModelEvent<User>(User.class, user));
     assertFalse(view.isProcessingOverlayShowing());
   } // start //

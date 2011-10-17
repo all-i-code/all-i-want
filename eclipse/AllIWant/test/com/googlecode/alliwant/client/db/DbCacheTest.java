@@ -24,5 +24,8 @@ import junit.framework.TestCase;
 public class DbCacheTest extends TestCase {
 
   // TODO: add some tests for model retrieval, etc.
+  public void testNothing() {
+    
+  }
   
 } // DbCacheTest //

@@ -63,13 +63,13 @@ public class WishListImpl extends JavaScriptObject implements WishList {
     return this.b;
   }-*/;
 
-  private final native JsArray<ListItemImpl> getListItemsJs()/*-{
+  private final native JsArray<ListItemImpl> getItemsJs()/*-{
     return this.c;
   }-*/;
 
   @Override
-  public final List<ListItem> getListItems() {
-    return ListItemImpl.decodeList(getListItemsJs());
+  public final List<ListItem> getItems() {
+    return ListItemImpl.decodeList(getItemsJs());
   }
 
 

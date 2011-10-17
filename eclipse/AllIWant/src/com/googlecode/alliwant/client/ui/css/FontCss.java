@@ -26,4 +26,6 @@ public interface FontCss extends CssResource {
   String heading();
   String subHeading();
   String instructions();
+  String tableHeader();
+  String tableAlt();
 }

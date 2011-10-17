@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <!--
-  File: AlertImpl.ui.xml 
-  Description: UiBinder definition of AlertImpl
+  File: RequestsViewImpl.ui.xml 
+  Description: UiBinder definition of ListsViewImpl
   
   Copyright 2011 Adam Meadows 
  
@@ -18,27 +18,18 @@
      limitations under the License.
 -->
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-       xmlns:gwt="urn:import:com.google.gwt.user.client.ui">
+       xmlns:gwt="urn:import:com.google.gwt.user.client.ui"
+       xmlns:jhb="urn:import:com.googlecode.alliwant.client.ui.widget">
   
-  <ui:with type="com.googlecode.alliwant.client.ui.css.CssBundle" field="css" />
   <ui:with type="com.googlecode.alliwant.client.i18n.AiwConstants" field="aiwc" />
+  <ui:with type="com.googlecode.alliwant.client.ui.css.CssBundle" field="css" />
   
-  <ui:style>
-    .msg {
-	    font-size: 1.25em;
-	    white-space: pre-wrap;
-	    padding-bottom: 1em;
-	  }
-    .main { padding: 1em; } 
-    .button { float: right; }
-  </ui:style>
-  
-  <gwt:PopupPanel animationEnabled="true" modal="true" glassEnabled="true"
-   addStyleNames="{style.main}">
-    <gwt:FlowPanel>
-      <gwt:Label ui:field="message" styleName="{style.msg}" />
-      <gwt:Button ui:field="ok" text="{aiwc.ok}"
-       addStyleNames="{style.button}" />
-    </gwt:FlowPanel>
-  </gwt:PopupPanel>
+  <gwt:FlowPanel>
+    <gwt:SimplePanel ui:field="headerWrapper" />
+    <gwt:Label styleName="{css.font.title} {css.layout.centered}" 
+     text="{aiwc.requests}" />
+
+    <gwt:Grid ui:field="requests" />
+     
+  </gwt:FlowPanel>
 </ui:UiBinder>

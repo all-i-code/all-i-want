@@ -1,5 +1,5 @@
 /**
- * @file Header.java
+ * @file SettingsPlace.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -17,9 +17,28 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.alliwant.client.ui.widget.smart;
+package com.googlecode.alliwant.client.place;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceTokenizer;
+import com.google.gwt.place.shared.Prefix;
 
-public interface Header extends IsWidget {
-}
+public class SettingsPlace extends Place {
+ 
+  public static final String PREFIX = "Settings";
+ 
+  @Prefix(PREFIX)
+  public static class Tokenizer implements PlaceTokenizer<SettingsPlace> {
+    
+    @Override
+    public SettingsPlace getPlace(String token) {
+      return new SettingsPlace();
+    }
+
+    @Override
+    public String getToken(SettingsPlace place) {
+      return "";
+    }
+    
+  } // Tokenizer //
+} 

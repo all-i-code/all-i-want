@@ -29,6 +29,6 @@ public interface Group {
   int getId();
   String getName();
   String getDescription();
-  List<GroupInvitation> getGroupInvitations();
-  List<GroupMember> getGroupMembers();
+  List<GroupInvitation> getInvitations();
+  List<GroupMember> getMembers();
 }

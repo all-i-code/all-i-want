@@ -19,9 +19,15 @@
 */
 package com.googlecode.alliwant.client.rpc;
 
+import java.util.List;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
+import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
+import com.googlecode.alliwant.client.event.ModelListEvent;
+import com.googlecode.alliwant.client.model.AccessReq;
+import com.googlecode.alliwant.client.model.AccessReqImpl;
 import com.googlecode.alliwant.client.model.User;
 import com.googlecode.alliwant.client.model.UserImpl;
 
@@ -46,22 +52,58 @@ public class ManagerImpl implements Manager {
    * @param currentURL the current URL (used to redirect back after login)
    */
   @Override
-  public void getCurrentUser(String currentURL) {    
+  public void getCurrentUser() {    
+    /*
     if (null != user) {
       eventBus.fireEvent(new ModelEvent<User>(User.class, user));
       return;
     }
+    */
     
-    if (currentURL.length() < 1)
-      currentURL = Window.Location.getHref();
     String url = "/rpc/user/get_current_user?";
-    url += rpc.add("url", currentURL, true);
+    url += rpc.add("url", Window.Location.getHref(), true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
         handleUser(result);
       }
     });
   } // getCurrentUser //
+
+  /**
+   * Request a listing of all AccessReq objects
+   */
+  @Override
+  public void getAccessRequests() {
+    String url = "/rpc/user/get_requests";
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        List<AccessReq> reqs = AccessReqImpl.decodeList(result);
+        eventBus.fireEvent(new ModelListEvent<AccessReq>(AccessReq.class, reqs));
+      }
+    });
+  } // getAccessRequests //
+
+  @Override
+  public void approveRequest(int reqId) {
+    String url = "/rpc/user/approve_request?";
+    url += rpc.add("req_id", reqId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.REQ_APPROVED));
+      }
+    });
+  } // approveRequest //
+ 
+  @Override
+  public void denyRequest(int reqId) {
+    String url = "/rpc/user/deny_request?";
+    url += rpc.add("req_id", reqId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.REQ_DENIED));
+      }
+    });
+  }
   
   // ================================================================
   // END: Manager methods

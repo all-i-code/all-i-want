@@ -26,15 +26,18 @@ import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.model.MockModel;
 import com.googlecode.alliwant.client.model.User;
 import com.googlecode.alliwant.client.rpc.Manager;
+import com.googlecode.alliwant.client.ui.widget.AlertTestImpl;
 
 import junit.framework.TestCase;
 
 public class HeaderPresenterTest extends TestCase {
 
+  @SuppressWarnings("unused")
   private HeaderPresenter presenter;
   private Manager manager;
   private EventBus eventBus;
   private HeaderViewTestImpl view;
+  private AlertTestImpl alert;
   private ClientFactoryTestImpl cf;
  
   // ================================================================
@@ -46,9 +49,11 @@ public class HeaderPresenterTest extends TestCase {
     super.setUp();
     cf = new ClientFactoryTestImpl();
     view = new HeaderViewTestImpl();
+    alert = cf.getAlert();
     eventBus = cf.getEventBus();
     manager = cf.getManager();
-    presenter = new HeaderPresenter(view, eventBus, manager);
+    presenter = new HeaderPresenter(view, alert, eventBus, manager,
+     cf.getPlaceController());
   } // setUp //
   
   // ================================================================
@@ -61,13 +66,9 @@ public class HeaderPresenterTest extends TestCase {
   // ================================================================
   
   public void testLogin() {
-    String URL = "http://host.domain#Place:";
-    view.setURL(URL);
-    assertFalse(view.isProcessingOverlayShowing());
-    presenter.getUser();
     assertTrue(view.isProcessingOverlayShowing());
     assertEquals("", view.getRedirectTo());
-    verify(manager).getCurrentUser(URL);
+    verify(manager).getCurrentUser();
     User user = MockModel.newUser("https://super.secure.login.url");
     eventBus.fireEvent(new ModelEvent<User>(User.class, user));
     assertFalse(view.isProcessingOverlayShowing());
@@ -75,12 +76,8 @@ public class HeaderPresenterTest extends TestCase {
   } // testLogin //
   
   public void testValidUser() {
-    String URL = "http://host.domain#Place:";
-    view.setURL(URL);
-    assertFalse(view.isProcessingOverlayShowing());
-    presenter.getUser();
     assertTrue(view.isProcessingOverlayShowing());
-    verify(manager).getCurrentUser(URL);
+    verify(manager).getCurrentUser();
     User user = MockModel.newUser("john.dorian@sacredheart.net", "J.D.", 
      "12345", "https://fine.leave.then");
     eventBus.fireEvent(new ModelEvent<User>(User.class, user));

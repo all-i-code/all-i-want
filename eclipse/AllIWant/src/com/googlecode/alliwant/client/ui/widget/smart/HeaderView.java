@@ -19,6 +19,7 @@
 */
 package com.googlecode.alliwant.client.ui.widget.smart;
 
+import com.googlecode.alliwant.client.i18n.AiwConstants;
 import com.googlecode.alliwant.client.i18n.AiwMessages;
 import com.googlecode.alliwant.client.ui.JhbView;
 
@@ -27,8 +28,18 @@ public interface HeaderView extends JhbView {
   void setLogoutURL(String url);
   void setListsActive(boolean active);
   void setGroupsActive(boolean active);
+  void setRequestsActive(boolean active);
+  void setRequestsVisible(boolean visible);
   void setSettingsActive(boolean active);
-  String getURL();
   void redirect(String url);
+  AiwConstants getConsts();
   AiwMessages getMsgs();
-}
+ 
+  void setPresenter(Presenter presenter);
+  interface Presenter {
+    void lists();
+    void groups();
+    void requests();
+    void settings();
+  }
+} // HeaderView //

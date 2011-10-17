@@ -28,5 +28,5 @@ import java.util.List;
 public interface WishList {
   int getId();
   String getName();
-  List<ListItem> getListItems();
+  List<ListItem> getItems();
 }

@@ -31,4 +31,6 @@ public interface User {
   String getLoginUrl();
   String getLogoutUrl();
   int getOwnerId();
+  boolean wasReqDenied();
+  boolean isAdmin();
 }

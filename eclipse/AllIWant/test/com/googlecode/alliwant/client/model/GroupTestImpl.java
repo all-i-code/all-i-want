@@ -74,12 +74,12 @@ public class GroupTestImpl extends ModelJson
   }
 
   @Override
-  public List<GroupInvitation> getGroupInvitations() {
+  public List<GroupInvitation> getInvitations() {
     return GroupInvitationTestImpl.parseArray(getArray("d"));
   }
 
   @Override
-  public List<GroupMember> getGroupMembers() {
+  public List<GroupMember> getMembers() {
     return GroupMemberTestImpl.parseArray(getArray("e"));
   }
 

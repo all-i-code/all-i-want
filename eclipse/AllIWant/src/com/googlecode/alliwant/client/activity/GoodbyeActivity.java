@@ -62,7 +62,7 @@ public class GoodbyeActivity implements Activity {
     panel.setWidget(view);
     addEventBusHandlers(eventBus);
     view.showProcessingOverlay();
-    manager.getCurrentUser(view.getURL());
+    manager.getCurrentUser();
   }
   
   // ==========================================================================

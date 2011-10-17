@@ -28,5 +28,11 @@ public interface AiwMessages extends Messages {
   
   @DefaultMessage("RPC Error: request: [{0}] error: [{1}]")
   String rpcError(String request, String error);
+
+  @DefaultMessage("Account Request for <{0}> approved.")
+  String reqApproved(String email);
+  
+  @DefaultMessage("Account Request for <{0}> denied")
+  String reqDenied(String email);
   
 } // AiwMessages //

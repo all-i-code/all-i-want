@@ -28,9 +28,4 @@ public class HeaderTestImpl implements Header {
     return null;
   }
   
-  @Override
-  public void getUser() {
-    
-  }
-
 } // HeaderTestImpl //

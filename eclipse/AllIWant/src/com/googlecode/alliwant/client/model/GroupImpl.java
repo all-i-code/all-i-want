@@ -68,22 +68,22 @@ public class GroupImpl extends JavaScriptObject implements Group {
     return this.c;
   }-*/;
 
-  private final native JsArray<GroupInvitationImpl> getGroupInvitationsJs()/*-{
+  private final native JsArray<GroupInvitationImpl> getInvitationsJs()/*-{
     return this.d;
   }-*/;
 
   @Override
-  public final List<GroupInvitation> getGroupInvitations() {
-    return GroupInvitationImpl.decodeList(getGroupInvitationsJs());
+  public final List<GroupInvitation> getInvitations() {
+    return GroupInvitationImpl.decodeList(getInvitationsJs());
   }
 
-  private final native JsArray<GroupMemberImpl> getGroupMembersJs()/*-{
+  private final native JsArray<GroupMemberImpl> getMembersJs()/*-{
     return this.e;
   }-*/;
 
   @Override
-  public final List<GroupMember> getGroupMembers() {
-    return GroupMemberImpl.decodeList(getGroupMembersJs());
+  public final List<GroupMember> getMembers() {
+    return GroupMemberImpl.decodeList(getMembersJs());
   }
 
 

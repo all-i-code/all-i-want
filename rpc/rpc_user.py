@@ -20,7 +20,7 @@
 '''
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
-from rpc.rpc_params import RpcParamString, RpcParamInt
+from rpc.rpc_params import RpcParamString, RpcParamInt, RpcParamBoolean
 from core.model import User, ListOwner, AccessReq
 from core.exception import PermissionDeniedError
 
@@ -54,27 +54,31 @@ class UserRpcGroup(RpcGroupBase):
         If user has not yet been authenticated, return a User object with a
         url to allow user to log in.
         '''
-        e, n, ui, li, lo, oid = (None, None, None, None, None, -1)
+        e, n, ui, li, lo, oid, wrd = (None, None, None, None, None, -1, False)
         user = self.db.user
+        ia = False
         if user is None:
             li = self.ae.create_login_url(url)
         else:
+            ia = user.is_admin
             e, n, ui = user.email(), user.nickname(), user.user_id()
             # make sure ListOwnerDb record exists
             owner = self.db.get_owner_by_user(user)
+            req = None 
             if owner is None:
                 if not user.is_admin:
-                    if self.db.get_req_by_user(user) is None:
-                        self.db.add_req(user)
+                    req = self.db.get_req_by_user(user)
+                    if req is None:
+                        req = self.db.add_req(user)
                 else:
                     owner = self.db.add_owner(user)
             oid = owner.key().id() if owner is not None else -1
-            
+            wrd = req.denied if req is not None else False 
             from core.util import get_base_url
             base = get_base_url(url)
             lo = self.ae.create_logout_url('%s/#Goodbye:' % base)
         return User(email=e, nickname=n, user_id=ui, login_url=li,
-            logout_url=lo, owner_id=oid)
+            logout_url=lo, owner_id=oid, was_req_denied=wrd, is_admin=ia)
 
     def get_owner(self, owner_id):
         '''
@@ -98,7 +102,7 @@ class UserRpcGroup(RpcGroupBase):
         '''
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
-        
+      
         return [ AccessReq.from_db(db) for db in self.db.get_reqs() ]
 
     def approve_request(self, req_id):

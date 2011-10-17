@@ -1,5 +1,5 @@
 /**
- * @file ListsViewTestImpl.java
+ * @file RequestsView.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -20,39 +20,19 @@
 package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.alliwant.client.i18n.AiwConstants;
+import com.googlecode.alliwant.client.i18n.AiwMessages;
 
-public class ListsViewTestImpl implements ListsView {
-
-  private boolean processing = false;
-  private IsWidget header = null;
-  
-  @Override
-  public Widget asWidget() {
-    // TODO Auto-generated method stub
-    return null;
+public interface RequestsView extends JhbView {
+  void setHeader(IsWidget header);
+  void setNumRequests(int num);
+  void setEmail(int index, String email);
+  void setDenied(int index, String denied);
+  AiwConstants getAiwc();
+  AiwMessages getAiwm();
+  void setPresenter(Presenter presenter);
+  interface Presenter {
+    void approve(int index);
+    void deny(int index);
   }
-
-  @Override
-  public void showProcessingOverlay() {
-    processing = true;
-  }
-
-  @Override
-  public void hideProcessingOverlay() {
-    processing = false;
-  }
-  
-  public boolean isProcessing() {
-    return processing;
-  }
-
-  public void setHeader(IsWidget header) {
-    this.header = header;
-  }
- 
-  public IsWidget getHeader() {
-    return header;
-  }
-  
-} // ListsViewTestImpl //
+}

@@ -31,4 +31,14 @@ public class AiwMessagesTestImpl implements AiwMessages {
     return "rpcError" + request + error;
   }
 
+  @Override
+  public String reqApproved(String email) {
+    return "reqApproved" + email;
+  }
+
+  @Override
+  public String reqDenied(String email) {
+    return "reqDenied" + email;
+  }
+
 } // AiwMessagesTestImpl //

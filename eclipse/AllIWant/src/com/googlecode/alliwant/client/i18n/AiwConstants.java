@@ -79,5 +79,32 @@ public interface AiwConstants extends Constants {
 
   @DefaultStringValue("Settings")
   String settings();
+
+  @DefaultStringValue("Your request for access to All I Want is being processed.\nYou will be notified via email when a decision has been made.")
+  String reqBeingProcessed();
+  
+  @DefaultStringValue("Your request for access to All I Want could not be granted at this time.")
+  String reqDenied();
+  
+  @DefaultStringValue("Requests")
+  String requests();
+
+  @DefaultStringValue("Email")
+  String email();
+ 
+  @DefaultStringValue("Approve")
+  String approve();
+  
+  @DefaultStringValue("Deny")
+  String deny();
+  
+  @DefaultStringValue("Denied")
+  String denied();
+  
+  @DefaultStringValue("Yes")
+  String yes();
+  
+  @DefaultStringValue("No")
+  String no();
   
 } // AiwConstants //

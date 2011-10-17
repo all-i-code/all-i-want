@@ -19,18 +19,21 @@
 */
 package com.googlecode.alliwant.client.ui.widget.smart;
 
+import com.googlecode.alliwant.client.i18n.AiwConstants;
+import com.googlecode.alliwant.client.i18n.AiwConstantsTestImpl;
 import com.googlecode.alliwant.client.i18n.AiwMessages;
 import com.googlecode.alliwant.client.i18n.AiwMessagesTestImpl;
 import com.googlecode.alliwant.client.ui.JhbViewTestImpl;
 
 public class HeaderViewTestImpl extends JhbViewTestImpl implements HeaderView {
 
-  private String user = "", logoutURL = "", redirectTo = "", 
-   url = "TEST_URL";
+  private String user = "", logoutURL = "", redirectTo = "";
   private boolean listsActive = false, groupsActive = false,
-   settingsActive = false;
- 
+   reqsActive = false, reqsVisible = false, settingsActive = false;
+
+  private Presenter presenter = null;
   private AiwMessagesTestImpl aiwm = new AiwMessagesTestImpl();
+  private AiwConstantsTestImpl aiwc = new AiwConstantsTestImpl();
   
   // ================================================================
   // BEGIN: HeaderView methods 
@@ -57,13 +60,18 @@ public class HeaderViewTestImpl extends JhbViewTestImpl implements HeaderView {
   }
 
   @Override
-  public void setSettingsActive(boolean active) {
-    settingsActive = active;
+  public void setRequestsActive(boolean active) {
+    reqsActive = active;
   }
 
   @Override
-  public String getURL() {
-    return url;
+  public void setRequestsVisible(boolean visible) {
+    reqsVisible = visible;
+  }
+
+  @Override
+  public void setSettingsActive(boolean active) {
+    settingsActive = active;
   }
 
   @Override
@@ -72,8 +80,18 @@ public class HeaderViewTestImpl extends JhbViewTestImpl implements HeaderView {
   }
   
   @Override
+  public AiwConstants getConsts() {
+    return aiwc;
+  }
+  
+  @Override
   public AiwMessages getMsgs() {
     return aiwm;
+  }
+  
+  @Override
+  public void setPresenter(Presenter presenter) {
+    this.presenter = presenter;
   }
   
   // ================================================================
@@ -100,12 +118,20 @@ public class HeaderViewTestImpl extends JhbViewTestImpl implements HeaderView {
     return groupsActive;
   }
   
+  public boolean isRequestsActive() {
+    return reqsActive;
+  }
+  
+  public boolean isRequestsVisible() {
+    return reqsVisible;
+  }
+  
   public boolean isSettingsActive() {
     return settingsActive;
   }
   
-  public void setURL(String url) {
-    this.url = url;
+  public Presenter getPresenter() {
+    return presenter;
   }
 
 } // HeaderViewTestImpl //

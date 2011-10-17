@@ -96,5 +96,50 @@ public class AiwConstantsTestImpl implements AiwConstants {
   public String category() {
     return "category";
   }
+  
+  @Override
+  public String reqBeingProcessed() {
+    return "reqBeingProcessed";
+  }
+  
+  @Override
+  public String reqDenied() {
+    return "reqDenied";
+  }
 
+  @Override
+  public String requests() {
+    return "requets";
+  }
+
+  @Override
+  public String email() {
+    return "email";
+  }
+  
+  @Override
+  public String approve() {
+    return "approve";
+  }
+  
+  @Override
+  public String deny() {
+    return "deny";
+  }
+  
+  @Override
+  public String denied() {
+    return "denied";
+  }
+  
+  @Override
+  public String yes() {
+    return "yes";
+  }
+  
+  @Override
+  public String no() {
+    return "no";
+  }
+  
 } // AiwConstantsTestImpl //

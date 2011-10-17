@@ -1,5 +1,5 @@
 /**
- * @file UserImpl.java
+ * @file AccessReqImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -29,69 +29,45 @@ import java.util.List;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class UserImpl extends JavaScriptObject implements User {
+public class AccessReqImpl extends JavaScriptObject implements AccessReq {
   
-  public static final List<User> decodeList(JsArray<UserImpl> js_arr) {
-    List<User> arr = new ArrayList<User>();
+  public static final List<AccessReq> decodeList(String json) {
+    return decodeList(decodeArray(json)); 
+  }
+
+  public static final native JsArray<AccessReqImpl> decodeArray(String json) /*-{
+    eval('var js = ' + json);
+    return js;
+  }-*/;
+  
+  public static final native AccessReqImpl decode(String json) /*-{
+    eval('var js = ' + json);
+    return js;
+  }-*/;
+  
+  private static final List<AccessReq> decodeList(JsArray<AccessReqImpl> js_arr) {
+    List<AccessReq> arr = new ArrayList<AccessReq>();
     for (int i = 0; i < js_arr.length(); i++) arr.add(js_arr.get(i));
     return arr; 
   }
 
-  public static final List<User> decodeList(String json) {
-    return decodeList(decodeArray(json)); 
-  }
 
-  public static final native JsArray<UserImpl> decodeArray(String json) /*-{
-    eval('var js = ' + json);
-    return js;
-  }-*/;
-  
-  public static final native UserImpl decode(String json) /*-{
-    eval('var js = ' + json);
-    return js;
-  }-*/;
-
-  protected UserImpl() {}
+  protected AccessReqImpl() {}
 
   @Override
-  public final native String getEmail() /*-{
+  public final native int getId() /*-{
     return this.a;
   }-*/;
 
   @Override
-  public final native String getNickname() /*-{
+  public final native boolean denied() /*-{
     return this.b;
   }-*/;
 
   @Override
-  public final native String getUserId() /*-{
+  public final native String getEmail() /*-{
     return this.c;
   }-*/;
 
-  @Override
-  public final native String getLoginUrl() /*-{
-    return this.d;
-  }-*/;
 
-  @Override
-  public final native String getLogoutUrl() /*-{
-    return this.e;
-  }-*/;
-
-  @Override
-  public final native int getOwnerId() /*-{
-    return this.f;
-  }-*/;
-
-  @Override
-  public final native boolean wasReqDenied() /*-{
-    return this.g;
-  }-*/;
-
-  @Override
-  public final native boolean isAdmin() /*-{
-    return this.h;
-  }-*/;
-
-
-} // UserImpl
+} // AccessReqImpl

@@ -25,9 +25,9 @@
   <ui:with type="com.googlecode.alliwant.client.ui.css.CssBundle" field="css" />
   
   <gwt:FlowPanel>
-    <gwt:SimplePanel ui:field="headerWrapper" />
+    <gwt:SimplePanel ui:field="headerWrapper" addStyleNames="header" />
     <gwt:Label styleName="{css.font.title} {css.layout.centered}" 
-     text="{aiwc.allIWant}" />
+     text="{aiwc.lists}" />
      
   </gwt:FlowPanel>
 </ui:UiBinder>

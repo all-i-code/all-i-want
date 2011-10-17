@@ -69,18 +69,28 @@ public class ListItemImpl extends JavaScriptObject implements ListItem {
   }-*/;
 
   @Override
-  public final native String getUrl() /*-{
+  public final native String getCategory() /*-{
     return this.d;
   }-*/;
 
   @Override
-  public final native String getReservedBy() /*-{
+  public final native String getUrl() /*-{
     return this.e;
   }-*/;
 
   @Override
-  public final native String getPurchasedBy() /*-{
+  public final native String getReservedBy() /*-{
     return this.f;
+  }-*/;
+
+  @Override
+  public final native String getPurchasedBy() /*-{
+    return this.g;
+  }-*/;
+
+  @Override
+  public final native boolean isSurprise() /*-{
+    return this.h;
   }-*/;
 
 

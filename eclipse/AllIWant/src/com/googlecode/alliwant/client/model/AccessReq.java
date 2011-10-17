@@ -1,5 +1,5 @@
 /**
- * @file Header.java
+ * @file AccessReq.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -16,10 +16,16 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *
+ * WARNING: This file is auto-generated, don't modify it directly,
+ * instead modify core/model.py and re-generate
+ *
 */
-package com.googlecode.alliwant.client.ui.widget.smart;
 
-import com.google.gwt.user.client.ui.IsWidget;
+package com.googlecode.alliwant.client.model;
 
-public interface Header extends IsWidget {
+
+public interface AccessReq {
+  int getId();
+  boolean denied();
+  String getEmail();
 }

@@ -24,8 +24,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.googlecode.alliwant.client.ui.widget.smart.Header;
 
 public class ListsViewImpl extends Composite implements ListsView {
 
@@ -35,14 +35,28 @@ public class ListsViewImpl extends Composite implements ListsView {
   @UiField
   SimplePanel headerWrapper;
   
-  public ListsViewImpl(Header header) {
+  public ListsViewImpl() {
     initWidget(uiBinder.createAndBindUi(this));
-    headerWrapper.setWidget(header);
-  } // ListsViewImpl //
+  }
 
   // ================================================================
   // BEGIN: ListsView methods
   // ================================================================
+  
+  @Override
+  public void showProcessingOverlay() {
+    ProcessingOverlay.show();
+  }
+
+  @Override
+  public void hideProcessingOverlay() {
+    ProcessingOverlay.hide();
+  }
+  
+  @Override
+  public void setHeader(IsWidget header) {
+    headerWrapper.setWidget(header);
+  }
   
   // ================================================================
   // END: ListsView methods

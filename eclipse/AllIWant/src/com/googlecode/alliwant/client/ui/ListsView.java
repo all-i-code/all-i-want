@@ -21,5 +21,6 @@ package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-public interface ListsView extends IsWidget {
+public interface ListsView extends JhbView {
+  void setHeader(IsWidget header);
 }

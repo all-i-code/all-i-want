@@ -88,5 +88,15 @@ public class UserTestImpl extends ModelJson
     return getInt("f");
   }
 
+  @Override
+  public boolean wasReqDenied() {
+    return getBool("g");
+  }
+
+  @Override
+  public boolean isAdmin() {
+    return getBool("h");
+  }
+
 
 } // UserTestImpl //

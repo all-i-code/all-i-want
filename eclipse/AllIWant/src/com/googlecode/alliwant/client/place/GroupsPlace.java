@@ -1,5 +1,5 @@
 /**
- * @file Header.java
+ * @file GroupsPlace.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -17,9 +17,28 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.alliwant.client.ui.widget.smart;
+package com.googlecode.alliwant.client.place;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceTokenizer;
+import com.google.gwt.place.shared.Prefix;
 
-public interface Header extends IsWidget {
-}
+public class GroupsPlace extends Place {
+ 
+  public static final String PREFIX = "Groups";
+ 
+  @Prefix(PREFIX)
+  public static class Tokenizer implements PlaceTokenizer<GroupsPlace> {
+    
+    @Override
+    public GroupsPlace getPlace(String token) {
+      return new GroupsPlace();
+    }
+
+    @Override
+    public String getToken(GroupsPlace place) {
+      return "";
+    }
+    
+  } // Tokenizer //
+} 

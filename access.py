@@ -83,7 +83,7 @@ class DbAccess:
         return AccessReqDb.all().filter('user =', user).get()
 
     def add_req(self, user):
-        return AccessReqDb(user=user).put()
+        return AccessReqDb(user=user, denied=False).put()
 
     def get_req(self, req_id):
         return AccessReqDb.get_by_id(req_id)

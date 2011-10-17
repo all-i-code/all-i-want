@@ -1,5 +1,5 @@
 /**
- * @file ListItemTestImpl.java
+ * @file AccessReqTestImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -32,28 +32,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ListItemTestImpl extends ModelJson
- implements ListItem {
+public class AccessReqTestImpl extends ModelJson
+ implements AccessReq {
 
-  public static List<ListItem> parseArray(String json) {
-    List<ListItem> al = new ArrayList<ListItem>();
+  public static List<AccessReq> parseArray(String json) {
+    List<AccessReq> al = new ArrayList<AccessReq>();
     try {
       JSONArray arr = new JSONArray(json);
       for (int i = 0; i < arr.length(); i++) {
-        al.add(new ListItemTestImpl(arr.getJSONObject(i))); 
+        al.add(new AccessReqTestImpl(arr.getJSONObject(i))); 
       }
     } catch (JSONException e) {
-      logger().severe("ListItemTestImpl::parseArray: " +
+      logger().severe("AccessReqTestImpl::parseArray: " +
         e.getLocalizedMessage()); 
     }
     return al;
   } // parseArray //
 
-  public ListItemTestImpl(String json) {
+  public AccessReqTestImpl(String json) {
     super(json);
   }
   
-  public ListItemTestImpl(JSONObject obj) {
+  public AccessReqTestImpl(JSONObject obj) {
     super(obj);
   }
 
@@ -64,39 +64,14 @@ public class ListItemTestImpl extends ModelJson
   }
 
   @Override
-  public String getName() {
-    return getStr("b");
+  public boolean denied() {
+    return getBool("b");
   }
 
   @Override
-  public String getDescription() {
+  public String getEmail() {
     return getStr("c");
   }
 
-  @Override
-  public String getCategory() {
-    return getStr("d");
-  }
 
-  @Override
-  public String getUrl() {
-    return getStr("e");
-  }
-
-  @Override
-  public String getReservedBy() {
-    return getStr("f");
-  }
-
-  @Override
-  public String getPurchasedBy() {
-    return getStr("g");
-  }
-
-  @Override
-  public boolean isSurprise() {
-    return getBool("h");
-  }
-
-
-} // ListItemTestImpl //
+} // AccessReqTestImpl //

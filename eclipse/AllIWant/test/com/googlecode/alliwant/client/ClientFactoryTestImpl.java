@@ -27,6 +27,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.googlecode.alliwant.client.rpc.Manager;
 import com.googlecode.alliwant.client.ui.ListsViewTestImpl;
 import com.googlecode.alliwant.client.ui.GoodbyeViewTestImpl;
+import com.googlecode.alliwant.client.ui.RequestsViewTestImpl;
 import com.googlecode.alliwant.client.ui.widget.AlertTestImpl;
 import com.googlecode.alliwant.client.ui.widget.smart.Header;
 import com.googlecode.alliwant.client.ui.widget.smart.HeaderTestImpl;
@@ -38,7 +39,8 @@ public class ClientFactoryTestImpl implements ClientFactory {
   private PlaceController pc = mock(PlaceController.class);
   private AlertTestImpl alert = new AlertTestImpl();
   private HeaderTestImpl header = new HeaderTestImpl();
-  private ListsViewTestImpl dashboardView = new ListsViewTestImpl();
+  private ListsViewTestImpl listsView = new ListsViewTestImpl();
+  private RequestsViewTestImpl reqsView = new RequestsViewTestImpl();
   private GoodbyeViewTestImpl goodbyeView = new GoodbyeViewTestImpl();
   
   // ================================================================
@@ -71,8 +73,13 @@ public class ClientFactoryTestImpl implements ClientFactory {
   }
 
   @Override
-  public ListsViewTestImpl getDashboardView() {
-    return dashboardView;
+  public ListsViewTestImpl getListsView() {
+    return listsView;
+  }
+  
+  @Override
+  public RequestsViewTestImpl getRequestsView() {
+    return reqsView;
   }
   
   @Override
