@@ -26,13 +26,81 @@ public interface Manager {
    * @param currentURL the current URL (used to redirect back after login)
    */
   void getCurrentUser();
- 
+  
   /**
-   * Request a listing of all AccessReq objects
+   * Request current AccessReqs
    */
   void getAccessRequests();
 
+  /**
+   * Request given ListOwner
+   * @param ownerId ID of ListOwner
+   */
+  void getOwner(int ownerId);
+ 
+  /**
+   * Update the given ListOwner
+   * @param ownerId ID of ListOwner
+   * @param name new String name for ListOwner
+   * @param nickname new String nickname for ListOwner
+   */
+  void updateOwner(int ownerId, String name, String nickname);
+  
+  /**
+   * Approve the given AccessReq
+   * @param reqId ID of the AccessReq to approve
+   */
   void approveRequest(int reqId);
+  
+  /**
+   * Deny the given AccessReq
+   * @param reqId ID of the AccessReq to deny
+   */
   void denyRequest(int reqId);
+
+
+  /**
+   * Add a new Group
+   * @param name short Name for Group
+   * @param description longer Description of Group
+   */
+  void addGroup(String name, String description);
+
+  /**
+   * Update a given Group
+   * @param groupId ID of Group
+   * @param name new Name
+   * @param description new Description
+   */
+  void updateGroup(int groupId, String name, String description);
+
+  /**
+   * Get my Groups (or all Groups if admin)
+   */
+  void getGroups();
+  
+  /**
+   * Invite someone to join a Group
+   * @param groupId ID of Group
+   * @param email Email address of potential member
+   */
+  void inviteMember(int groupId, String email);
+  
+  /**
+   * Get my GroupInvitations (or all GroupInvitations if admin)
+   */
+  void getGroupInvites();
+
+  /**
+   * Accept the given GroupInvitation
+   * @param inviteId ID of GroupInvitation
+   */
+  void acceptInvite(int inviteId);
+ 
+  /**
+   * Decline the given GroupInvitation
+   * @param inviteId ID of GroupInvitation
+   */
+  void declineInvite(int inviteId);
   
 } // Manager //

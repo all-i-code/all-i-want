@@ -88,6 +88,7 @@ class Group(Model):
         FieldInt(name='id'),
         FieldString(name='name'),
         FieldString(name='owner'),
+        FieldInt(name='owner_id'),
         FieldText(name='description'),
         FieldModelArray(type=GroupInvitation, name='invitations'),
         FieldModelArray(type=GroupMember, name='members'),
@@ -97,9 +98,9 @@ class Group(Model):
     def from_db(cls, db):
         invitations = [ GroupInvitation.from_db(i) for i in db.invitations ]
         members = [ GroupMember.from_db(m) for m in db.members ]
-        return cls(id=db.key().id(), name=db.name, owner=db.owner.label(),
-            description=db.description, invitations=invitations,
-            members=members)
+        return cls(id=db.key().id(), name=db.name, owner_id=db.owner.key().id(),
+            owner=db.owner.label(), description=db.description,
+            invitations=invitations, members=members)
 
 class ListItem(Model):
     fields = (

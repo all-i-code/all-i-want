@@ -45,6 +45,8 @@ public class GroupsViewImpl extends Composite implements GroupsView {
   private AiwMessages aiwm = GWT.create(AiwMessages.class);
   private CssBundle css = CSS.getBundle();
  
+  private int mgNameCol, mgDescCol, mgInvitesCol, mgMembersCol, mgInviteCol, 
+   mgDeleteCol;
   private int gNameCol, gDescCol, gOwnerCol, gLeaveCol;
   private int iNameCol, iOwnerCol, iEmailCol, iAcceptCol, iDeclineCol;
   
@@ -52,11 +54,20 @@ public class GroupsViewImpl extends Composite implements GroupsView {
   SimplePanel headerWrapper;
 
   @UiField
-  Grid groups, invites;
+  Grid myGroups, groups, invites;
   
   public GroupsViewImpl() {
     initWidget(uiBinder.createAndBindUi(this));
     int col = 0;
+    myGroups.resize(1, 6);
+    myGroups.getRowFormatter().addStyleName(0, css.main().tableHeader());
+    myGroups.setText(0, mgNameCol = col++, aiwc.name());
+    myGroups.setText(0, mgDescCol = col++, aiwc.description());
+    myGroups.setText(0, mgInvitesCol = col++, aiwc.description());
+    myGroups.setText(0, mgMembersCol = col++, aiwc.description());
+    myGroups.setText(0, mgInviteCol = col++, aiwc.description());
+    myGroups.setText(0, mgDeleteCol = col++, "");
+    
     groups.resize(1, 4);
     groups.getRowFormatter().addStyleName(0, css.main().tableHeader());
     groups.setText(0, gNameCol = col++, aiwc.name());
@@ -93,6 +104,52 @@ public class GroupsViewImpl extends Composite implements GroupsView {
     headerWrapper.setWidget(header);
   }
 
+  @Override
+  public void setNumMyGroups(int num) {
+    myGroups.resizeRows(num+1);
+    for (int i = 1; i <= num; i++) {
+      final int index = i-1;
+      Anchor invite = new Anchor(aiwc.inviteMember());
+      invite.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.inviteMember(index);
+        }
+      });
+      myGroups.setWidget(i, mgInviteCol, invite);
+      
+      Anchor delete = new Anchor(aiwc.deleteGroup());
+      delete.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.deleteGroup(index);
+        }
+      });
+      myGroups.setWidget(i, mgDeleteCol, delete);
+     
+      if (index % 2 != 0)
+        myGroups.getRowFormatter().addStyleName(i, css.main().tableAlt());
+    } // for all requests //
+  } // setNumGroups //
+ 
+  @Override
+  public void setMyGroupName(int index, String name) {
+    myGroups.setText(index+1, mgNameCol, name);
+  }
+  
+  @Override
+  public void setMyGroupDescription(int index, String description) {
+    myGroups.setText(index+1, mgDescCol, description);
+  }
+  
+  @Override
+  public void setMyGroupMemberCount(int index, String memberCount) {
+    myGroups.setText(index+1, mgMembersCol, memberCount);
+  }
+  
+  @Override
+  public void setMyGroupInviteCount(int index, String inviteCount) {
+    myGroups.setText(index+1, mgInvitesCol, inviteCount);
+  }
+  
   @Override
   public void setNumGroups(int num) {
     groups.resizeRows(num+1);

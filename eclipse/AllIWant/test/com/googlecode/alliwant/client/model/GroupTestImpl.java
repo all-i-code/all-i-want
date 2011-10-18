@@ -74,18 +74,23 @@ public class GroupTestImpl extends ModelJson
   }
 
   @Override
+  public int getOwnerId() {
+    return getInt("d");
+  }
+
+  @Override
   public String getDescription() {
-    return getStr("d");
+    return getStr("e");
   }
 
   @Override
   public List<GroupInvitation> getInvitations() {
-    return GroupInvitationTestImpl.parseArray(getArray("e"));
+    return GroupInvitationTestImpl.parseArray(getArray("f"));
   }
 
   @Override
   public List<GroupMember> getMembers() {
-    return GroupMemberTestImpl.parseArray(getArray("f"));
+    return GroupMemberTestImpl.parseArray(getArray("g"));
   }
 
 

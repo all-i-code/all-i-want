@@ -31,6 +31,7 @@ public class GroupsViewTestImpl implements GroupsView {
   private boolean processing = false;
   private IsWidget header = null;
   private Presenter presenter = null;
+  private String[] mgNames, mgDescs, mgInvites, mgMembers;
   private String[] gNames, gDescs, gOwners;
   private String[] iNames, iOwners, iEmails;
   private AiwMessages aiwm = new AiwMessagesTestImpl();
@@ -57,6 +58,40 @@ public class GroupsViewTestImpl implements GroupsView {
     this.header = header;
   }
   
+  @Override
+  public void setNumMyGroups(int num) {
+    mgNames = new String[num];
+    mgDescs = new String[num];
+    mgInvites = new String[num];
+    mgMembers = new String[num];
+    for (int i = 0; i < num; i++) {
+      mgNames[i] = "";
+      mgDescs[i] = "";
+      mgInvites[i] = "";
+      mgMembers[i] = "";
+    }
+  } // setNumMyGroups //
+ 
+  @Override
+  public void setMyGroupName(int index, String name) {
+    mgNames[index] = name;
+  }
+  
+  @Override
+  public void setMyGroupDescription(int index, String desc) {
+    mgDescs[index] = desc;
+  }
+ 
+  @Override
+  public void setMyGroupInviteCount(int index, String count) {
+    mgInvites[index] = count;
+  }
+ 
+  @Override
+  public void setMyGroupMemberCount(int index, String count) {
+    mgMembers[index] = count;
+  }
+ 
   @Override
   public void setNumGroups(int num) {
     gNames = new String[num];
@@ -137,6 +172,30 @@ public class GroupsViewTestImpl implements GroupsView {
   public Presenter getPresenter() {
     return presenter;
   }
+ 
+  public int getNumMyGroups() {
+    return mgNames.length;
+  }
+  
+  public String getMyGroupName(int index) {
+    return mgNames[index];
+  }
+  
+  public String getMyGroupDesc(int index) {
+    return mgDescs[index];
+  }
+  
+  public String getMyGroupInviteCount(int index) {
+    return mgInvites[index];
+  }
+  
+  public String getMyGroupMemberCount(int index) {
+    return mgMembers[index];
+  }
+ 
+  public int getNumGroups() {
+    return gNames.length;
+  }
   
   public String getGroupName(int index) {
     return gNames[index];
@@ -148,6 +207,10 @@ public class GroupsViewTestImpl implements GroupsView {
   
   public String getGroupOwner(int index) {
     return gOwners[index];
+  }
+ 
+  public int getNumInvites() {
+    return iNames.length;
   }
   
   public String getInviteName(int index) {

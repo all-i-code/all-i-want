@@ -31,6 +31,7 @@ public class InfoEvent extends GwtEvent<InfoEvent.Handler> {
 
   public static final String REQ_APPROVED = "reqApproved";
   public static final String REQ_DENIED = "reqDenied";
+  public static final String MEMBER_INVITED = "memberInvited";
   public static final String INVITE_ACCEPTED = "inviteAccepted";
   public static final String INVITE_DECLINED = "inviteDeclined";
   

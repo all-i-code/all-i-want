@@ -35,12 +35,16 @@ import com.googlecode.alliwant.client.model.User;
 import com.googlecode.alliwant.client.place.GroupsPlace;
 import com.googlecode.alliwant.client.rpc.Manager;
 import com.googlecode.alliwant.client.ui.GroupsView;
+import com.googlecode.alliwant.client.ui.widget.Alert;
 
 public class GroupsActivity implements Activity, GroupsView.Presenter {
 
   private ClientFactory cf;
   private GroupsView view;
   private Manager manager;
+  private Alert alert;
+  private User user;
+  private List<Group> myGroups = new ArrayList<Group>();
   private List<Group> groups = new ArrayList<Group>();
   private List<GroupInvitation> invites = new ArrayList<GroupInvitation>();
   
@@ -48,6 +52,7 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
     this.cf = cf;
     view = cf.getGroupsView();
     manager = cf.getManager();
+    alert = cf.getAlert();
   }
   
   // ==========================================================================
@@ -83,20 +88,35 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
   // ==========================================================================
   // BEGIN: GroupsView.Presenter methods
   // ==========================================================================
- 
+
+  @Override
+  public void inviteMember(int index) {
+    // TODO: Implement this
+    alert.show(view.getAiwc().comingSoon());
+  }
+  
+  @Override
+  public void deleteGroup(int index) {
+    // TODO: Implement this
+    alert.show(view.getAiwc().comingSoon());
+  }
+  
   @Override
   public void leaveGroup(int index) {
-    // TODO: implement this
+    // TODO: Implement this
+    alert.show(view.getAiwc().comingSoon());
   }
   
   @Override
   public void acceptInvite(int index) {
-    // TODO: implement this
+    view.showProcessingOverlay();
+    manager.acceptInvite(invites.get(index).getId());
   }
     
   @Override
   public void declineInvite(int index) {
-    // TODO: implement this
+    view.showProcessingOverlay();
+    manager.declineInvite(invites.get(index).getId());
   }
   
   // ==========================================================================
@@ -153,13 +173,27 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
 
   private void handleUser(User user) {
     view.showProcessingOverlay();
+    this.user = user;
     manager.getAccessRequests();
   }
   
-  private void handleGroups(List<Group> groups) {
+  private void handleGroups(List<Group> allGroups) {
     view.hideProcessingOverlay();
-    this.groups.clear();
-    this.groups.addAll(groups);
+    
+    myGroups.clear();
+    groups.clear();
+    for (Group g : allGroups) {
+      if (g.getOwnerId() == user.getOwnerId()) myGroups.add(g);
+      else groups.add(g);
+    }
+   
+    view.setNumMyGroups(myGroups.size());
+    for (int i = 0; i < myGroups.size(); i++) {
+      Group g = myGroups.get(i);
+      view.setMyGroupName(i, g.getName());
+      view.setMyGroupDescription(i, g.getDescription());
+    }
+    
     view.setNumGroups(groups.size());
     for (int i = 0; i < groups.size(); i++) {
       Group g = groups.get(i);
@@ -170,7 +204,6 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
   } // handleGroups //
  
   private void handleInvites(List<GroupInvitation> invites) {
-    view.hideProcessingOverlay();
     this.invites.clear();
     this.invites.addAll(invites);
     view.setNumInvites(invites.size());
@@ -180,14 +213,21 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
       view.setInviteOwner(i, invite.getOwnerName());
       view.setInviteEmail(i, invite.getMemberEmail());
     }
+    manager.getGroups();
   } // handleInvites //
   
   private void handleAccept() {
-    // TODO: implement this
+    view.hideProcessingOverlay();
+    alert.show(view.getAiwc().invitationAccepted());
+    view.showProcessingOverlay();
+    manager.getGroupInvites();
   }
   
   private void handleDecline() {
-    // TODO: implement this
+    view.hideProcessingOverlay();
+    alert.show(view.getAiwc().invitationDeclined());
+    view.showProcessingOverlay();
+    manager.getGroupInvites();
   }
 
 } // RequestsActivity //

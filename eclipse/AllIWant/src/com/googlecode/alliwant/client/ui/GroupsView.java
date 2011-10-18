@@ -25,6 +25,11 @@ import com.googlecode.alliwant.client.i18n.AiwMessages;
 
 public interface GroupsView extends JhbView {
   void setHeader(IsWidget header);
+  void setNumMyGroups(int num);
+  void setMyGroupName(int index, String name);
+  void setMyGroupDescription(int index, String description);
+  void setMyGroupMemberCount(int index, String memberCount);
+  void setMyGroupInviteCount(int index, String inviteCount);
   void setNumGroups(int num);
   void setGroupName(int index, String name);
   void setGroupDescription(int index, String description);
@@ -37,6 +42,8 @@ public interface GroupsView extends JhbView {
   AiwMessages getAiwm();
   void setPresenter(Presenter presenter);
   interface Presenter {
+    void inviteMember(int index);
+    void deleteGroup(int index);
     void leaveGroup(int index);
     void acceptInvite(int index);
     void declineInvite(int index);

@@ -28,6 +28,12 @@
     <gwt:SimplePanel ui:field="headerWrapper" addStyleNames="header" />
     <gwt:Label styleName="{css.main.title} {css.main.centered}" 
      text="{aiwc.groups}" />
+    <gwt:FlowPanel>
+      <gwt:Label text="{aiwc.myGroups}" />
+      <gwt:Anchor ui:field="createGroup" text="{aiwc.createGroup}"
+       href="javascript:;" />
+    </gwt:FlowPanel>
+    <gwt:Grid ui:field="myGroups" />
     <gwt:Label text="{aiwc.groups}" />
     <gwt:Grid ui:field="groups" />
     <gwt:Label text="{aiwc.invitations}" />

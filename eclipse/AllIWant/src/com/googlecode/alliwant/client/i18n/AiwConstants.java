@@ -113,10 +113,34 @@ public interface AiwConstants extends Constants {
   @DefaultStringValue("Leave Group")
   String leaveGroup();
   
+  @DefaultStringValue("Delete Group")
+  String deleteGroup();
+  
   @DefaultStringValue("Accept")
   String accept();
   
   @DefaultStringValue("Decline")
   String decline();
+  
+  @DefaultStringValue("Create Group")
+  String createGroup();
+  
+  @DefaultStringValue("My Groups")
+  String myGroups();
+  
+  @DefaultStringValue("Coming Soon")
+  String comingSoon();
+  
+  @DefaultStringValue("Invitation Accepted")
+  String invitationAccepted();
+  
+  @DefaultStringValue("Invitation Declined")
+  String invitationDeclined();
+
+  @DefaultStringValue("Invite Member")
+  String inviteMember();
+  
+  @DefaultStringValue("Members")
+  String members();
   
 } // AiwConstants //

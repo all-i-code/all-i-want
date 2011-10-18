@@ -172,6 +172,11 @@ public class AiwConstantsTestImpl implements AiwConstants {
   }
   
   @Override
+  public String deleteGroup() {
+    return "deleteGroup";
+  }
+  
+  @Override
   public String accept() {
     return "accept";
   }
@@ -179,6 +184,41 @@ public class AiwConstantsTestImpl implements AiwConstants {
   @Override
   public String decline() {
     return "decline";
+  }
+  
+  @Override
+  public String createGroup() {
+    return "createGroup";
+  }
+
+  @Override
+  public String myGroups() {
+    return "myGroups";
+  }
+  
+  @Override
+  public String comingSoon() {
+    return "comingSoon";
+  }
+  
+  @Override
+  public String invitationAccepted() {
+    return "invitationAccepted";
+  }
+  
+  @Override
+  public String inviteMember() {
+    return "inviteMember";
+  }
+  
+  @Override
+  public String members() {
+    return "members";
+  }
+  
+  @Override
+  public String invitationDeclined() {
+    return "invitationDeclined";
   }
   
 } // AiwConstantsTestImpl //

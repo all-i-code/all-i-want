@@ -19,8 +19,6 @@
 */
 package com.googlecode.alliwant.client.rpc;
 
-import java.util.List;
-
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.googlecode.alliwant.client.event.InfoEvent;
@@ -28,6 +26,12 @@ import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
 import com.googlecode.alliwant.client.model.AccessReq;
 import com.googlecode.alliwant.client.model.AccessReqImpl;
+import com.googlecode.alliwant.client.model.Group;
+import com.googlecode.alliwant.client.model.GroupImpl;
+import com.googlecode.alliwant.client.model.GroupInvitation;
+import com.googlecode.alliwant.client.model.GroupInvitationImpl;
+import com.googlecode.alliwant.client.model.ListOwner;
+import com.googlecode.alliwant.client.model.ListOwnerImpl;
 import com.googlecode.alliwant.client.model.User;
 import com.googlecode.alliwant.client.model.UserImpl;
 
@@ -35,12 +39,10 @@ public class ManagerImpl implements Manager {
 
   private Rpc rpc;
   private EventBus eventBus;
-  private User user;
   
   public ManagerImpl(Rpc rpc, EventBus eventBus) {
     this.rpc = rpc;
     this.eventBus = eventBus;
-    user = null;
   }
   
   // ================================================================
@@ -53,18 +55,12 @@ public class ManagerImpl implements Manager {
    */
   @Override
   public void getCurrentUser() {    
-    /*
-    if (null != user) {
-      eventBus.fireEvent(new ModelEvent<User>(User.class, user));
-      return;
-    }
-    */
-    
     String url = "/rpc/user/get_current_user?";
     url += rpc.add("url", Window.Location.getHref(), true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
-        handleUser(result);
+        eventBus.fireEvent(new ModelEvent<User>(User.class, 
+         UserImpl.decode(result)));
       }
     });
   } // getCurrentUser //
@@ -77,12 +73,38 @@ public class ManagerImpl implements Manager {
     String url = "/rpc/user/get_requests";
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
-        List<AccessReq> reqs = AccessReqImpl.decodeList(result);
-        eventBus.fireEvent(new ModelListEvent<AccessReq>(AccessReq.class, reqs));
+        eventBus.fireEvent(new ModelListEvent<AccessReq>(AccessReq.class, 
+         AccessReqImpl.decodeList(result)));
       }
     });
   } // getAccessRequests //
 
+  @Override
+  public void getOwner(int ownerId) {
+    String url = "/rpc/user/get_owner?";
+    url += rpc.add("owner_id", ownerId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<ListOwner>(ListOwner.class,
+         ListOwnerImpl.decode(result)));
+      }
+    });
+  } // getOwner //
+
+  @Override
+  public void updateOwner(int ownerId, String name, String nickname) {
+    String url = "/rpc/user/update_owner?";
+    url += rpc.add("owner_id", ownerId, true);
+    url += rpc.add("name", name);
+    url += rpc.add("nickname", nickname);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<ListOwner>(ListOwner.class,
+         ListOwnerImpl.decode(result)));
+      }
+    });
+  } // updateOwner //
+  
   @Override
   public void approveRequest(int reqId) {
     String url = "/rpc/user/approve_request?";
@@ -103,15 +125,94 @@ public class ManagerImpl implements Manager {
         eventBus.fireEvent(new InfoEvent(InfoEvent.REQ_DENIED));
       }
     });
-  }
+  } // denyRequest //
+  
+  
+  @Override
+  public void addGroup(String name, String description) {
+    String url = "/rpc/group/add_group?";
+    url += rpc.add("name", name, true);
+    url += rpc.add("desc", description);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<Group>(Group.class,
+         GroupImpl.decode(result)));
+      }
+    });
+  } // addGroup //
+  
+  @Override
+  public void updateGroup(int groupId, String name, String description) {
+    String url = "/rpc/group/update_group?";
+    url += rpc.add("id", groupId, true);
+    url += rpc.add("name", name);
+    url += rpc.add("desc", description);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<Group>(Group.class,
+         GroupImpl.decode(result)));
+      }
+    });
+  } // updateGroup //
+ 
+  @Override
+  public void getGroups() {
+    String url = "/rpc/group/get_groups";
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelListEvent<Group>(Group.class,
+         GroupImpl.decodeList(result)));
+      }
+    });
+  } // getGroups //
+  
+  @Override
+  public void inviteMember(int groupId, String email) {
+    String url = "/rpc/group/invite_member?";
+    url += rpc.add("group_id", groupId, true);
+    url += rpc.add("email", email);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.MEMBER_INVITED));
+      }
+    });
+  } // inviteMember //
+ 
+  @Override
+  public void getGroupInvites() {
+    String url = "/rpc/group/get_invitations";
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelListEvent<GroupInvitation>(GroupInvitation.class,
+         GroupInvitationImpl.decodeList(result)));
+      }
+    });
+  } // getGroupInvites //
+
+  @Override
+  public void acceptInvite(int inviteId) {
+    String url = "/rpc/group/accept_invitation?";
+    url += rpc.add("invite_id", inviteId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.INVITE_ACCEPTED));
+      }
+    });
+  } // acceptInvite //
+  
+  @Override
+  public void declineInvite(int inviteId) {
+    String url = "/rpc/group/decline_invitation?";
+    url += rpc.add("invite_id", inviteId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.INVITE_DECLINED));
+      }
+    });
+  } // declineInvite //
   
   // ================================================================
   // END: Manager methods
   // ================================================================
-  
-  private void handleUser(String response) {
-    user = UserImpl.decode(response);
-    eventBus.fireEvent(new ModelEvent<User>(User.class, user));
-  } // handleUser //
   
 } // ManagerJson //
