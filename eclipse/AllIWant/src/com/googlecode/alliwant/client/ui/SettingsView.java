@@ -1,5 +1,5 @@
 /**
- * @file ListsView.java
+ * @file SettingsView.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -21,21 +21,6 @@ package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-public interface ListsView extends JhbView {
+public interface SettingsView extends JhbView {
   void setHeader(IsWidget header);
-  void clearOwners();
-  void addOwnerItem(String item, String value);
-  String getOwner();
-  
-  void clearLists();
-  void addListItem(String item, String value);
-  String getList();
-
-  void setPresenter(Presenter presenter);
-  interface Presenter {
-    void userChanged(); 
-    void addList();
-    void listChanged();
-    void addItem();
-  }
 }

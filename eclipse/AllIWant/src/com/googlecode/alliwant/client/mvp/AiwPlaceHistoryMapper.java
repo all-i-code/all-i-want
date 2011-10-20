@@ -25,6 +25,7 @@ import com.googlecode.alliwant.client.place.GroupsPlace;
 import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.place.GoodbyePlace;
 import com.googlecode.alliwant.client.place.RequestsPlace;
+import com.googlecode.alliwant.client.place.SettingsPlace;
 
 /**
  * PlaceHistoryMapper interface is used to attach all places which the
@@ -36,6 +37,7 @@ import com.googlecode.alliwant.client.place.RequestsPlace;
   ListsPlace.Tokenizer.class,
   GroupsPlace.Tokenizer.class,
   RequestsPlace.Tokenizer.class,
+  SettingsPlace.Tokenizer.class,
   GoodbyePlace.Tokenizer.class
 })
 public interface AiwPlaceHistoryMapper extends PlaceHistoryMapper {

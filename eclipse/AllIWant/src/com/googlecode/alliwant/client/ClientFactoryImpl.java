@@ -34,6 +34,8 @@ import com.googlecode.alliwant.client.ui.GoodbyeView;
 import com.googlecode.alliwant.client.ui.GoodbyeViewImpl;
 import com.googlecode.alliwant.client.ui.RequestsView;
 import com.googlecode.alliwant.client.ui.RequestsViewImpl;
+import com.googlecode.alliwant.client.ui.SettingsView;
+import com.googlecode.alliwant.client.ui.SettingsViewImpl;
 import com.googlecode.alliwant.client.ui.widget.Alert;
 import com.googlecode.alliwant.client.ui.widget.AlertImpl;
 import com.googlecode.alliwant.client.ui.widget.smart.Header;
@@ -54,6 +56,7 @@ public class ClientFactoryImpl implements ClientFactory {
   private ListsView listsView = new ListsViewImpl();
   private GroupsView groupsView = new GroupsViewImpl();
   private RequestsView requestsView = new RequestsViewImpl();
+  private SettingsView settingsView = new SettingsViewImpl();
   private GoodbyeView goodbyeView = new GoodbyeViewImpl();
   
   @Override 
@@ -94,6 +97,11 @@ public class ClientFactoryImpl implements ClientFactory {
   @Override
   public RequestsView getRequestsView() {
     return requestsView;
+  }
+  
+  @Override
+  public SettingsView getSettingsView() {
+    return settingsView;
   }
   
   @Override

@@ -27,10 +27,12 @@ import com.googlecode.alliwant.client.activity.GroupsActivity;
 import com.googlecode.alliwant.client.activity.ListsActivity;
 import com.googlecode.alliwant.client.activity.GoodbyeActivity;
 import com.googlecode.alliwant.client.activity.RequestsActivity;
+import com.googlecode.alliwant.client.activity.SettingsActivity;
 import com.googlecode.alliwant.client.place.GroupsPlace;
 import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.place.GoodbyePlace;
 import com.googlecode.alliwant.client.place.RequestsPlace;
+import com.googlecode.alliwant.client.place.SettingsPlace;
 
 public class AiwActivityMapper implements ActivityMapper {
 
@@ -49,10 +51,12 @@ public class AiwActivityMapper implements ActivityMapper {
       return new GroupsActivity((GroupsPlace)place, cf);
     } else if (place instanceof RequestsPlace) {
       return new RequestsActivity((RequestsPlace)place, cf);
+    } else if (place instanceof SettingsPlace) {
+      return new SettingsActivity((SettingsPlace)place, cf);
     } else if (place instanceof GoodbyePlace) {
       return new GoodbyeActivity((GoodbyePlace)place, cf);
     }
     return null;
   } // getActivity //
 
-} // JhbActivityMapper //
+} // AiwActivityMapper //

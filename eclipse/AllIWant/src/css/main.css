@@ -28,16 +28,23 @@
 .subHeading, .instructions { font-style: italic; }
 
 .title { font-size: titleSize; }
+.title, .table { padding-bottom: 0.5em; }
 .heading { font-size: headingSize; }
 .subHeading { font-size: subHeadingSize; }
+.table { clear: left; }
 .tableHeader { color: tblHeadColor; }
 .tableHeader { background-color: tblHeadBgColor; }
 .tableAlt { background-color: grey; }
-
-.containFloats { overflow: hidden; }
+.wrap, .field { overflow: hidden; }
 .shrinkWrap { display: table; }
-.left { float: left; }
+.field .label { text-align: right; }
+.field .label { font-weight: bold; }
+.left, .sectionLink, .heading, .field .label, .field .input { float: left; }
+.field .input { display: block; }
+.field .input { margin-left: 0.5em; }
 .right { float: right; }
 .clear { clear: both; }
 .centered { margin: 0 auto; }
-
+.sectionLink { display: block; }
+.sectionLink { padding-left: 0.5em; }
+.sectionLink { margin-top: 0.5em; }

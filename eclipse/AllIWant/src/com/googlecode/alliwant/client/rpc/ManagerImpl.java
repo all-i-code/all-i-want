@@ -34,6 +34,8 @@ import com.googlecode.alliwant.client.model.ListOwner;
 import com.googlecode.alliwant.client.model.ListOwnerImpl;
 import com.googlecode.alliwant.client.model.User;
 import com.googlecode.alliwant.client.model.UserImpl;
+import com.googlecode.alliwant.client.model.WishList;
+import com.googlecode.alliwant.client.model.WishListImpl;
 
 public class ManagerImpl implements Manager {
 
@@ -210,6 +212,30 @@ public class ManagerImpl implements Manager {
       }
     });
   } // declineInvite //
+
+  @Override
+  public void getAvailableOwners(int ownerId) {
+    String url = "/rpc/group/get_available_owners?";
+    url += rpc.add("owner_id", ownerId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelListEvent<ListOwner>(ListOwner.class,
+         ListOwnerImpl.decodeList(result)));
+      }
+    });
+  } // getAvailableOwners //
+  
+  @Override
+  public void getLists(int ownerId) {
+    String url = "/rpc/list/get_lists?";
+    url += rpc.add("owner_id", ownerId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelListEvent<WishList>(WishList.class,
+         WishListImpl.decodeList(result)));
+      }
+    });
+  } // getLists //
   
   // ================================================================
   // END: Manager methods

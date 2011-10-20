@@ -67,7 +67,8 @@ public class GroupsViewImpl extends Composite implements GroupsView {
     myGroups.setText(0, mgMembersCol = col++, aiwc.description());
     myGroups.setText(0, mgInviteCol = col++, aiwc.description());
     myGroups.setText(0, mgDeleteCol = col++, "");
-    
+   
+    col = 0;
     groups.resize(1, 4);
     groups.getRowFormatter().addStyleName(0, css.main().tableHeader());
     groups.setText(0, gNameCol = col++, aiwc.name());
@@ -76,7 +77,7 @@ public class GroupsViewImpl extends Composite implements GroupsView {
     groups.setText(0, gLeaveCol = col++, "");
    
     col = 0;
-    invites.resize(1, 4);
+    invites.resize(1, 5);
     invites.getRowFormatter().addStyleName(0, css.main().tableHeader());
     invites.setText(0, iNameCol = col++, aiwc.group());
     invites.setText(0, iOwnerCol = col++, aiwc.owner());

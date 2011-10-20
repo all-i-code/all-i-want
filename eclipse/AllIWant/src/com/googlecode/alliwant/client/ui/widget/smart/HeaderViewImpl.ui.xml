@@ -31,7 +31,7 @@
     .active { font-weight: bold; }
   </ui:style>
   
-  <gwt:FlowPanel addStyleNames="{s.main} {css.main.containFloats}">
+  <gwt:FlowPanel addStyleNames="{s.main} {css.main.wrap}">
     <gwt:FlowPanel styleName="{css.main.left}">
       <gwt:Anchor ui:field="listsLink" text="{aiwc.lists}" 
        href="javascript:;" />

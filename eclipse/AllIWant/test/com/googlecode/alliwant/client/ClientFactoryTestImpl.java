@@ -29,6 +29,7 @@ import com.googlecode.alliwant.client.ui.GroupsViewTestImpl;
 import com.googlecode.alliwant.client.ui.ListsViewTestImpl;
 import com.googlecode.alliwant.client.ui.GoodbyeViewTestImpl;
 import com.googlecode.alliwant.client.ui.RequestsViewTestImpl;
+import com.googlecode.alliwant.client.ui.SettingsViewTestImpl;
 import com.googlecode.alliwant.client.ui.widget.AlertTestImpl;
 import com.googlecode.alliwant.client.ui.widget.smart.Header;
 import com.googlecode.alliwant.client.ui.widget.smart.HeaderTestImpl;
@@ -43,6 +44,7 @@ public class ClientFactoryTestImpl implements ClientFactory {
   private ListsViewTestImpl listsView = new ListsViewTestImpl();
   private GroupsViewTestImpl groupsView = new GroupsViewTestImpl();
   private RequestsViewTestImpl reqsView = new RequestsViewTestImpl();
+  private SettingsViewTestImpl settingsView = new SettingsViewTestImpl();
   private GoodbyeViewTestImpl goodbyeView = new GoodbyeViewTestImpl();
   
   // ================================================================
@@ -87,6 +89,11 @@ public class ClientFactoryTestImpl implements ClientFactory {
   @Override
   public RequestsViewTestImpl getRequestsView() {
     return reqsView;
+  }
+  
+  @Override
+  public SettingsViewTestImpl getSettingsView() {
+    return settingsView;
   }
   
   @Override

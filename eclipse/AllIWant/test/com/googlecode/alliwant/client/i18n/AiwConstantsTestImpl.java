@@ -221,4 +221,24 @@ public class AiwConstantsTestImpl implements AiwConstants {
     return "invitationDeclined";
   }
   
+  @Override
+  public String user() {
+    return "user";
+  }
+  
+  @Override
+  public String listItems() {
+    return "listItems";
+  }
+  
+  @Override
+  public String addList() {
+    return "addList";
+  }
+  
+  @Override
+  public String addItem() {
+    return "addItem";
+  }
+  
 } // AiwConstantsTestImpl //

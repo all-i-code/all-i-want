@@ -41,4 +41,17 @@ public abstract class StringUtils {
     if (null == s2) return false;
     return 0 == s1.compareTo(s2);
   }
+  
+  public static int toInt(String str) {
+    return toInt(str, -1);
+  }
+  
+  public static int toInt(String str, int defaultInt) {
+    try {
+      return Integer.parseInt(str);
+    } catch (Exception e) {
+      return defaultInt;
+    }
+  } // toInt //
+  
 } // StringUtils //

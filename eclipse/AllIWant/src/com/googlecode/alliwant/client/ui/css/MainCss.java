@@ -22,7 +22,7 @@ package com.googlecode.alliwant.client.ui.css;
 import com.google.gwt.resources.client.CssResource;
 
 public interface MainCss extends CssResource {
-  String containFloats();
+  String wrap();
   String shrinkWrap();
   String left();
   String right();
@@ -32,6 +32,11 @@ public interface MainCss extends CssResource {
   String heading();
   String subHeading();
   String instructions();
+  String table();
   String tableHeader();
   String tableAlt();
+  String sectionLink();
+  String field();
+  String label();
+  String input();
 }

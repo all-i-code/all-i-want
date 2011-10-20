@@ -102,5 +102,17 @@ public interface Manager {
    * @param inviteId ID of GroupInvitation
    */
   void declineInvite(int inviteId);
+
+  /**
+   * Get list of all available owners
+   * @param ownerId ID of the current Owner
+   */
+  void getAvailableOwners(int ownerId);
+  
+  /**
+   * Get list of all WishLists for given owner
+   * @param ownerId ID of the Owner
+   */
+  void getLists(int ownerId);
   
 } // Manager //

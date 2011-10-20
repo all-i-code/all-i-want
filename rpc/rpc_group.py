@@ -122,7 +122,7 @@ class GroupRpcGroup(RpcGroupBase):
         owner = self.db.get_owner(owner_id)
         _ = lambda x: ListOwner.from_db(x)
         gs, gms = (owner.groups, owner.memberships)
-        owners = []
+        owners = [ owner ]
         owners.extend(m.member for g in gs for m in g.members)
         owners.extend(m.member for gm in gms for m in gm.group.members)
         return [ ListOwner.from_db(o) for o in set(owners) ]

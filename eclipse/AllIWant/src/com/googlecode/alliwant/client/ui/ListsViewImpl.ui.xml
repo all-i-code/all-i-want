@@ -28,7 +28,24 @@
     <gwt:SimplePanel ui:field="headerWrapper" addStyleNames="header" />
     <gwt:Label styleName="{css.main.title} {css.main.centered}" 
      text="{aiwc.lists}" />
-    <gwt:ListBox ui:field="owner" /> 
-    <gwt:Grid ui:field="items" />
+    
+    <gwt:FlowPanel styleName="{css.main.field}">
+      <gwt:Label text="{aiwc.user}" addStyleNames="{css.main.label}" />
+      <gwt:ListBox ui:field="listOwner" addStyleNames="{css.main.input}" /> 
+    </gwt:FlowPanel> 
+    
+    <gwt:FlowPanel styleName="{css.main.field}">
+      <gwt:Label text="{aiwc.list}" addStyleNames="{css.main.label}" />
+      <gwt:ListBox ui:field="wishList" addStyleNames="{css.main.input}" /> 
+      <gwt:Anchor ui:field="addList" text="{aiwc.addList}" 
+        href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
+    </gwt:FlowPanel> 
+  
+    <gwt:FlowPanel>
+      <gwt:Label text="{aiwc.listItems}" addStyleNames="{css.main.heading}" /> 
+      <gwt:Anchor ui:field="addItem" text="{aiwc.addItem}"
+       href="javascript:;" addStyleNames="{css.main.sectionLink}" />
+    </gwt:FlowPanel>
+    <gwt:Grid ui:field="items" addStyleNames="{css.main.table}" />
   </gwt:FlowPanel>
 </ui:UiBinder>

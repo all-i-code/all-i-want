@@ -1,5 +1,5 @@
 /**
- * @file ListsViewTestImpl.java
+ * @file SettingsViewTestImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -22,7 +22,7 @@ package com.googlecode.alliwant.client.ui;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ListsViewTestImpl implements ListsView {
+public class SettingsViewTestImpl implements SettingsView {
 
   private boolean processing = false;
   private IsWidget header = null;
@@ -54,47 +54,5 @@ public class ListsViewTestImpl implements ListsView {
   public IsWidget getHeader() {
     return header;
   }
-
-  @Override
-  public void clearOwners() {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void addOwnerItem(String item, String value) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void clearLists() {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void addListItem(String item, String value) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void setPresenter(Presenter presenter) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public String getOwner() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public String getList() {
-    // TODO Auto-generated method stub
-    return null;
-  }
   
-} // ListsViewTestImpl //
+} // SettingsViewTestImpl //

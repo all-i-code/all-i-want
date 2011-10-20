@@ -26,6 +26,7 @@ import com.googlecode.alliwant.client.ui.GroupsView;
 import com.googlecode.alliwant.client.ui.ListsView;
 import com.googlecode.alliwant.client.ui.GoodbyeView;
 import com.googlecode.alliwant.client.ui.RequestsView;
+import com.googlecode.alliwant.client.ui.SettingsView;
 import com.googlecode.alliwant.client.ui.widget.Alert;
 import com.googlecode.alliwant.client.ui.widget.smart.Header;
 
@@ -39,6 +40,7 @@ public interface ClientFactory {
   ListsView getListsView();
   GroupsView getGroupsView();
   RequestsView getRequestsView();
+  SettingsView getSettingsView();
   GoodbyeView getGoodbyeView();
   
 } // ClientFactory //

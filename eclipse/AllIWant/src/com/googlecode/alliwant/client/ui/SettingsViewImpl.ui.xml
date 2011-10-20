@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <!--
-  File: GroupsViewImpl.ui.xml 
+  File: SettingsViewImpl.ui.xml 
   Description: UiBinder definition of ListsViewImpl
   
   Copyright 2011 Adam Meadows 
@@ -27,18 +27,6 @@
   <gwt:FlowPanel>
     <gwt:SimplePanel ui:field="headerWrapper" addStyleNames="header" />
     <gwt:Label styleName="{css.main.title} {css.main.centered}" 
-     text="{aiwc.groups}" />
-    <gwt:FlowPanel>
-      <gwt:Label text="{aiwc.myGroups}" styleName="{css.main.heading}" />
-      <gwt:Anchor ui:field="createGroup" text="{aiwc.createGroup}"
-       href="javascript:;" addStyleNames="{css.main.sectionLink}" />
-    </gwt:FlowPanel>
-    <gwt:Grid ui:field="myGroups" addStyleNames="{css.main.table}" />
-   
-    <gwt:Label text="{aiwc.groups}" addStyleNames="{css.main.heading}" />
-    <gwt:Grid ui:field="groups" addStyleNames="{css.main.table}" />
-    
-    <gwt:Label text="{aiwc.invitations}" addStyleNames="{css.main.heading}" />
-    <gwt:Grid ui:field="invites" addStyleNames="{css.main.table}" />
+     text="{aiwc.settings}" />
   </gwt:FlowPanel>
 </ui:UiBinder>

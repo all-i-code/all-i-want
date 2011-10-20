@@ -143,4 +143,16 @@ public interface AiwConstants extends Constants {
   @DefaultStringValue("Members")
   String members();
   
+  @DefaultStringValue("User")
+  String user();
+  
+  @DefaultStringValue("List Items")
+  String listItems();
+  
+  @DefaultStringValue("Add List")
+  String addList();
+  
+  @DefaultStringValue("Add Item")
+  String addItem();
+  
 } // AiwConstants //
