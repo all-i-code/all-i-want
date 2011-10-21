@@ -40,7 +40,6 @@ public class AlertImpl implements Alert {
   @UiField Button ok;
   
   public AlertImpl() {
-    message = new Label();
     popup = uiBinder.createAndBindUi(this);
   }
   

@@ -46,7 +46,7 @@ public class ListsViewImpl extends Composite implements ListsView {
   ListBox listOwner, wishList;
 
   @UiField
-  Anchor addList, addItem;
+  Anchor addList, editList, addItem;
   
   @UiField
   Grid items;
@@ -68,6 +68,11 @@ public class ListsViewImpl extends Composite implements ListsView {
   @UiHandler("addList")
   void onAddListClick(ClickEvent event) {
     presenter.addList();
+  }
+  
+  @UiHandler("editList")
+  void onEditListClick(ClickEvent event) {
+    presenter.editList();
   }
   
   @UiHandler("addItem")
@@ -108,6 +113,16 @@ public class ListsViewImpl extends Composite implements ListsView {
   public String getOwner() {
     return listOwner.getValue(listOwner.getSelectedIndex());
   }
+
+  @Override
+  public void setOwner(String owner) {
+    int index = 0;
+    for (int i = 0; i < listOwner.getItemCount(); i++) {
+      String value = listOwner.getValue(i);
+      if (0 == value.compareTo(owner)) index = i;
+    }
+    listOwner.setSelectedIndex(index);
+  } // setOwner //
   
   @Override
   public void clearLists() {
@@ -123,6 +138,16 @@ public class ListsViewImpl extends Composite implements ListsView {
   public String getList() {
     return wishList.getValue(wishList.getSelectedIndex());
   }
+  
+  @Override
+  public void setList(String list) {
+    int index = 0;
+    for (int i = 0; i < wishList.getItemCount(); i++) {
+      String value = wishList.getValue(i);
+      if (0 == value.compareTo(list)) index = i;
+    }
+    wishList.setSelectedIndex(index);
+  } // setList //
   
   @Override
   public void setPresenter(Presenter presenter) {

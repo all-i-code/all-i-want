@@ -237,6 +237,34 @@ public class ManagerImpl implements Manager {
     });
   } // getLists //
   
+  @Override
+  public void addList(int ownerId, String name, String description) {
+    String url = "/rpc/list/add_list?";
+    url += rpc.add("owner_id", ownerId, true);
+    url += rpc.add("name", name);
+    url += rpc.add("desc", description);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<WishList>(WishList.class,
+         WishListImpl.decode(result)));
+      }
+    });
+  } // addList //
+  
+  @Override
+  public void updateList(int listId, String name, String description) {
+    String url = "/rpc/list/update_list?";
+    url += rpc.add("list_id", listId, true);
+    url += rpc.add("name", name);
+    url += rpc.add("desc", description);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<WishList>(WishList.class,
+         WishListImpl.decode(result)));
+      }
+    });
+  } // updateList //
+  
   // ================================================================
   // END: Manager methods
   // ================================================================

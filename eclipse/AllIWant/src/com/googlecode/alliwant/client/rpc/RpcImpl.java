@@ -27,24 +27,29 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.googlecode.alliwant.client.i18n.AiwMessages;
+import com.googlecode.alliwant.client.logging.Logging;
+import com.googlecode.alliwant.client.model.FailureReport;
+import com.googlecode.alliwant.client.model.FailureReportImpl;
 import com.googlecode.alliwant.client.ui.widget.Alert;
 
 public class RpcImpl implements Rpc {
 
   private Alert alert;
   private Handler handler;
-  private AiwMessages jhbm = GWT.create(AiwMessages.class);
+  private AiwMessages aiwm = GWT.create(AiwMessages.class);
   private RequestCallback callback= new RequestCallback() {
     public void onResponseReceived(Request request, Response response) {
       if (response.getStatusCode() == Response.SC_OK) {
         handler.onComplete(response.getText());
       } else {
-        alert.show(jhbm.rpcError(request.toString(), response.getStatusText()));
+        Logging.logger().info("rep: " + response.getText());
+        FailureReport fr = FailureReportImpl.decode(response.getText());
+        alert.show(fr.getMessage());
       }
     }
     
     public void onError(Request request, Throwable exception) {
-      alert.show(jhbm.rpcError(request.toString(), exception.getLocalizedMessage()));
+      alert.show(aiwm.rpcError(request.toString(), exception.getLocalizedMessage()));
       exception.printStackTrace();
     }
   };
@@ -105,7 +110,7 @@ public class RpcImpl implements Rpc {
     try {
       rb.send();
     } catch (RequestException e) {
-      alert.show(jhbm.rpcError(url, e.getLocalizedMessage()));
+      alert.show(aiwm.rpcError(url, e.getLocalizedMessage()));
       e.printStackTrace();
     }
   } // send //
@@ -117,7 +122,7 @@ public class RpcImpl implements Rpc {
     try {
       rb.sendRequest(params, callback);
     } catch (RequestException e) {
-      alert.show(jhbm.rpcError(url, e.getLocalizedMessage()));
+      alert.show(aiwm.rpcError(url, e.getLocalizedMessage()));
       e.printStackTrace();
     }
   } // sendPost //

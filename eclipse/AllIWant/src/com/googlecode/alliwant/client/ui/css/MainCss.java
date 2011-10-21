@@ -39,4 +39,5 @@ public interface MainCss extends CssResource {
   String field();
   String label();
   String input();
+  String buttons();
 }

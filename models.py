@@ -55,7 +55,7 @@ class GroupMemberDb(Db):
     group = db.ReferenceProperty(GroupDb, collection_name='members')
 
 class ListDb(Db):
-    name = db.StringProperty(indexed=False)
+    name = db.StringProperty()
     description = db.StringProperty(indexed=False)
     owner = db.ReferenceProperty(ListOwnerDb, collection_name='lists')
 

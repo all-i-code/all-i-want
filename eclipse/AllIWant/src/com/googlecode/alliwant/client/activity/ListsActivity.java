@@ -36,12 +36,14 @@ import com.googlecode.alliwant.client.model.WishList;
 import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.rpc.Manager;
 import com.googlecode.alliwant.client.ui.ListsView;
+import com.googlecode.alliwant.client.ui.widget.smart.EditListPopup;
 
 public class ListsActivity implements Activity, ListsView.Presenter {
 
   private ClientFactory cf;
   private ListsView view;
   private Manager manager;
+  private EditListPopup editListPopup;
   private User user;
   private WishList currentList = null;
   private Map<Integer, WishList> listMap = new HashMap<Integer, WishList>();
@@ -51,6 +53,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     this.cf = cf;
     view = cf.getListsView();
     manager = cf.getManager();
+    editListPopup = cf.getEditListPopup();
   }
   
   // ==========================================================================
@@ -72,11 +75,12 @@ public class ListsActivity implements Activity, ListsView.Presenter {
 
   @Override
   public void start(AcceptsOneWidget panel, EventBus eventBus) {
+    view.setPresenter(this); 
     panel.setWidget(view.asWidget());
     addEventBusHandlers(eventBus);
     view.setHeader(cf.getHeader());
     cf.getManager().getCurrentUser();
-  }
+  } // start //
   
   // ==========================================================================
   // END: Activity methods
@@ -95,9 +99,23 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     
   @Override
   public void addList() {
-    // TODO: implement this
-  }
-   
+    editListPopup.show(new EditListPopup.Handler() {
+      public void onSave(int listId, String name, String description) {
+        addList(name, description);
+      }
+    });
+  } // addList //
+ 
+  @Override
+  public void editList() {
+    if (null == currentList) cf.getAlert().show("No List");
+    editListPopup.show(currentList, new EditListPopup.Handler() {
+      public void onSave(int listId, String name, String description) {
+        editList(listId, name, description);
+      }
+    });
+  } // editList //
+  
   @Override
   public void listChanged() {
     view.showProcessingOverlay();
@@ -145,6 +163,15 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       };
       ModelListEvent.register(eventBus, WishList.class, handler);
     }
+    
+    {
+      ModelEvent.Handler<WishList> handler = new ModelEvent.Handler<WishList>() {
+        public void onModel(ModelEvent<WishList> event) {
+          handleList(event.getModel());
+        }
+      };
+      ModelEvent.register(eventBus, WishList.class, handler);
+    }
   } // addEventBusHandlers //
 
   private void handleUser(User user) {
@@ -160,19 +187,39 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       ownerMap.put(owner.getId(), owner);
       view.addOwnerItem(owner.getNickname(), Integer.toString(owner.getId()));
     }
+    userChanged();
   } // handleOwners //
   
   private void handleLists(List<WishList> lists) {
     view.clearLists();
     listMap.clear();
     for (WishList wl : lists) {
+      if ((null != currentList) && (currentList.getId() == wl.getId())) 
+        currentList = wl;
       listMap.put(wl.getId(), wl);
       view.addListItem(wl.getName(), Integer.toString(wl.getId()));
     }
+    if (null != currentList) view.setList(currentList.getId() + "");
+    else listChanged();
   } // handleLists //
+  
+  private void handleList(WishList wl) {
+    currentList = wl;
+    manager.getLists(user.getOwnerId());
+  }
  
   private void showList() {
     // TODO: implement this
   } // showList //
+  
+  private void addList(String name, String description) {
+    view.showProcessingOverlay();
+    manager.addList(user.getOwnerId(), name, description);
+  } // addList //
+  
+  private void editList(int listId, String name, String description) {
+    view.showProcessingOverlay();
+    manager.updateList(listId, name, description);
+  } // editList //
   
 } // ListsActivity //

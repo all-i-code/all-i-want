@@ -126,13 +126,15 @@ class WishList(Model):
     fields = (
         FieldInt(name='id'),
         FieldString(name='name'),
+        FieldString(name='description'),
         FieldModelArray(type=ListItem, name='items'),
     )
 
     @classmethod
     def from_db(cls, db):
         items = [ ListItem.from_db(i) for i in db.items ]
-        return cls(id=db.key().id(), name=db.name, items=items)
+        return cls(id=db.key().id(), name=db.name, \
+            description=db.description, items=items)
 
 class User(Model):
     fields = (

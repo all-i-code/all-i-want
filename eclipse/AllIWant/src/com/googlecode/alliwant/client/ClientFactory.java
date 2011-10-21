@@ -28,6 +28,7 @@ import com.googlecode.alliwant.client.ui.GoodbyeView;
 import com.googlecode.alliwant.client.ui.RequestsView;
 import com.googlecode.alliwant.client.ui.SettingsView;
 import com.googlecode.alliwant.client.ui.widget.Alert;
+import com.googlecode.alliwant.client.ui.widget.smart.EditListPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.Header;
 
 public interface ClientFactory {
@@ -36,6 +37,7 @@ public interface ClientFactory {
   Alert getAlert();
   Manager getManager();
   Header getHeader();
+  EditListPopup getEditListPopup();
   
   ListsView getListsView();
   GroupsView getGroupsView();

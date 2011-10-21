@@ -34,7 +34,6 @@ class ListRpcGroup(RpcGroupBase):
             RpcParamString('desc'),
         )),
         Rpc(name='update_list', params=(
-            RpcParamInt('owner_id'),
             RpcParamInt('list_id'),
             RpcParamString('name'),
             RpcParamString('desc'),

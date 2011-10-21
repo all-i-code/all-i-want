@@ -10,3 +10,4 @@ syntax: regexp
 ^.*\.gwt.log$
 ^eclipse/AllIWant/.settings
 ^.coverage
+^index.yaml

@@ -40,7 +40,7 @@ class DbAccess:
     def is_group_name_unique(self, name, key=None):
         q = GroupDb.all().filter('name =', name)
         if key is not None:
-            q.filter('key !=', key)
+            q = q.filter('__key__ !=', key)
         return q.count(1) == 0
 
     def add_group(self, name, description):
@@ -98,6 +98,9 @@ class DbAccess:
     def get_reqs(self):
         return AccessReqDb.all()
 
+    def get_list(self, list_id):
+        return ListDb.get_by_id(list_id)
+
     def add_list(self, owner_id, name, desc):
         owner = self.get_owner(owner_id)
         return ListDb(name=name, description=desc, owner=owner).put()
@@ -106,7 +109,7 @@ class DbAccess:
         owner = self.get_owner(owner_id)
         q = ListDb.all().filter('owner = ', owner).filter('name =', name)
         if key is not None:
-            q.filter('key !=', key)
+            q = q.filter('__key__ !=', key)
         return q.count(1) == 0
 
     def add_list_item(self, list_id, name, category, desc, url, is_surprise):

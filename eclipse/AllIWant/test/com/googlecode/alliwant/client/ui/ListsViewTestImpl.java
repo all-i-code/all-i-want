@@ -96,5 +96,17 @@ public class ListsViewTestImpl implements ListsView {
     // TODO Auto-generated method stub
     return null;
   }
+
+  @Override
+  public void setOwner(String owner) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setList(String list) {
+    // TODO Auto-generated method stub
+    
+  }
   
 } // ListsViewTestImpl //

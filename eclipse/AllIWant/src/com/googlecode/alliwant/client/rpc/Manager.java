@@ -114,5 +114,8 @@ public interface Manager {
    * @param ownerId ID of the Owner
    */
   void getLists(int ownerId);
+
+  void addList(int ownerId, String name, String description);
+  void updateList(int listId, String name, String description);
   
 } // Manager //

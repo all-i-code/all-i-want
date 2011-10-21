@@ -72,6 +72,7 @@ class RpcReqHandler(webapp.RequestHandler):
         nm = lambda e: e.__class__.__name__
         tb = '\n'.join(traceback.format_exception(*sys.exc_info()))
         d = dict(error_type=nm(exception), message=str(exception), traceback=tb)
+        self.response.set_status(500)
         self.dump(FailureReport(**d))
 
 class RpcGroupManager(object):

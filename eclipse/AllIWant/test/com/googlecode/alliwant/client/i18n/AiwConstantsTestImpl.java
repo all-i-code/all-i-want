@@ -237,6 +237,11 @@ public class AiwConstantsTestImpl implements AiwConstants {
   }
   
   @Override
+  public String editList() {
+    return "editList";
+  }
+  
+  @Override
   public String addItem() {
     return "addItem";
   }

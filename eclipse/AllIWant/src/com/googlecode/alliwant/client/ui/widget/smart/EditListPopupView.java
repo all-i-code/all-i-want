@@ -1,5 +1,5 @@
 /**
- * @file ListsView.java
+ * @file EditListPopupView.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -17,28 +17,23 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.alliwant.client.ui;
+package com.googlecode.alliwant.client.ui.widget.smart;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import com.googlecode.alliwant.client.i18n.AiwConstants;
 
-public interface ListsView extends JhbView {
-  void setHeader(IsWidget header);
-  void clearOwners();
-  void addOwnerItem(String item, String value);
-  void setOwner(String owner);
-  String getOwner();
-  
-  void clearLists();
-  void addListItem(String item, String value);
-  void setList(String list);
-  String getList();
+public interface EditListPopupView {
+  void show();
+  void hide();
+  void setHeader(String header);
+  void setName(String name);
+  String getName();
+  void setDescription(String description);
+  String getDescription();
 
+  AiwConstants getAiwc();
   void setPresenter(Presenter presenter);
-  interface Presenter {
-    void userChanged(); 
-    void addList();
-    void editList();
-    void listChanged();
-    void addItem();
+  public interface Presenter {
+    void ok();
+    void cancel();
   }
 }

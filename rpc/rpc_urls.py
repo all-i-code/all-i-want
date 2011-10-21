@@ -24,10 +24,12 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 from rpc.rpc_user import UserRpcReqHandler
 from rpc.rpc_group import GroupRpcReqHandler
+from rpc.rpc_list import ListRpcReqHandler
 
 urls = [
     ('/rpc/user/.*', UserRpcReqHandler),
     ('/rpc/group/.*', GroupRpcReqHandler),
+    ('/rpc/list/.*', ListRpcReqHandler),
 ]
 application = webapp.WSGIApplication(urls, debug=True)
 

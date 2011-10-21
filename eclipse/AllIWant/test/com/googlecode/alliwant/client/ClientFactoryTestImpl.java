@@ -31,7 +31,7 @@ import com.googlecode.alliwant.client.ui.GoodbyeViewTestImpl;
 import com.googlecode.alliwant.client.ui.RequestsViewTestImpl;
 import com.googlecode.alliwant.client.ui.SettingsViewTestImpl;
 import com.googlecode.alliwant.client.ui.widget.AlertTestImpl;
-import com.googlecode.alliwant.client.ui.widget.smart.Header;
+import com.googlecode.alliwant.client.ui.widget.smart.EditListPopupTest;
 import com.googlecode.alliwant.client.ui.widget.smart.HeaderTestImpl;
 
 public class ClientFactoryTestImpl implements ClientFactory {
@@ -41,6 +41,7 @@ public class ClientFactoryTestImpl implements ClientFactory {
   private PlaceController pc = mock(PlaceController.class);
   private AlertTestImpl alert = new AlertTestImpl();
   private HeaderTestImpl header = new HeaderTestImpl();
+  private EditListPopupTest editListPopup = new EditListPopupTest();
   private ListsViewTestImpl listsView = new ListsViewTestImpl();
   private GroupsViewTestImpl groupsView = new GroupsViewTestImpl();
   private RequestsViewTestImpl reqsView = new RequestsViewTestImpl();
@@ -72,8 +73,13 @@ public class ClientFactoryTestImpl implements ClientFactory {
   }
 
   @Override
-  public Header getHeader() {
+  public HeaderTestImpl getHeader() {
     return header;
+  }
+  
+  @Override
+  public EditListPopupTest getEditListPopup() {
+    return editListPopup;
   }
 
   @Override
