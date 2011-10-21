@@ -129,6 +129,21 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     // TODO: implement this
   }
   
+  @Override
+  public void goToItemUrl(int index) {
+    // TODO: implement this
+  }
+   
+  @Override
+  public void itemDetail(int index) {
+    // TODO: implement this
+  }
+    
+  @Override
+  public void itemAction(int index) {
+    // TODO: implement this
+  }
+  
   // ==========================================================================
   // END: ListsView.Presenter methods
   // ==========================================================================

@@ -89,13 +89,23 @@ public class ListItemTestImpl extends ModelJson
   }
 
   @Override
+  public int getReservedByOwnerId() {
+    return getInt("g");
+  }
+
+  @Override
   public String getPurchasedBy() {
-    return getStr("g");
+    return getStr("h");
+  }
+
+  @Override
+  public int getPurchasedByOwnerId() {
+    return getInt("i");
   }
 
   @Override
   public boolean isSurprise() {
-    return getBool("h");
+    return getBool("j");
   }
 
 

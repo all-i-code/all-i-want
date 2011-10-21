@@ -110,16 +110,21 @@ class ListItem(Model):
         FieldString(name='category'),
         FieldString(name='url'),
         FieldString(name='reserved_by'),
+        FieldInt(name='reserved_by_owner_id'),
         FieldString(name='purchased_by'),
+        FieldInt(name='purchased_by_owner_id'),
         FieldBoolean(name='is_surprise'),
     )
     
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.label() if x is not None else ''
+        _id = lambda x: x.key().id() if x is not None else -1
         return cls(key=db.key().id(), name=db.name,
             description=db.description, category=db.category, url=db.url,
             reserved_by=_(db.reserved_by), purchased_by=_(db.purchased_by),
+            reserved_by_owner_id=_id(db.reserved_by),
+            purchased_by_owner_id=_id(db.purchased_by),
             is_surprise=db.is_surprise)
 
 class WishList(Model):

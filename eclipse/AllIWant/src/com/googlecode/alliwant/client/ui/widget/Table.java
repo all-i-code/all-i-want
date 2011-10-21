@@ -20,7 +20,6 @@
 package com.googlecode.alliwant.client.ui.widget;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 
@@ -28,16 +27,14 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.alliwant.client.ui.css.CssBundle;
 
 public class Table extends Composite implements IsTable {
 
   private static TableUiBinder uiBinder = GWT.create(TableUiBinder.class);
   interface TableUiBinder extends UiBinder<Widget, Table> {}
-
-  public interface Css extends CssResource {
-    String header();
-    String alternate();
-  }
+  
+  private CssBundle css = GWT.create(CssBundle.class);
   
   public Table() {
     initWidget(uiBinder.createAndBindUi(this));
@@ -46,9 +43,6 @@ public class Table extends Composite implements IsTable {
   @UiField
   Grid grid;
   
-  @UiField
-  Css css;
-
   public Table(String firstName) {
     initWidget(uiBinder.createAndBindUi(this));
   }
@@ -62,7 +56,7 @@ public class Table extends Composite implements IsTable {
     int rows = 1;
     if (grid.getRowCount() > rows) rows = grid.getRowCount();
     grid.resize(rows, numColumns);
-    grid.getRowFormatter().addStyleName(0, css.header());
+    grid.getRowFormatter().addStyleName(0, css.main().tableHeader());
   } // setNumColumns //
 
   @Override
@@ -71,7 +65,7 @@ public class Table extends Composite implements IsTable {
     for (int i = 0; i < numRecords; i++) {
       int row = i+1;
       if (0 != (i % 2)) 
-        grid.getRowFormatter().addStyleName(row, css.alternate());
+        grid.getRowFormatter().addStyleName(row, css.main().tableAlt());
     }
   } // setNumRecords //
 

@@ -84,13 +84,23 @@ public class ListItemImpl extends JavaScriptObject implements ListItem {
   }-*/;
 
   @Override
-  public final native String getPurchasedBy() /*-{
+  public final native int getReservedByOwnerId() /*-{
     return this.g;
   }-*/;
 
   @Override
-  public final native boolean isSurprise() /*-{
+  public final native String getPurchasedBy() /*-{
     return this.h;
+  }-*/;
+
+  @Override
+  public final native int getPurchasedByOwnerId() /*-{
+    return this.i;
+  }-*/;
+
+  @Override
+  public final native boolean isSurprise() /*-{
+    return this.j;
   }-*/;
 
 

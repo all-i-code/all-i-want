@@ -21,6 +21,7 @@ package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.alliwant.client.i18n.AiwConstants;
 
 public class ListsViewTestImpl implements ListsView {
 
@@ -107,6 +108,90 @@ public class ListsViewTestImpl implements ListsView {
   public void setList(String list) {
     // TODO Auto-generated method stub
     
+  }
+
+  @Override
+  public void setOwnItemsVisible(boolean visible) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setNumOwnItems(int numItems) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setOwnItem(int index, String item) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setOwnItemCategory(int index, String category) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setOwnItemLinkVisible(int index, boolean visible) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setItemsVisible(boolean visible) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setNumItems(int numItems) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setItem(int index, String item) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setItemCategory(int index, String category) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setItemLinkVisible(int index, boolean visible) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setItemStatus(int index, String status) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setItemActionVisible(int index, boolean visible) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setItemActionText(int index, String text) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public AiwConstants getAiwc() {
+    // TODO Auto-generated method stub
+    return null;
   }
   
 } // ListsViewTestImpl //

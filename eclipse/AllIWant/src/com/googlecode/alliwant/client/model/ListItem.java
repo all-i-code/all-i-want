@@ -31,6 +31,8 @@ public interface ListItem {
   String getCategory();
   String getUrl();
   String getReservedBy();
+  int getReservedByOwnerId();
   String getPurchasedBy();
+  int getPurchasedByOwnerId();
   boolean isSurprise();
 }

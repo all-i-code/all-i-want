@@ -19,24 +19,45 @@
 */
 package com.googlecode.alliwant.client.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.googlecode.alliwant.client.i18n.AiwConstants;
+import com.googlecode.alliwant.client.ui.widget.Table;
 
 public class ListsViewImpl extends Composite implements ListsView {
 
   interface Binder extends UiBinder<FlowPanel, ListsViewImpl> {}
   private static final Binder uiBinder = GWT.create(Binder.class);
+
+  private AiwConstants aiwc = GWT.create(AiwConstants.class);
+  private List<HandlerRegistration> regs = new ArrayList<HandlerRegistration>();
+  private List<HandlerRegistration> ownRegs = 
+   new ArrayList<HandlerRegistration>();
+  
+  private List<Anchor> ownItemLinks = new ArrayList<Anchor>();
+  private List<Anchor> ownItemDetailLinks = new ArrayList<Anchor>();
+  private List<Anchor> itemLinks = new ArrayList<Anchor>();
+  private List<Anchor> itemDetailLinks = new ArrayList<Anchor>();
+  private List<Anchor> itemActionLinks = new ArrayList<Anchor>();
+ 
+  private int oItemCol, oCatCol, oLinkCol, oDetailCol;
+  private int itemCol, catCol, linkCol, statCol, actCol, detailCol;
+  
   private Presenter presenter;
   
   @UiField
@@ -49,11 +70,27 @@ public class ListsViewImpl extends Composite implements ListsView {
   Anchor addList, editList, addItem;
   
   @UiField
-  Grid items;
+  Table items, ownItems;
   
   public ListsViewImpl() {
     initWidget(uiBinder.createAndBindUi(this));
-  }
+   
+    int col = 0;
+    ownItems.setNumColumns(4);
+    ownItems.setHeader(oItemCol = col++, aiwc.name());
+    ownItems.setHeader(oCatCol = col++, aiwc.category());
+    ownItems.setHeader(oLinkCol = col++, aiwc.url());
+    ownItems.setHeader(oDetailCol = col++, "");
+
+    col = 0;
+    items.setNumColumns(6);
+    items.setHeader(itemCol = col++, aiwc.name());
+    items.setHeader(catCol = col++, aiwc.category());
+    items.setHeader(linkCol = col++, aiwc.url());
+    items.setHeader(statCol = col++, aiwc.status());
+    items.setHeader(actCol = col++, aiwc.action());
+    items.setHeader(detailCol = col++, "");
+  } // ListViewImpl //
 
   @UiHandler("listOwner")
   void onOwnerChange(ChangeEvent event) {
@@ -110,11 +147,6 @@ public class ListsViewImpl extends Composite implements ListsView {
   }
   
   @Override
-  public String getOwner() {
-    return listOwner.getValue(listOwner.getSelectedIndex());
-  }
-
-  @Override
   public void setOwner(String owner) {
     int index = 0;
     for (int i = 0; i < listOwner.getItemCount(); i++) {
@@ -125,6 +157,11 @@ public class ListsViewImpl extends Composite implements ListsView {
   } // setOwner //
   
   @Override
+  public String getOwner() {
+    return listOwner.getValue(listOwner.getSelectedIndex());
+  }
+
+  @Override
   public void clearLists() {
     wishList.clear();
   }
@@ -132,11 +169,6 @@ public class ListsViewImpl extends Composite implements ListsView {
   @Override
   public void addListItem(String item, String value) {
     wishList.addItem(item, value);
-  }
-  
-  @Override
-  public String getList() {
-    return wishList.getValue(wishList.getSelectedIndex());
   }
   
   @Override
@@ -150,6 +182,140 @@ public class ListsViewImpl extends Composite implements ListsView {
   } // setList //
   
   @Override
+  public String getList() {
+    return wishList.getValue(wishList.getSelectedIndex());
+  }
+  
+  @Override
+  public void setOwnItemsVisible(boolean visible) {
+    ownItems.setVisible(visible);
+  }
+  
+  @Override
+  public void setNumOwnItems(int numItems) {
+    clearHandlers(ownRegs);
+    ownItemLinks.clear();
+    ownItemDetailLinks.clear();
+   
+    ownItems.setNumRecords(numItems);
+    for (int i = 0; i < numItems; i++) {
+      final int index = i;
+      Anchor link = new Anchor(aiwc.link());
+      ownRegs.add(link.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.goToItemUrl(index);
+        }
+      }));
+      ownItemLinks.add(link);
+      ownItems.setWidget(index, oLinkCol, link);
+      
+      Anchor dLink = new Anchor(aiwc.detail());
+      ownRegs.add(link.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.itemDetail(index);
+        }
+      }));
+      ownItemDetailLinks.add(dLink);
+      ownItems.setWidget(index, oDetailCol, dLink);
+    } // for all items //
+  } // setNumOwnItems //
+  
+  @Override
+  public void setOwnItem(int index, String item) {
+    ownItems.setText(index, oItemCol, item);
+  }
+  
+  @Override
+  public void setOwnItemCategory(int index, String category) {
+    ownItems.setText(index, oCatCol, category);
+  }
+  
+  @Override
+  public void setOwnItemLinkVisible(int index, boolean visible) {
+    ownItemLinks.get(index).setVisible(visible);
+  }
+  
+  @Override
+  public void setItemsVisible(boolean visible) {
+    items.setVisible(visible);
+  }
+  
+  @Override
+  public void setNumItems(int numItems) {
+    clearHandlers(regs);
+    itemLinks.clear();
+    itemActionLinks.clear();
+    itemDetailLinks.clear();
+   
+    items.setNumRecords(numItems);
+    for (int i = 0; i < numItems; i++) {
+      final int index = i;
+      Anchor link = new Anchor(aiwc.link());
+      regs.add(link.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.goToItemUrl(index);
+        }
+      }));
+      itemLinks.add(link);
+      items.setWidget(index, linkCol, link);
+      
+      Anchor action = new Anchor(aiwc.action());
+      regs.add(link.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.itemAction(index);
+        }
+      }));
+      itemActionLinks.add(action);
+      items.setWidget(index, actCol, action);
+      
+      Anchor dLink = new Anchor(aiwc.detail());
+      regs.add(link.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.itemDetail(index);
+        }
+      }));
+      itemDetailLinks.add(dLink);
+      items.setWidget(index, detailCol, dLink);
+    } // for all items //
+    
+  } // setNumItems //
+  
+  @Override
+  public void setItem(int index, String item) {
+    items.setText(index, itemCol, item);
+  }
+  
+  @Override
+  public void setItemCategory(int index, String category) {
+    items.setText(index, catCol, category);
+  }
+  
+  @Override
+  public void setItemLinkVisible(int index, boolean visible) {
+    itemLinks.get(index).setVisible(visible);
+  }
+  
+  @Override
+  public void setItemStatus(int index, String status) {
+    items.setText(index, statCol, status);
+  }
+  
+  @Override
+  public void setItemActionVisible(int index, boolean visible) {
+    itemActionLinks.get(index).setVisible(visible);
+  }
+  
+  @Override
+  public void setItemActionText(int index, String text) {
+    itemActionLinks.get(index).setText(text);
+  }
+  
+  @Override
+  public AiwConstants getAiwc() {
+    return aiwc;
+  }
+  
+  @Override
   public void setPresenter(Presenter presenter) {
     this.presenter = presenter;
   }
@@ -157,5 +323,10 @@ public class ListsViewImpl extends Composite implements ListsView {
   // ================================================================
   // END: ListsView methods
   // ================================================================
+ 
+  private void clearHandlers(List<HandlerRegistration> regs) {
+    for (HandlerRegistration reg : regs) reg.removeHandler();
+    regs.clear();
+  }
   
 } // ListsViewImpl //

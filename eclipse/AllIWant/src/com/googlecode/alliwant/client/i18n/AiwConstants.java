@@ -157,5 +157,29 @@ public interface AiwConstants extends Constants {
   
   @DefaultStringValue("Add Item")
   String addItem();
+
+  @DefaultStringValue("Link")
+  String link();
+  
+  @DefaultStringValue("Detail")
+  String detail();
+  
+  @DefaultStringValue("Status")
+  String status();
+  
+  @DefaultStringValue("Action")
+  String action();
+  
+  @DefaultStringValue("Reserve")
+  String reserve();
+  
+  @DefaultStringValue("Purchase")
+  String purchase();
+  
+  @DefaultStringValue("Un-Reserve")
+  String unReserve();
+  
+  @DefaultStringValue("Un-Purchase")
+  String unPurchase();
   
 } // AiwConstants //

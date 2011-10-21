@@ -246,4 +246,44 @@ public class AiwConstantsTestImpl implements AiwConstants {
     return "addItem";
   }
   
+  @Override
+  public String link() {
+    return "link";
+  }
+  
+  @Override
+  public String detail() {
+    return "detail";
+  }
+
+  @Override
+  public String status() {
+    return "status";
+  }
+
+  @Override
+  public String action() {
+    return "action";
+  }
+
+  @Override
+  public String reserve() {
+    return "reserve";
+  }
+
+  @Override
+  public String purchase() {
+    return "purchase";
+  }
+
+  @Override
+  public String unReserve() {
+    return "unReserve";
+  }
+
+  @Override
+  public String unPurchase() {
+    return "unPurchase";
+  }
+  
 } // AiwConstantsTestImpl //
