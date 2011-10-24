@@ -21,6 +21,7 @@ package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
+import com.googlecode.alliwant.client.i18n.AiwMessages;
 
 public interface ListsView extends JhbView {
   void setHeader(IsWidget header);
@@ -49,7 +50,9 @@ public interface ListsView extends JhbView {
   void setItemActionVisible(int index, boolean visible);
   void setItemActionText(int index, String text);
 
+  void openURL(String url);
   AiwConstants getAiwc();
+  AiwMessages getAiwm();
   void setPresenter(Presenter presenter);
   interface Presenter {
     void userChanged(); 

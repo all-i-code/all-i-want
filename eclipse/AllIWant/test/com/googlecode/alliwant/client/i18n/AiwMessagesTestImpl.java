@@ -41,4 +41,14 @@ public class AiwMessagesTestImpl implements AiwMessages {
     return "reqDenied" + email;
   }
 
+  @Override
+  public String reservedBy(String owner) {
+    return "reservedBy" + owner;
+  }
+
+  @Override
+  public String purchasedBy(String owner) {
+    return "purchasedBy" + owner;
+  }
+
 } // AiwMessagesTestImpl //

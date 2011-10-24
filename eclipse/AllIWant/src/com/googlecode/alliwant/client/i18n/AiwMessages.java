@@ -35,4 +35,10 @@ public interface AiwMessages extends Messages {
   @DefaultMessage("Account Request for <{0}> denied")
   String reqDenied(String email);
   
+  @DefaultMessage("Reserved By: {0}")
+  String reservedBy(String owner);
+  
+  @DefaultMessage("Purchased By: {0}")
+  String purchasedBy(String owner);
+  
 } // AiwMessages //

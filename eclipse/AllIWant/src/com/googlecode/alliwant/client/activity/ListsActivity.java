@@ -30,6 +30,7 @@ import com.googlecode.alliwant.client.ClientFactory;
 import com.googlecode.alliwant.client.StringUtils;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
+import com.googlecode.alliwant.client.model.ListItem;
 import com.googlecode.alliwant.client.model.ListOwner;
 import com.googlecode.alliwant.client.model.User;
 import com.googlecode.alliwant.client.model.WishList;
@@ -45,6 +46,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   private Manager manager;
   private EditListPopup editListPopup;
   private User user;
+  private int ownerId = -1;
   private WishList currentList = null;
   private Map<Integer, WishList> listMap = new HashMap<Integer, WishList>();
   private Map<Integer, ListOwner> ownerMap = new HashMap<Integer, ListOwner>();
@@ -93,8 +95,8 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   @Override
   public void userChanged() {
     view.showProcessingOverlay();
-    int oid = StringUtils.toInt(view.getOwner());
-    manager.getLists(oid);
+    ownerId = StringUtils.toInt(view.getOwner());
+    manager.getLists(ownerId);
   }
     
   @Override
@@ -131,7 +133,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   
   @Override
   public void goToItemUrl(int index) {
-    // TODO: implement this
+    view.openURL(currentList.getItems().get(index).getUrl());
   }
    
   @Override
@@ -141,8 +143,18 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     
   @Override
   public void itemAction(int index) {
-    // TODO: implement this
-  }
+    ListItem item = currentList.getItems().get(index);
+    if (item.getReservedByOwnerId() == user.getOwnerId()) {
+      view.showProcessingOverlay();
+      manager.purchaseItem(item.getId());
+    } else if (item.getPurchasedByOwnerId() == user.getOwnerId()) {
+      view.showProcessingOverlay();
+      manager.unPurchaseItem(item.getId());
+    } else {
+      view.showProcessingOverlay();
+      manager.reserveItem(item.getId());
+    }
+  } // itemAction //
   
   // ==========================================================================
   // END: ListsView.Presenter methods
@@ -187,6 +199,14 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       };
       ModelEvent.register(eventBus, WishList.class, handler);
     }
+    {
+      ModelEvent.Handler<ListItem> handler = new ModelEvent.Handler<ListItem>() {
+        public void onModel(ModelEvent<ListItem> event) {
+          handleItem(event.getModel());
+        }
+      };
+      ModelEvent.register(eventBus, ListItem.class, handler);
+    }
   } // addEventBusHandlers //
 
   private void handleUser(User user) {
@@ -200,7 +220,9 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     ownerMap.clear();
     for (ListOwner owner : owners) {
       ownerMap.put(owner.getId(), owner);
-      view.addOwnerItem(owner.getNickname(), Integer.toString(owner.getId()));
+      String nickname = owner.getNickname();
+      if (owner.getId() == user.getOwnerId()) nickname = view.getAiwc().me();
+      view.addOwnerItem(nickname, Integer.toString(owner.getId()));
     }
     userChanged();
   } // handleOwners //
@@ -223,8 +245,62 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     manager.getLists(user.getOwnerId());
   }
  
+  private void handleItem(ListItem item) {
+    // TODO: Update that Item, or just refresh the list
+  } // handleItem //
+  
   private void showList() {
-    // TODO: implement this
+    boolean ownList = user.getOwnerId() == ownerId;
+    view.setOwnItemsVisible(ownList);
+    view.setItemsVisible(!ownList);
+    
+    List<ListItem> items = currentList.getItems();
+    if (ownList) {
+      view.setNumOwnItems(items.size());
+      for (int i = 0; i < items.size(); i++) {
+        ListItem item = items.get(i);
+        view.setOwnItem(i, item.getName());
+        view.setOwnItemCategory(i, item.getCategory());
+        view.setOwnItemLinkVisible(i, (item.getUrl().length() > 0));
+      } // for all items //
+    } else {
+      view.setNumItems(items.size());
+      for (int i = 0; i < items.size(); i++) {
+        ListItem item = items.get(i);
+        view.setItem(i, item.getName());
+        view.setItemCategory(i, item.getCategory());
+        view.setItemLinkVisible(i, (item.getUrl().length() > 0));
+        
+        // Set status
+        String status = view.getAiwc().available();
+        String by = view.getAiwc().me();
+        boolean available = true;
+        if (item.getReservedByOwnerId() > 0) {
+          available = false;
+          if (item.getReservedByOwnerId() != user.getOwnerId())
+            by = item.getReservedBy();
+          status = view.getAiwm().reservedBy(by);
+        } else if (item.getPurchasedByOwnerId() > 0) {
+          available = false;
+          if (item.getPurchasedByOwnerId() != user.getOwnerId())
+            by = item.getPurchasedBy();
+          status = view.getAiwm().purchasedBy(by);
+        }
+        view.setItemStatus(i, status);
+        
+        // Set Action
+        String action = "";
+        if (available) {
+          action = view.getAiwc().reserve();
+        } else if (item.getReservedByOwnerId() == user.getOwnerId()) {
+          action = view.getAiwc().purchase();
+        } else if (item.getPurchasedByOwnerId() == user.getOwnerId()) {
+          action = view.getAiwc().unPurchase();
+        }
+        view.setItemActionText(i, action);
+        view.setItemActionVisible(i, (action.length() > 0));
+      } // for all items //
+    }
   } // showList //
   
   private void addList(String name, String description) {

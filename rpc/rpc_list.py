@@ -38,6 +38,9 @@ class ListRpcGroup(RpcGroupBase):
             RpcParamString('name'),
             RpcParamString('desc'),
         )),
+        Rpc(name='delete_list', params=(
+            RpcParamInt('list_id'),
+        )),
         Rpc(name='get_lists', params=(
             RpcParamInt('owner_id'),
         )),
@@ -127,6 +130,18 @@ class ListRpcGroup(RpcGroupBase):
         l.name = name
         l.description = desc
         return WishList.from_db(l.put())
+
+    def delete_list(self, list_id):
+        '''
+        Delete the given List 
+        '''
+        l = self.db.get_list(list_id)
+        oid = l.owner.key().id()
+        if not self._can_add_to_list(oid):
+            raise PermissionDeniedError()
+       
+        l.delete()
+        return []
 
     def get_lists(self, owner_id):
         '''

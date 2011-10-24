@@ -30,6 +30,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -37,6 +38,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
+import com.googlecode.alliwant.client.i18n.AiwMessages;
 import com.googlecode.alliwant.client.ui.widget.Table;
 
 public class ListsViewImpl extends Composite implements ListsView {
@@ -45,6 +47,7 @@ public class ListsViewImpl extends Composite implements ListsView {
   private static final Binder uiBinder = GWT.create(Binder.class);
 
   private AiwConstants aiwc = GWT.create(AiwConstants.class);
+  private AiwMessages aiwm = GWT.create(AiwMessages.class);
   private List<HandlerRegistration> regs = new ArrayList<HandlerRegistration>();
   private List<HandlerRegistration> ownRegs = 
    new ArrayList<HandlerRegistration>();
@@ -309,10 +312,20 @@ public class ListsViewImpl extends Composite implements ListsView {
   public void setItemActionText(int index, String text) {
     itemActionLinks.get(index).setText(text);
   }
+
+  @Override
+  public void openURL(String url) {
+    Window.open(url, "_blank", "");
+  }
   
   @Override
   public AiwConstants getAiwc() {
     return aiwc;
+  }
+  
+  @Override
+  public AiwMessages getAiwm() {
+    return aiwm;
   }
   
   @Override

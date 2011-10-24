@@ -285,5 +285,35 @@ public class AiwConstantsTestImpl implements AiwConstants {
   public String unPurchase() {
     return "unPurchase";
   }
+
+  @Override
+  public String available() {
+    return "available";
+  }
+
+  @Override
+  public String me() {
+    return "me";
+  }
+  
+  @Override
+  public String done() {
+    return "done";
+  }
+  
+  @Override
+  public String reservedBy() {
+    return "reservedBy";
+  }
+  
+  @Override
+  public String purchasedBy() {
+    return "purchasedBy";
+  }
+
+  @Override
+  public String itemDetail() {
+    return "itemDetail";
+  }
   
 } // AiwConstantsTestImpl //

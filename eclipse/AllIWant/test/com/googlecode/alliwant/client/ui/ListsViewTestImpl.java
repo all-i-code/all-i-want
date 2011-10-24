@@ -22,6 +22,7 @@ package com.googlecode.alliwant.client.ui;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
+import com.googlecode.alliwant.client.i18n.AiwMessages;
 
 public class ListsViewTestImpl implements ListsView {
 
@@ -190,6 +191,18 @@ public class ListsViewTestImpl implements ListsView {
 
   @Override
   public AiwConstants getAiwc() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void openURL(String url) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public AiwMessages getAiwm() {
     // TODO Auto-generated method stub
     return null;
   }

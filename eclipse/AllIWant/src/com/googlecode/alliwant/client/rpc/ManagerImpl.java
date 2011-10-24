@@ -30,6 +30,8 @@ import com.googlecode.alliwant.client.model.Group;
 import com.googlecode.alliwant.client.model.GroupImpl;
 import com.googlecode.alliwant.client.model.GroupInvitation;
 import com.googlecode.alliwant.client.model.GroupInvitationImpl;
+import com.googlecode.alliwant.client.model.ListItem;
+import com.googlecode.alliwant.client.model.ListItemImpl;
 import com.googlecode.alliwant.client.model.ListOwner;
 import com.googlecode.alliwant.client.model.ListOwnerImpl;
 import com.googlecode.alliwant.client.model.User;
@@ -265,8 +267,101 @@ public class ManagerImpl implements Manager {
     });
   } // updateList //
   
+  @Override
+  public void deleteList(int listId) {
+    String url = "/rpc/list/delete_list?";
+    url += rpc.add("list_id", listId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.LIST_DELETED));
+      }
+    });
+  } // deleteList //
+
+  @Override
+  public void addItem(int listId, String name, String category,
+   String description, String url, boolean isSurprise) {
+    String rpcUrl = "/rpc/list/add_item";
+    String params = rpc.add("list_id", listId, true);
+    params += rpc.add("name", name);
+    params += rpc.add("category", category);
+    params += rpc.add("desc", description);
+    params += rpc.add("url", url);
+    params += rpc.add("surprise", isSurprise);
+    rpc.sendPost(rpcUrl, params, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
+         ListItemImpl.decode(result)));
+      }
+    });
+  } // add Item //
+  
+  @Override
+  public void updateItem(int listId, String name, String category,
+   String description, String url) {
+    String rpcUrl = "/rpc/list/update_item";
+    String params = rpc.add("list_id", listId, true);
+    params += rpc.add("name", name);
+    params += rpc.add("category", category);
+    params += rpc.add("desc", description);
+    params += rpc.add("url", url);
+    rpc.sendPost(rpcUrl, params, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
+         ListItemImpl.decode(result)));
+      }
+    });
+  } // updateItem //
+  
+  @Override
+  public void deleteItem(int itemId) {
+    String url = "/rpc/list/remove_item";
+    url += rpc.add("item_id", itemId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.ITEM_DELETED));
+      }
+    });
+  } // deleteItem //
+    
+  @Override
+  public void reserveItem(int itemId) {
+    String url = "/rpc/list/reserve_item";
+    url += rpc.add("item_id", itemId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
+         ListItemImpl.decode(result)));
+      }
+    });
+  } // reserveItem //
+  
+  @Override
+  public void purchaseItem(int itemId) {
+    String url = "/rpc/list/purchase_item";
+    url += rpc.add("item_id", itemId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
+         ListItemImpl.decode(result)));
+      }
+    });
+  } // purchaseItem //
+    
+  @Override
+  public void unPurchaseItem(int itemId) {
+    String url = "/rpc/list/unpurchase_item";
+    url += rpc.add("item_id", itemId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
+         ListItemImpl.decode(result)));
+      }
+    });
+  } // unPurchaseItem //
+    
   // ================================================================
   // END: Manager methods
   // ================================================================
   
-} // ManagerJson //
+} // ManagerImpl //

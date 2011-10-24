@@ -117,5 +117,17 @@ public interface Manager {
 
   void addList(int ownerId, String name, String description);
   void updateList(int listId, String name, String description);
+  void deleteList(int listId);
+
+  void addItem(int listId, String name, String category, String description,
+   String url, boolean isSurprise);
+  
+  void updateItem(int listId, String name, String category, String description,
+   String url);
+  
+  void deleteItem(int itemId);
+  void reserveItem(int itemId);
+  void purchaseItem(int itemId);
+  void unPurchaseItem(int itemId);
   
 } // Manager //
