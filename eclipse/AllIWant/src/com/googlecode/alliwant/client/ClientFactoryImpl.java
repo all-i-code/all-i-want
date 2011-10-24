@@ -38,6 +38,10 @@ import com.googlecode.alliwant.client.ui.SettingsView;
 import com.googlecode.alliwant.client.ui.SettingsViewImpl;
 import com.googlecode.alliwant.client.ui.widget.Alert;
 import com.googlecode.alliwant.client.ui.widget.AlertImpl;
+import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopup;
+import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopupPresenter;
+import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopupView;
+import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopupViewImpl;
 import com.googlecode.alliwant.client.ui.widget.smart.EditListPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditListPopupPresenter;
 import com.googlecode.alliwant.client.ui.widget.smart.EditListPopupView;
@@ -66,6 +70,8 @@ public class ClientFactoryImpl implements ClientFactory {
   private EditListPopup editListPopup = new EditListPopupPresenter(editListPopupView);
   private ItemDetailPopupView itemDetailPopupView = new ItemDetailPopupViewImpl();
   private ItemDetailPopup itemDetailPopup = new ItemDetailPopupPresenter(itemDetailPopupView);
+  private EditItemPopupView editItemPopupView = new EditItemPopupViewImpl();
+  private EditItemPopup editItemPopup = new EditItemPopupPresenter(editItemPopupView);
   private ListsView listsView = new ListsViewImpl();
   private GroupsView groupsView = new GroupsViewImpl();
   private RequestsView requestsView = new RequestsViewImpl();
@@ -105,6 +111,11 @@ public class ClientFactoryImpl implements ClientFactory {
   @Override
   public ItemDetailPopup getItemDetailPopup() {
     return itemDetailPopup;
+  }
+  
+  @Override
+  public EditItemPopup getEditItemPopup() {
+    return editItemPopup;
   }
   
   @Override

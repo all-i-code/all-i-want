@@ -158,6 +158,9 @@ public interface AiwConstants extends Constants {
   @DefaultStringValue("Add Item")
   String addItem();
 
+  @DefaultStringValue("Edit Item")
+  String editItem();
+
   @DefaultStringValue("Link")
   String link();
   

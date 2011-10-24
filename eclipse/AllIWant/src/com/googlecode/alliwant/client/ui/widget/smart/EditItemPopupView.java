@@ -1,5 +1,5 @@
 /**
- * @file EditItemPopup.java
+ * @file EditItemPopupView.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -19,14 +19,25 @@
 */
 package com.googlecode.alliwant.client.ui.widget.smart;
 
-import com.googlecode.alliwant.client.model.ListItem;
+import com.googlecode.alliwant.client.i18n.AiwConstants;
 
-public interface EditItemPopup {
-  void show(Handler handler);
-  void show(ListItem item, Handler handler);
-  
-  public interface Handler {
-    void onSave(int itemId, String name, String category,
-     String description, String url);
+public interface EditItemPopupView {
+  void show();
+  void hide();
+  void setHeader(String header);
+  void setName(String name);
+  String getName();
+  void setCategory(String category);
+  String getCategory();
+  void setDescription(String description);
+  String getDescription();
+  void setUrl(String url);
+  String getUrl();
+
+  AiwConstants getAiwc();
+  void setPresenter(Presenter presenter);
+  public interface Presenter {
+    void ok();
+    void cancel();
   }
 }
