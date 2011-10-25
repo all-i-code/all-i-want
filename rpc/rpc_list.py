@@ -53,7 +53,7 @@ class ListRpcGroup(RpcGroupBase):
             RpcParamBoolean('surprise'),
         )),
         Rpc(name='update_item', params=(
-            RpcParamInt('list_id'),
+            RpcParamInt('item_id'),
             RpcParamString('name'),
             RpcParamString('cat'),
             RpcParamString('desc'),

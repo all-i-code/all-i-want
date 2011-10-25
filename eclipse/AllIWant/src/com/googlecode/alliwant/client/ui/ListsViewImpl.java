@@ -213,7 +213,7 @@ public class ListsViewImpl extends Composite implements ListsView {
       ownItems.setWidget(index, oLinkCol, link);
       
       Anchor dLink = new Anchor(aiwc.detail());
-      ownRegs.add(link.addClickHandler(new ClickHandler() {
+      ownRegs.add(dLink.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {
           presenter.itemDetail(index);
         }
@@ -263,7 +263,7 @@ public class ListsViewImpl extends Composite implements ListsView {
       items.setWidget(index, linkCol, link);
       
       Anchor action = new Anchor(aiwc.action());
-      regs.add(link.addClickHandler(new ClickHandler() {
+      regs.add(action.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {
           presenter.itemAction(index);
         }
@@ -272,7 +272,7 @@ public class ListsViewImpl extends Composite implements ListsView {
       items.setWidget(index, actCol, action);
       
       Anchor dLink = new Anchor(aiwc.detail());
-      regs.add(link.addClickHandler(new ClickHandler() {
+      regs.add(dLink.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {
           presenter.itemDetail(index);
         }

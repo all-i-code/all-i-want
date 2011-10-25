@@ -279,7 +279,10 @@ class Model(object):
         return self.__class__
 
     def get_value(self, name):
-        return getattr(self, name, None)
+        v = getattr(self, name, None)
+        if v.__class__ == list:
+            v = [ i.to_json_dict() for i in v ]
+        return v
    
     def to_dict(self):
         v = lambda f: self.get_value(f.get_name())

@@ -37,6 +37,18 @@ class AccessReq(Model):
         return cls(id=db.key().id(), was_denied=db.denied,
             email=db.user.email())
 
+class ListPermission(Model):
+    fields = (
+        FieldInt(name='id'),
+        FieldInt(name='owner_id'),
+        FieldString(name='email'),
+    )
+
+    @classmethod
+    def from_db(cls, db):
+        _ = lambda x: x.key().id()
+        return cls(id=_(db), owner_id=_(db.owner), email=db.email)
+
 class ListOwner(Model):
     fields = (
         FieldInt(name='id'),
@@ -120,7 +132,7 @@ class ListItem(Model):
     def from_db(cls, db):
         _ = lambda x: x.label() if x is not None else ''
         _id = lambda x: x.key().id() if x is not None else -1
-        return cls(key=db.key().id(), name=db.name,
+        return cls(id=db.key().id(), name=db.name,
             description=db.description, category=db.category, url=db.url,
             reserved_by=_(db.reserved_by), purchased_by=_(db.purchased_by),
             reserved_by_owner_id=_id(db.reserved_by),

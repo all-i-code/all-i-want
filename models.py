@@ -41,6 +41,10 @@ class ListOwnerDb(Db):
     def label(self):
         return '%s (%s)' % (self.name, self.email)
 
+class ListPermissionDb(Db):
+    owner = db.ReferenceProperty(ListOwnerDb, collection_name='permissions')
+    email = db.StringProperty()
+
 class GroupDb(Db):
     name = db.StringProperty()
     description = db.StringProperty(indexed=False, multiline=True)

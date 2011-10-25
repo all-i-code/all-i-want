@@ -19,6 +19,7 @@
 */
 package com.googlecode.alliwant.client.activity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +33,15 @@ import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
 import com.googlecode.alliwant.client.model.ListItem;
 import com.googlecode.alliwant.client.model.ListOwner;
+import com.googlecode.alliwant.client.model.ListPermission;
 import com.googlecode.alliwant.client.model.User;
 import com.googlecode.alliwant.client.model.WishList;
 import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.rpc.Manager;
 import com.googlecode.alliwant.client.ui.ListsView;
+import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditListPopup;
+import com.googlecode.alliwant.client.ui.widget.smart.ItemDetailPopup;
 
 public class ListsActivity implements Activity, ListsView.Presenter {
 
@@ -45,17 +49,22 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   private ListsView view;
   private Manager manager;
   private EditListPopup editListPopup;
+  private EditItemPopup editItemPopup;
+  private ItemDetailPopup itemDetailPopup;
   private User user;
   private int ownerId = -1;
   private WishList currentList = null;
   private Map<Integer, WishList> listMap = new HashMap<Integer, WishList>();
   private Map<Integer, ListOwner> ownerMap = new HashMap<Integer, ListOwner>();
+  private List<Integer> permissionOwnerIds = new ArrayList<Integer>();
   
   public ListsActivity(ListsPlace place, ClientFactory cf) {
     this.cf = cf;
     view = cf.getListsView();
     manager = cf.getManager();
     editListPopup = cf.getEditListPopup();
+    editItemPopup = cf.getEditItemPopup(); 
+    itemDetailPopup = cf.getItemDetailPopup();
   }
   
   // ==========================================================================
@@ -81,6 +90,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     panel.setWidget(view.asWidget());
     addEventBusHandlers(eventBus);
     view.setHeader(cf.getHeader());
+    view.showProcessingOverlay();
     cf.getManager().getCurrentUser();
   } // start //
   
@@ -128,8 +138,13 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     
   @Override
   public void addItem() {
-    // TODO: implement this
-  }
+    editItemPopup.show(new EditItemPopup.Handler() {
+      public void onSave(int itemId, String name, String category,
+       String description, String url) {
+        addItem(name, category, description, url); 
+      }
+    }) ;
+  } // addItem //
   
   @Override
   public void goToItemUrl(int index) {
@@ -138,29 +153,38 @@ public class ListsActivity implements Activity, ListsView.Presenter {
    
   @Override
   public void itemDetail(int index) {
-    // TODO: implement this
-  }
+    ListItem item = currentList.getItems().get(index);
+    if (permissionOwnerIds.contains(ownerId)) {
+      editItemPopup.show(item, new EditItemPopup.Handler() {
+        public void onSave(int itemId, String name, String category,
+         String description, String url) {
+          editItem(itemId, name, category, description, url); 
+        }
+      });
+    } else {
+      itemDetailPopup.show(item, user, new ItemDetailPopup.Handler() {
+        public void unPurchaseItem(int itemId) { unPurchase(itemId); }
+        public void reserveItem(int itemId) { reserve(itemId); }
+        public void purchaseItem(int itemId) { purchase(itemId); }
+      });
+    }
+  } // itemDetail //
     
   @Override
   public void itemAction(int index) {
     ListItem item = currentList.getItems().get(index);
-    if (item.getReservedByOwnerId() == user.getOwnerId()) {
-      view.showProcessingOverlay();
-      manager.purchaseItem(item.getId());
-    } else if (item.getPurchasedByOwnerId() == user.getOwnerId()) {
-      view.showProcessingOverlay();
-      manager.unPurchaseItem(item.getId());
-    } else {
-      view.showProcessingOverlay();
-      manager.reserveItem(item.getId());
-    }
+    if (item.getReservedByOwnerId() == user.getOwnerId())
+      purchase(item.getId());
+    else if (item.getPurchasedByOwnerId() == user.getOwnerId()) 
+      unPurchase(item.getId());
+    else 
+      reserve(item.getId());
   } // itemAction //
   
   // ==========================================================================
   // END: ListsView.Presenter methods
   // ==========================================================================
-  
-  
+ 
   private void addEventBusHandlers(EventBus eventBus) {
     {
       ModelEvent.Handler<User> handler = new ModelEvent.Handler<User>() {
@@ -199,6 +223,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       };
       ModelEvent.register(eventBus, WishList.class, handler);
     }
+    
     {
       ModelEvent.Handler<ListItem> handler = new ModelEvent.Handler<ListItem>() {
         public void onModel(ModelEvent<ListItem> event) {
@@ -207,15 +232,32 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       };
       ModelEvent.register(eventBus, ListItem.class, handler);
     }
+    
+    {
+      ModelListEvent.Handler<ListPermission> handler =
+       new ModelListEvent.Handler<ListPermission>() {
+        public void onModelList(ModelListEvent<ListPermission> event) {
+          handlePermissions(event.getModelList());
+        }
+      };
+      ModelListEvent.register(eventBus, ListPermission.class, handler);
+    }
   } // addEventBusHandlers //
 
   private void handleUser(User user) {
-    view.showProcessingOverlay();
     this.user = user;
+    manager.getPermissions(user.getOwnerId());
+  }
+ 
+  private void handlePermissions(List<ListPermission> permissions) {
+    permissionOwnerIds.clear();
+    permissionOwnerIds.add(user.getOwnerId());
+    for (ListPermission p : permissions) permissionOwnerIds.add(p.getOwnerId());
     manager.getAvailableOwners(user.getOwnerId());
-  } // handleUser //
+  }
   
   private void handleOwners(List<ListOwner> owners) {
+    view.hideProcessingOverlay();
     view.clearOwners();
     ownerMap.clear();
     for (ListOwner owner : owners) {
@@ -312,5 +354,33 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     view.showProcessingOverlay();
     manager.updateList(listId, name, description);
   } // editList //
+  
+  private void addItem(String name, String category, String description,
+   String url) {
+    view.showProcessingOverlay();
+    manager.addItem(currentList.getId(), name, category, description, url,
+     false);
+  } // addItem //
+  
+  private void editItem(int itemId, String name, String category,
+   String description, String url) {
+    view.showProcessingOverlay();
+    manager.updateItem(itemId, name, category, description, url);
+  } // editItem //
+  
+  public void unPurchase(int id) {
+    view.showProcessingOverlay();
+    manager.unPurchaseItem(id);
+  }
+  
+  public void purchase(int id) {
+    view.showProcessingOverlay();
+    manager.purchaseItem(id);
+  }
+  
+   void reserve(int id) {
+    view.showProcessingOverlay();
+    manager.reserveItem(id);
+  }
   
 } // ListsActivity //

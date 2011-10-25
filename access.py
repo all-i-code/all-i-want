@@ -21,7 +21,7 @@
 from google.appengine.ext.db import Key
 from core.util import extract_name as extract
 from models import AccessReqDb, ListOwnerDb, GroupDb, GroupInvitationDb,\
-    GroupMemberDb, ListDb, ListItemDb
+    GroupMemberDb, ListDb, ListItemDb, ListPermissionDb
 
 class DbAccess:
     def __init__(self, user=None):
@@ -85,6 +85,15 @@ class DbAccess:
 
     def get_owner_by_user(self, user):
         return ListOwnerDb.all().filter('user =', user).get()
+
+    def add_permission(self, owner, email):
+        return ListPermissionDb(owner=owner, email=email).put()
+
+    def get_permission(self, permission_id):
+        return ListPermissionDb.get_by_id(permission_id)
+
+    def get_permissions_by_email(self, email):
+        return ListPermissionDb.all().filter('email =', email)
 
     def get_req_by_user(self, user):
         return AccessReqDb.all().filter('user =', user).get()

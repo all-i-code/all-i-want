@@ -24,6 +24,7 @@ import com.google.gwt.user.client.Window;
 import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
+import com.googlecode.alliwant.client.logging.Logging;
 import com.googlecode.alliwant.client.model.AccessReq;
 import com.googlecode.alliwant.client.model.AccessReqImpl;
 import com.googlecode.alliwant.client.model.Group;
@@ -34,6 +35,8 @@ import com.googlecode.alliwant.client.model.ListItem;
 import com.googlecode.alliwant.client.model.ListItemImpl;
 import com.googlecode.alliwant.client.model.ListOwner;
 import com.googlecode.alliwant.client.model.ListOwnerImpl;
+import com.googlecode.alliwant.client.model.ListPermission;
+import com.googlecode.alliwant.client.model.ListPermissionImpl;
 import com.googlecode.alliwant.client.model.User;
 import com.googlecode.alliwant.client.model.UserImpl;
 import com.googlecode.alliwant.client.model.WishList;
@@ -95,6 +98,42 @@ public class ManagerImpl implements Manager {
     });
   } // getOwner //
 
+  @Override
+  public void getPermissions(int ownerId) {
+    String url = "/rpc/user/get_permissions?";
+    url += rpc.add("owner_id", ownerId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelListEvent<ListPermission>(
+         ListPermission.class, ListPermissionImpl.decodeList(result)));
+      }
+    });
+  } // getPermissions //
+ 
+  @Override
+  public void addPermission(int ownerId, String email) {
+    String url = "/rpc/user/add_permission?";
+    url += rpc.add("owner_id", ownerId, true);
+    url += rpc.add("email", email);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new ModelEvent<ListPermission>(
+         ListPermission.class, ListPermissionImpl.decode(result)));
+      }
+    });
+  } // addPermission //
+ 
+  @Override
+  public void removePermission(int permissionId) {
+    String url = "/rpc/user/remove_permission?";
+    url += rpc.add("permission_id", permissionId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.PERMISSION_DELETED));
+      }
+    });
+  } // removePermission //
+  
   @Override
   public void updateOwner(int ownerId, String name, String nickname) {
     String url = "/rpc/user/update_owner?";
@@ -281,14 +320,16 @@ public class ManagerImpl implements Manager {
   @Override
   public void addItem(int listId, String name, String category,
    String description, String url, boolean isSurprise) {
-    String rpcUrl = "/rpc/list/add_item";
-    String params = rpc.add("list_id", listId, true);
-    params += rpc.add("name", name);
-    params += rpc.add("category", category);
-    params += rpc.add("desc", description);
-    params += rpc.add("url", url);
-    params += rpc.add("surprise", isSurprise);
-    rpc.sendPost(rpcUrl, params, new Rpc.Handler() {
+    String rpcUrl = "/rpc/list/add_item?";
+    rpcUrl += rpc.add("list_id", listId, true);
+    rpcUrl += rpc.add("name", name);
+    rpcUrl += rpc.add("cat", category);
+    rpcUrl += rpc.add("desc", description);
+    rpcUrl += rpc.add("url", url);
+    rpcUrl += rpc.add("surprise", isSurprise);
+    Logging.logger().info("ManagerImpl::addItem: url:");
+    Logging.logger().info(" " + rpcUrl);
+    rpc.send(rpcUrl, new Rpc.Handler() {
       public void onComplete(String result) {
         eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
          ListItemImpl.decode(result)));
@@ -297,15 +338,17 @@ public class ManagerImpl implements Manager {
   } // add Item //
   
   @Override
-  public void updateItem(int listId, String name, String category,
+  public void updateItem(int itemId, String name, String category,
    String description, String url) {
-    String rpcUrl = "/rpc/list/update_item";
-    String params = rpc.add("list_id", listId, true);
-    params += rpc.add("name", name);
-    params += rpc.add("category", category);
-    params += rpc.add("desc", description);
-    params += rpc.add("url", url);
-    rpc.sendPost(rpcUrl, params, new Rpc.Handler() {
+    String rpcUrl = "/rpc/list/update_item?";
+    rpcUrl += rpc.add("item_id", itemId, true);
+    rpcUrl += rpc.add("name", name);
+    rpcUrl += rpc.add("cat", category);
+    rpcUrl += rpc.add("desc", description);
+    rpcUrl += rpc.add("url", url);
+    Logging.logger().info("ManagerImpl::updateItem: url:");
+    Logging.logger().info(" " + rpcUrl);
+    rpc.send(rpcUrl, new Rpc.Handler() {
       public void onComplete(String result) {
         eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
          ListItemImpl.decode(result)));
@@ -315,7 +358,7 @@ public class ManagerImpl implements Manager {
   
   @Override
   public void deleteItem(int itemId) {
-    String url = "/rpc/list/remove_item";
+    String url = "/rpc/list/remove_item?";
     url += rpc.add("item_id", itemId, true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
@@ -326,7 +369,7 @@ public class ManagerImpl implements Manager {
     
   @Override
   public void reserveItem(int itemId) {
-    String url = "/rpc/list/reserve_item";
+    String url = "/rpc/list/reserve_item?";
     url += rpc.add("item_id", itemId, true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
@@ -338,7 +381,7 @@ public class ManagerImpl implements Manager {
   
   @Override
   public void purchaseItem(int itemId) {
-    String url = "/rpc/list/purchase_item";
+    String url = "/rpc/list/purchase_item?";
     url += rpc.add("item_id", itemId, true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
@@ -350,7 +393,7 @@ public class ManagerImpl implements Manager {
     
   @Override
   public void unPurchaseItem(int itemId) {
-    String url = "/rpc/list/unpurchase_item";
+    String url = "/rpc/list/unpurchase_item?";
     url += rpc.add("item_id", itemId, true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {

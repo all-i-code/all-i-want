@@ -37,7 +37,13 @@ public interface Manager {
    * @param ownerId ID of ListOwner
    */
   void getOwner(int ownerId);
- 
+
+  void getPermissions(int ownerId);
+  
+  void addPermission(int ownerId, String email);
+  
+  void removePermission(int permissionId);
+  
   /**
    * Update the given ListOwner
    * @param ownerId ID of ListOwner
@@ -122,7 +128,7 @@ public interface Manager {
   void addItem(int listId, String name, String category, String description,
    String url, boolean isSurprise);
   
-  void updateItem(int listId, String name, String category, String description,
+  void updateItem(int itemId, String name, String category, String description,
    String url);
   
   void deleteItem(int itemId);
