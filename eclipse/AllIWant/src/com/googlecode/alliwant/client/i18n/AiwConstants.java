@@ -125,6 +125,9 @@ public interface AiwConstants extends Constants {
   @DefaultStringValue("Create Group")
   String createGroup();
   
+  @DefaultStringValue("Edit Group")
+  String editGroup();
+  
   @DefaultStringValue("My Groups")
   String myGroups();
   
@@ -202,5 +205,29 @@ public interface AiwConstants extends Constants {
   
   @DefaultStringValue("Item Detail")
   String itemDetail();
+  
+  @DefaultStringValue("Add")
+  String add();
+  
+  @DefaultStringValue("Edit")
+  String edit();
+  
+  @DefaultStringValue("Remove")
+  String remove();
+  
+  @DefaultStringValue("Delete")
+  String delete();
+  
+  @DefaultStringValue("Are you sure you want to remove this item?")
+  String confirmRemoveItem();
+  
+  @DefaultStringValue("Please select a List")
+  String noListSelected();
+  
+  @DefaultStringValue("Are you sure you want to delete this list?")
+  String confirmDeleteList();
+  
+  @DefaultStringValue("Surprise")
+  String surprise();
   
 } // AiwConstants //

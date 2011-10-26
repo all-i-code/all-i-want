@@ -1,5 +1,5 @@
 /**
- * @file EditItemPopupPresenter.java
+ * @file EditGroupPopupPresenter.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -19,79 +19,68 @@
 */
 package com.googlecode.alliwant.client.ui.widget.smart;
 
-import com.googlecode.alliwant.client.model.ListItem;
+import com.googlecode.alliwant.client.model.Group;
 
-public class EditItemPopupPresenter implements EditItemPopup, 
- EditItemPopupView.Presenter {
+public class EditGroupPopupPresenter implements EditGroupPopup, 
+ EditGroupPopupView.Presenter {
 
-  private EditItemPopupView view;
-  private ListItem item = null;
+  private EditGroupPopupView view;
+  private Group group = null;
   private Handler handler = null;
   
-  public EditItemPopupPresenter(EditItemPopupView view) {
+  public EditGroupPopupPresenter(EditGroupPopupView view) {
     view.setPresenter(this);
     this.view = view;
   }
   
   // ================================================================
-  // BEGIN: EditListPopup methods
+  // BEGIN: EditGroupPopup methods
   // ================================================================
   
   @Override
-  public void show(boolean isOwnList, boolean canAdd, Handler handler) {
+  public void show(Handler handler) {
     this.handler = handler;
-    view.setSurpriseVisible(!isOwnList);
-    view.setSurprise(!canAdd);
-    view.setSurpriseEnabled(canAdd);
-    view.setHeader(view.getAiwc().addItem());
+    view.setHeader(view.getAiwc().createGroup());
     view.setName("");
-    view.setCategory("");
     view.setDescription("");
-    view.setUrl("");
     view.show();
   }
   
   @Override
-  public void show(ListItem item, Handler handler) {
-    this.item = item;
+  public void show(Group group, Handler handler) {
+    this.group = group;
     this.handler = handler;
-    view.setSurpriseVisible(false);
-    view.setHeader(view.getAiwc().editItem());
-    view.setName(item.getName());
-    view.setCategory(item.getCategory());
-    view.setDescription(item.getDescription());
-    view.setUrl(item.getUrl());
+    view.setHeader(view.getAiwc().editGroup());
+    view.setName(group.getName());
+    view.setDescription(group.getDescription());
     view.show();
   }
 
   // ================================================================
-  // END: EditItemPopup methods
+  // END: EditGroupPopup methods
   // ================================================================
   
   // ================================================================
-  // BEGIN: EditItemPopupView.Presener methods
+  // BEGIN: EditGroupPopupView.Presener methods
   // ================================================================
 
   @Override
   public void ok() {
     int id = -1;
-    if (null != item) id = item.getId();
-    handler.onSave(id, view.getName(), view.getCategory(), 
-     view.getDescription(), view.getUrl(), view.getSurprise());
+    if (null != group) id = group.getId();
+    handler.onSave(id, view.getName(), view.getDescription());
     view.hide();
   }
     
   @Override
   public void cancel() {
     view.setName("");
-    view.setCategory("");
     view.setDescription("");
-    view.setUrl("");
     view.hide();
   }
   
   // ================================================================
-  // END: EditItemPopupView.Presenter methods
+  // END: EditGroupPopupView.Presenter methods
   // ================================================================
  
-} // EditItemPopupPresenter //
+} // EditGroupPopupPresenter //

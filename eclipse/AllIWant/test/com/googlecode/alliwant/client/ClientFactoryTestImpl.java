@@ -31,6 +31,8 @@ import com.googlecode.alliwant.client.ui.GoodbyeViewTestImpl;
 import com.googlecode.alliwant.client.ui.RequestsViewTestImpl;
 import com.googlecode.alliwant.client.ui.SettingsViewTestImpl;
 import com.googlecode.alliwant.client.ui.widget.AlertTestImpl;
+import com.googlecode.alliwant.client.ui.widget.Confirm;
+import com.googlecode.alliwant.client.ui.widget.smart.EditGroupPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditListPopupTest;
 import com.googlecode.alliwant.client.ui.widget.smart.HeaderTestImpl;
@@ -117,6 +119,18 @@ public class ClientFactoryTestImpl implements ClientFactory {
 
   @Override
   public EditItemPopup getEditItemPopup() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Confirm getConfirm() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public EditGroupPopup getEditGroupPopup() {
     // TODO Auto-generated method stub
     return null;
   }

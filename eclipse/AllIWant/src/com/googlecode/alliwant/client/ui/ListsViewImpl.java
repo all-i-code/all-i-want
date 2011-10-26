@@ -53,12 +53,11 @@ public class ListsViewImpl extends Composite implements ListsView {
    new ArrayList<HandlerRegistration>();
   
   private List<Anchor> ownItemLinks = new ArrayList<Anchor>();
-  private List<Anchor> ownItemDetailLinks = new ArrayList<Anchor>();
   private List<Anchor> itemLinks = new ArrayList<Anchor>();
   private List<Anchor> itemDetailLinks = new ArrayList<Anchor>();
   private List<Anchor> itemActionLinks = new ArrayList<Anchor>();
  
-  private int oItemCol, oCatCol, oLinkCol, oDetailCol;
+  private int oItemCol, oCatCol, oLinkCol, oEditCol, oDeleteCol;
   private int itemCol, catCol, linkCol, statCol, actCol, detailCol;
   
   private Presenter presenter;
@@ -70,7 +69,7 @@ public class ListsViewImpl extends Composite implements ListsView {
   ListBox listOwner, wishList;
 
   @UiField
-  Anchor addList, editList, addItem;
+  Anchor addList, editList, deleteList, addItem;
   
   @UiField
   Table items, ownItems;
@@ -79,11 +78,12 @@ public class ListsViewImpl extends Composite implements ListsView {
     initWidget(uiBinder.createAndBindUi(this));
    
     int col = 0;
-    ownItems.setNumColumns(4);
+    ownItems.setNumColumns(5);
     ownItems.setHeader(oItemCol = col++, aiwc.name());
     ownItems.setHeader(oCatCol = col++, aiwc.category());
     ownItems.setHeader(oLinkCol = col++, aiwc.url());
-    ownItems.setHeader(oDetailCol = col++, "");
+    ownItems.setHeader(oEditCol = col++, "");
+    ownItems.setHeader(oDeleteCol = col++, "");
 
     col = 0;
     items.setNumColumns(6);
@@ -113,6 +113,11 @@ public class ListsViewImpl extends Composite implements ListsView {
   @UiHandler("editList")
   void onEditListClick(ClickEvent event) {
     presenter.editList();
+  }
+  
+  @UiHandler("deleteList")
+  void onDeleteListClick(ClickEvent event) {
+    presenter.deleteList();
   }
   
   @UiHandler("addItem")
@@ -165,6 +170,13 @@ public class ListsViewImpl extends Composite implements ListsView {
   }
 
   @Override
+  public void setCanEditLists(boolean canEdit) {
+    addList.setVisible(canEdit);
+    editList.setVisible(canEdit);
+    deleteList.setVisible(canEdit);
+  }
+  
+  @Override
   public void clearLists() {
     wishList.clear();
   }
@@ -198,7 +210,6 @@ public class ListsViewImpl extends Composite implements ListsView {
   public void setNumOwnItems(int numItems) {
     clearHandlers(ownRegs);
     ownItemLinks.clear();
-    ownItemDetailLinks.clear();
    
     ownItems.setNumRecords(numItems);
     for (int i = 0; i < numItems; i++) {
@@ -212,14 +223,21 @@ public class ListsViewImpl extends Composite implements ListsView {
       ownItemLinks.add(link);
       ownItems.setWidget(index, oLinkCol, link);
       
-      Anchor dLink = new Anchor(aiwc.detail());
-      ownRegs.add(dLink.addClickHandler(new ClickHandler() {
+      Anchor eLink = new Anchor(aiwc.edit());
+      ownRegs.add(eLink.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {
-          presenter.itemDetail(index);
+          presenter.editItem(index);
         }
       }));
-      ownItemDetailLinks.add(dLink);
-      ownItems.setWidget(index, oDetailCol, dLink);
+      ownItems.setWidget(index, oEditCol, eLink);
+      
+      Anchor dLink = new Anchor(aiwc.remove());
+      ownRegs.add(dLink.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          presenter.deleteItem(index);
+        }
+      }));
+      ownItems.setWidget(index, oDeleteCol, dLink);
     } // for all items //
   } // setNumOwnItems //
   

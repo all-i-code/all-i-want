@@ -84,7 +84,10 @@ class ListRpcGroup(RpcGroupBase):
 
     def _can_add_to_list(self, owner_id):
         self._verify_owner()
-        return self.owner.key().id() == owner_id
+        perms = self.db.get_permissions_by_email(self.owner.email)
+        oid = self.owner.key().id()
+        oids = [ oid ] + [ p.owner.key().id() for p in perms ]
+        return owner_id in oids
 
     def _can_read_list(self, owner_id):
         _ = lambda x: x.member.key().id()
@@ -167,7 +170,7 @@ class ListRpcGroup(RpcGroupBase):
         if surprise:
             item.reserved_by = self.owner
             item.put()
-        return ListItem.from_db(item)
+        return WishList.from_db(self.db.get_list(list_id))
 
     def update_item(self, item_id, name, cat, desc, url):
         '''
@@ -181,7 +184,7 @@ class ListRpcGroup(RpcGroupBase):
         item.category = cat
         item.description = desc
         item.url = url
-        return ListItem.from_db(item.put())
+        return WishList.from_db(item.put().parent_list)
 
     def remove_item(self, item_id):
         '''
@@ -231,7 +234,7 @@ class ListRpcGroup(RpcGroupBase):
 
         item.reserved_by = self.owner
         item.purchased_by = None
-        return ListItem.from_db(item.put())
+        return WishLilst.from_db(item.put().parent_list)
 
     def unreserve_item(self, item_id):
         '''
@@ -249,7 +252,7 @@ class ListRpcGroup(RpcGroupBase):
             self._item_already_taken('reserved', item.reserved_by)
 
         item.reserved_by = None
-        return ListItem.from_db(item.put())
+        return WishLilst.from_db(item.put().parent_list)
 
     def purchase_item(self, item_id):
         '''
@@ -268,7 +271,7 @@ class ListRpcGroup(RpcGroupBase):
 
         item.reserved_by = None
         item.purchased_by = self.owner
-        return ListItem.from_db(item.put())
+        return WishLilst.from_db(item.put().parent_list)
     
     def unpurchase_item(self, item_id):
         '''
@@ -287,7 +290,7 @@ class ListRpcGroup(RpcGroupBase):
             self._item_already_taken('reserved', item.reserved_by)
 
         item.purchased_by = None
-        return ListItem.from_db(item.put())
+        return WishLilst.from_db(item.put().parent_list)
 
     def get_reserved_and_purchased_items(self):
         '''

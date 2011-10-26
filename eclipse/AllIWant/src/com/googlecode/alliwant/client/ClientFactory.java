@@ -28,6 +28,8 @@ import com.googlecode.alliwant.client.ui.GoodbyeView;
 import com.googlecode.alliwant.client.ui.RequestsView;
 import com.googlecode.alliwant.client.ui.SettingsView;
 import com.googlecode.alliwant.client.ui.widget.Alert;
+import com.googlecode.alliwant.client.ui.widget.Confirm;
+import com.googlecode.alliwant.client.ui.widget.smart.EditGroupPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditListPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.Header;
@@ -37,11 +39,13 @@ public interface ClientFactory {
   EventBus getEventBus();
   PlaceController getPlaceController();
   Alert getAlert();
+  Confirm getConfirm();
   Manager getManager();
   Header getHeader();
   EditListPopup getEditListPopup();
   ItemDetailPopup getItemDetailPopup();
   EditItemPopup getEditItemPopup();
+  EditGroupPopup getEditGroupPopup();
   
   ListsView getListsView();
   GroupsView getGroupsView();

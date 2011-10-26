@@ -30,22 +30,26 @@
      text="{aiwc.lists}" />
     
     <gwt:FlowPanel styleName="{css.main.field}">
-      <gwt:Label text="{aiwc.user}" addStyleNames="{css.main.label}" />
+      <gwt:Label text="{aiwc.user}"
+       addStyleNames="{css.main.label} {css.main.small}" />
       <gwt:ListBox ui:field="listOwner" addStyleNames="{css.main.input}" /> 
     </gwt:FlowPanel> 
     
     <gwt:FlowPanel styleName="{css.main.field}">
-      <gwt:Label text="{aiwc.list}" addStyleNames="{css.main.label}" />
+      <gwt:Label text="{aiwc.list}"
+       addStyleNames="{css.main.label} {css.main.small}" />
       <gwt:ListBox ui:field="wishList" addStyleNames="{css.main.input}" /> 
-      <gwt:Anchor ui:field="addList" text="{aiwc.addList}" 
+      <gwt:Anchor ui:field="addList" text="{aiwc.add}" visible="false"
         href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
-      <gwt:Anchor ui:field="editList" text="{aiwc.editList}" 
+      <gwt:Anchor ui:field="editList" text="{aiwc.edit}" visible="false"
+        href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
+      <gwt:Anchor ui:field="deleteList" text="{aiwc.delete}" visible="false"
         href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
     </gwt:FlowPanel> 
   
     <gwt:FlowPanel>
       <gwt:Label text="{aiwc.listItems}" addStyleNames="{css.main.heading}" /> 
-      <gwt:Anchor ui:field="addItem" text="{aiwc.addItem}"
+      <gwt:Anchor ui:field="addItem" text="{aiwc.add}"
        href="javascript:;" addStyleNames="{css.main.sectionLink}" />
     </gwt:FlowPanel>
     <aiw:Table ui:field="items" addStyleNames="{css.main.table}" />

@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <!--
-  File: EditItemPopupViewImpl.ui.xml 
+  File: EditGroupPopupViewImpl.ui.xml 
   
   Copyright 2011 Adam Meadows 
  
@@ -23,6 +23,11 @@
   <ui:with type="com.googlecode.alliwant.client.i18n.AiwConstants" field="aiwc" />
   
   <ui:style>
+    .msg {
+	    font-size: 1.25em;
+	    white-space: pre-wrap;
+	    padding-bottom: 1em;
+	  }
     .main { padding: 1em; } 
   </ui:style>
   
@@ -30,27 +35,13 @@
    addStyleNames="{style.main}">
     <gwt:FlowPanel>
       <gwt:Label ui:field="header" styleName="{css.main.title}" />
-      <gwt:FlowPanel ui:field="surpriseField" styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.surprise}" addStyleNames="{css.main.label}" />
-        <gwt:CheckBox ui:field="surprise" addStyleNames="{css.main.input}" /> 
-      </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
         <gwt:Label text="{aiwc.name}" addStyleNames="{css.main.label}" />
         <gwt:TextBox ui:field="name" addStyleNames="{css.main.input}" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.category}" addStyleNames="{css.main.label}" />
-        <gwt:TextBox ui:field="category" addStyleNames="{css.main.input}" /> 
-      </gwt:FlowPanel> 
-      <gwt:FlowPanel styleName="{css.main.field}">
         <gwt:Label text="{aiwc.description}" addStyleNames="{css.main.label}" />
-        <gwt:TextArea ui:field="description"
-         addStyleNames="{css.main.input} {css.main.area}" /> 
-      </gwt:FlowPanel> 
-      <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.url}" addStyleNames="{css.main.label}" />
-        <gwt:TextBox ui:field="url"
-         addStyleNames="{css.main.input} {css.main.url}" /> 
+        <gwt:TextBox ui:field="description" addStyleNames="{css.main.input}" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.buttons}">
         <gwt:Button ui:field="ok" text="{aiwc.ok}" />

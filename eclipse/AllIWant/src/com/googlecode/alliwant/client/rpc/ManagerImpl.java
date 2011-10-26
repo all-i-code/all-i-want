@@ -24,15 +24,12 @@ import com.google.gwt.user.client.Window;
 import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
-import com.googlecode.alliwant.client.logging.Logging;
 import com.googlecode.alliwant.client.model.AccessReq;
 import com.googlecode.alliwant.client.model.AccessReqImpl;
 import com.googlecode.alliwant.client.model.Group;
 import com.googlecode.alliwant.client.model.GroupImpl;
 import com.googlecode.alliwant.client.model.GroupInvitation;
 import com.googlecode.alliwant.client.model.GroupInvitationImpl;
-import com.googlecode.alliwant.client.model.ListItem;
-import com.googlecode.alliwant.client.model.ListItemImpl;
 import com.googlecode.alliwant.client.model.ListOwner;
 import com.googlecode.alliwant.client.model.ListOwnerImpl;
 import com.googlecode.alliwant.client.model.ListPermission;
@@ -327,12 +324,10 @@ public class ManagerImpl implements Manager {
     rpcUrl += rpc.add("desc", description);
     rpcUrl += rpc.add("url", url);
     rpcUrl += rpc.add("surprise", isSurprise);
-    Logging.logger().info("ManagerImpl::addItem: url:");
-    Logging.logger().info(" " + rpcUrl);
     rpc.send(rpcUrl, new Rpc.Handler() {
       public void onComplete(String result) {
-        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
-         ListItemImpl.decode(result)));
+        eventBus.fireEvent(new ModelEvent<WishList>(WishList.class, 
+         WishListImpl.decode(result)));
       }
     });
   } // add Item //
@@ -346,12 +341,10 @@ public class ManagerImpl implements Manager {
     rpcUrl += rpc.add("cat", category);
     rpcUrl += rpc.add("desc", description);
     rpcUrl += rpc.add("url", url);
-    Logging.logger().info("ManagerImpl::updateItem: url:");
-    Logging.logger().info(" " + rpcUrl);
     rpc.send(rpcUrl, new Rpc.Handler() {
       public void onComplete(String result) {
-        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
-         ListItemImpl.decode(result)));
+        eventBus.fireEvent(new ModelEvent<WishList>(WishList.class, 
+         WishListImpl.decode(result)));
       }
     });
   } // updateItem //
@@ -362,7 +355,8 @@ public class ManagerImpl implements Manager {
     url += rpc.add("item_id", itemId, true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
-        eventBus.fireEvent(new InfoEvent(InfoEvent.ITEM_DELETED));
+        eventBus.fireEvent(new ModelEvent<WishList>(WishList.class, 
+         WishListImpl.decode(result)));
       }
     });
   } // deleteItem //
@@ -373,8 +367,8 @@ public class ManagerImpl implements Manager {
     url += rpc.add("item_id", itemId, true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
-        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
-         ListItemImpl.decode(result)));
+        eventBus.fireEvent(new ModelEvent<WishList>(WishList.class, 
+         WishListImpl.decode(result)));
       }
     });
   } // reserveItem //
@@ -385,8 +379,8 @@ public class ManagerImpl implements Manager {
     url += rpc.add("item_id", itemId, true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
-        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
-         ListItemImpl.decode(result)));
+        eventBus.fireEvent(new ModelEvent<WishList>(WishList.class, 
+         WishListImpl.decode(result)));
       }
     });
   } // purchaseItem //
@@ -397,8 +391,8 @@ public class ManagerImpl implements Manager {
     url += rpc.add("item_id", itemId, true);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
-        eventBus.fireEvent(new ModelEvent<ListItem>(ListItem.class, 
-         ListItemImpl.decode(result)));
+        eventBus.fireEvent(new ModelEvent<WishList>(WishList.class, 
+         WishListImpl.decode(result)));
       }
     });
   } // unPurchaseItem //

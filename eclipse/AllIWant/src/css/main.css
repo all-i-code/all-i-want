@@ -39,10 +39,18 @@
 .wrap, .field { overflow: hidden; }
 .shrinkWrap { display: table; }
 .field .label { text-align: right; }
+.field .label { width: 7em; }
+.field .label.small { width: 3em; }
+.field .label.large { width: 10em; }
+.field .label.huge { width: 14em; }
 .field .label { font-weight: bold; }
 .left, .sectionLink, .heading, .field .label, .field .input { float: left; }
 .field .input { display: block; }
 .field .input { margin-left: 0.5em; }
+.field .input { width: auto; }
+.field .input.url { width: 25em; }
+.field .input.area { width: 21.325em; }
+.field .input.area { height: 5em; }
 .right, .buttons .gwt-Button { float: right; }
 .clear { clear: both; }
 .centered { margin: 0 auto; }

@@ -206,5 +206,11 @@ public class ListsViewTestImpl implements ListsView {
     // TODO Auto-generated method stub
     return null;
   }
+
+  @Override
+  public void setCanEditLists(boolean canEdit) {
+    // TODO Auto-generated method stub
+    
+  }
   
 } // ListsViewTestImpl //

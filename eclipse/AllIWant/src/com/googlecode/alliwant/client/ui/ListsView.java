@@ -29,7 +29,8 @@ public interface ListsView extends JhbView {
   void addOwnerItem(String item, String value);
   void setOwner(String owner);
   String getOwner();
-  
+ 
+  void setCanEditLists(boolean canEdit);
   void clearLists();
   void addListItem(String item, String value);
   void setList(String list);
@@ -58,10 +59,13 @@ public interface ListsView extends JhbView {
     void userChanged(); 
     void addList();
     void editList();
+    void deleteList();
     void listChanged();
     void addItem();
     void goToItemUrl(int index);
     void itemDetail(int index);
     void itemAction(int index);
+    void editItem(int index);
+    void deleteItem(int index);
   }
 }

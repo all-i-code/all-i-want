@@ -22,11 +22,11 @@ package com.googlecode.alliwant.client.ui.widget.smart;
 import com.googlecode.alliwant.client.model.ListItem;
 
 public interface EditItemPopup {
-  void show(Handler handler);
+  void show(boolean isOwnList, boolean canAdd, Handler handler);
   void show(ListItem item, Handler handler);
   
   public interface Handler {
     void onSave(int itemId, String name, String category,
-     String description, String url);
+     String description, String url, boolean surprise);
   }
 }

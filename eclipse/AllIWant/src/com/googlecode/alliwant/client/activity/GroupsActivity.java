@@ -36,6 +36,7 @@ import com.googlecode.alliwant.client.place.GroupsPlace;
 import com.googlecode.alliwant.client.rpc.Manager;
 import com.googlecode.alliwant.client.ui.GroupsView;
 import com.googlecode.alliwant.client.ui.widget.Alert;
+import com.googlecode.alliwant.client.ui.widget.smart.EditGroupPopup;
 
 public class GroupsActivity implements Activity, GroupsView.Presenter {
 
@@ -43,6 +44,7 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
   private GroupsView view;
   private Manager manager;
   private Alert alert;
+  private EditGroupPopup editGroupPopup; 
   private User user;
   private List<Group> myGroups = new ArrayList<Group>();
   private List<Group> groups = new ArrayList<Group>();
@@ -50,9 +52,6 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
   
   public GroupsActivity(GroupsPlace place, ClientFactory cf) {
     this.cf = cf;
-    view = cf.getGroupsView();
-    manager = cf.getManager();
-    alert = cf.getAlert();
   }
   
   // ==========================================================================
@@ -74,6 +73,10 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
 
   @Override
   public void start(AcceptsOneWidget panel, EventBus eventBus) {
+    view = cf.getGroupsView();
+    manager = cf.getManager();
+    alert = cf.getAlert();
+    editGroupPopup = cf.getEditGroupPopup();
     panel.setWidget(view.asWidget());
     view.setPresenter(this);
     addEventBusHandlers(eventBus);
@@ -89,6 +92,15 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
   // BEGIN: GroupsView.Presenter methods
   // ==========================================================================
 
+  @Override
+  public void createGroup() {
+    editGroupPopup.show(new EditGroupPopup.Handler() {
+      public void onSave(int groupId, String name, String description) {
+        addGroup(name, description);
+      }
+    });
+  } // createGroup //
+ 
   @Override
   public void inviteMember(int index) {
     // TODO: Implement this
@@ -230,4 +242,9 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
     manager.getGroupInvites();
   }
 
+  private void addGroup(String name, String description) {
+    view.showProcessingOverlay();
+    manager.addGroup(name, description);
+  }
+  
 } // RequestsActivity //

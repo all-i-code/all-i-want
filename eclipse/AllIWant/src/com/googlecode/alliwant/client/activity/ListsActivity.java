@@ -29,6 +29,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.alliwant.client.ClientFactory;
 import com.googlecode.alliwant.client.StringUtils;
+import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
 import com.googlecode.alliwant.client.model.ListItem;
@@ -39,6 +40,7 @@ import com.googlecode.alliwant.client.model.WishList;
 import com.googlecode.alliwant.client.place.ListsPlace;
 import com.googlecode.alliwant.client.rpc.Manager;
 import com.googlecode.alliwant.client.ui.ListsView;
+import com.googlecode.alliwant.client.ui.widget.Confirm;
 import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditListPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.ItemDetailPopup;
@@ -48,6 +50,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   private ClientFactory cf;
   private ListsView view;
   private Manager manager;
+  private Confirm confirm;
   private EditListPopup editListPopup;
   private EditItemPopup editItemPopup;
   private ItemDetailPopup itemDetailPopup;
@@ -62,6 +65,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     this.cf = cf;
     view = cf.getListsView();
     manager = cf.getManager();
+    confirm = cf.getConfirm(); 
     editListPopup = cf.getEditListPopup();
     editItemPopup = cf.getEditItemPopup(); 
     itemDetailPopup = cf.getItemDetailPopup();
@@ -106,6 +110,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   public void userChanged() {
     view.showProcessingOverlay();
     ownerId = StringUtils.toInt(view.getOwner());
+    view.setCanEditLists(permissionOwnerIds.contains(ownerId));
     manager.getLists(ownerId);
   }
     
@@ -120,13 +125,29 @@ public class ListsActivity implements Activity, ListsView.Presenter {
  
   @Override
   public void editList() {
-    if (null == currentList) cf.getAlert().show("No List");
+    if (null == currentList) {
+      cf.getAlert().show(view.getAiwc().noListSelected());
+      return;
+    }
     editListPopup.show(currentList, new EditListPopup.Handler() {
       public void onSave(int listId, String name, String description) {
         editList(listId, name, description);
       }
     });
   } // editList //
+
+  @Override
+  public void deleteList() {
+    if (null == currentList) {
+      cf.getAlert().show(view.getAiwc().noListSelected());
+      return;
+    }
+    confirm.show(view.getAiwc().confirmDeleteList(), new Confirm.Handler() {
+      public void onYes() {
+        reallyDeleteList(currentList.getId());
+      }
+    });
+  } // deleteList //
   
   @Override
   public void listChanged() {
@@ -138,10 +159,12 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     
   @Override
   public void addItem() {
-    editItemPopup.show(new EditItemPopup.Handler() {
+    boolean isOwnList = (ownerId == user.getOwnerId());
+    boolean canAdd = permissionOwnerIds.contains(ownerId);
+    editItemPopup.show(isOwnList, canAdd, new EditItemPopup.Handler() {
       public void onSave(int itemId, String name, String category,
-       String description, String url) {
-        addItem(name, category, description, url); 
+       String description, String url, boolean surprise) {
+        addItem(name, category, description, url, surprise); 
       }
     }) ;
   } // addItem //
@@ -157,7 +180,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     if (permissionOwnerIds.contains(ownerId)) {
       editItemPopup.show(item, new EditItemPopup.Handler() {
         public void onSave(int itemId, String name, String category,
-         String description, String url) {
+         String description, String url, boolean surprise) {
           editItem(itemId, name, category, description, url); 
         }
       });
@@ -181,10 +204,31 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       reserve(item.getId());
   } // itemAction //
   
+  @Override
+  public void editItem(int index) {
+    ListItem item = currentList.getItems().get(index);
+	  editItemPopup.show(item, new EditItemPopup.Handler() {
+	    public void onSave(int itemId, String name, String category,
+	     String description, String url, boolean surprise) {
+	      editItem(itemId, name, category, description, url); 
+	    }
+	      });
+  } // editItem //
+  
+  @Override
+  public void deleteItem(int index) {
+    final int itemId = currentList.getItems().get(index).getId();
+    confirm.show(view.getAiwc().confirmRemoveItem(), new Confirm.Handler() {
+      public void onYes() {
+        reallyDeleteItem(itemId);
+      }
+    });
+  } // deleteItem //
+  
   // ==========================================================================
   // END: ListsView.Presenter methods
   // ==========================================================================
- 
+
   private void addEventBusHandlers(EventBus eventBus) {
     {
       ModelEvent.Handler<User> handler = new ModelEvent.Handler<User>() {
@@ -225,15 +269,6 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     }
     
     {
-      ModelEvent.Handler<ListItem> handler = new ModelEvent.Handler<ListItem>() {
-        public void onModel(ModelEvent<ListItem> event) {
-          handleItem(event.getModel());
-        }
-      };
-      ModelEvent.register(eventBus, ListItem.class, handler);
-    }
-    
-    {
       ModelListEvent.Handler<ListPermission> handler =
        new ModelListEvent.Handler<ListPermission>() {
         public void onModelList(ModelListEvent<ListPermission> event) {
@@ -241,6 +276,15 @@ public class ListsActivity implements Activity, ListsView.Presenter {
         }
       };
       ModelListEvent.register(eventBus, ListPermission.class, handler);
+    }
+    
+    {
+      InfoEvent.Handler handler = new InfoEvent.Handler() {
+        public void onInfo(InfoEvent event) {
+          handleListDeleted();
+        }
+      };
+      InfoEvent.register(eventBus, InfoEvent.LIST_DELETED, handler);
     }
   } // addEventBusHandlers //
 
@@ -278,19 +322,25 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       listMap.put(wl.getId(), wl);
       view.addListItem(wl.getName(), Integer.toString(wl.getId()));
     }
-    if (null != currentList) view.setList(currentList.getId() + "");
-    else listChanged();
+    if (null != currentList) {
+      view.setList(currentList.getId() + "");
+      showList();
+    }
+    else {
+      listChanged();
+    }
   } // handleLists //
   
   private void handleList(WishList wl) {
     currentList = wl;
-    manager.getLists(user.getOwnerId());
+    manager.getLists(ownerId);
+  }
+  
+  private void handleListDeleted() {
+    currentList = null;
+    manager.getLists(ownerId);
   }
  
-  private void handleItem(ListItem item) {
-    // TODO: Update that Item, or just refresh the list
-  } // handleItem //
-  
   private void showList() {
     boolean ownList = user.getOwnerId() == ownerId;
     view.setOwnItemsVisible(ownList);
@@ -347,7 +397,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   
   private void addList(String name, String description) {
     view.showProcessingOverlay();
-    manager.addList(user.getOwnerId(), name, description);
+    manager.addList(ownerId, name, description);
   } // addList //
   
   private void editList(int listId, String name, String description) {
@@ -356,10 +406,10 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   } // editList //
   
   private void addItem(String name, String category, String description,
-   String url) {
+   String url, boolean surprise) {
     view.showProcessingOverlay();
     manager.addItem(currentList.getId(), name, category, description, url,
-     false);
+     surprise);
   } // addItem //
   
   private void editItem(int itemId, String name, String category,
@@ -381,6 +431,16 @@ public class ListsActivity implements Activity, ListsView.Presenter {
    void reserve(int id) {
     view.showProcessingOverlay();
     manager.reserveItem(id);
+  }
+  
+  private void reallyDeleteItem(int itemId) {
+    view.showProcessingOverlay();
+    manager.deleteItem(itemId);
+  }
+  
+  private void reallyDeleteList(int listId) {
+    view.showProcessingOverlay();
+    manager.deleteList(listId);
   }
   
 } // ListsActivity //

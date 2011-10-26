@@ -1,5 +1,5 @@
 /**
- * @file EditItemPopupViewImpl.java
+ * @file EditGroupPopupViewImpl.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -29,17 +29,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
 
-public class EditItemPopupViewImpl implements EditItemPopupView {
+public class EditGroupPopupViewImpl implements EditGroupPopupView {
 
-  interface Binder extends UiBinder<PopupPanel, EditItemPopupViewImpl> {}
+  interface Binder extends UiBinder<PopupPanel, EditGroupPopupViewImpl> {}
   private Binder uiBinder = GWT.create(Binder.class);
   
   private PopupPanel popup;
@@ -48,23 +45,14 @@ public class EditItemPopupViewImpl implements EditItemPopupView {
   
   @UiField
   Label header;
-
+ 
   @UiField
-  FlowPanel surpriseField;
-  
-  @UiField
-  CheckBox surprise;
-  
-  @UiField
-  TextBox name, category, url;
-
-  @UiField
-  TextArea description;
+  TextBox name, description;
   
   @UiField
   Button ok, cancel;
   
-  public EditItemPopupViewImpl() {
+  public EditGroupPopupViewImpl() {
     popup = uiBinder.createAndBindUi(this);
   }
   
@@ -90,20 +78,8 @@ public class EditItemPopupViewImpl implements EditItemPopupView {
       presenter.ok();
   }
   
-  @UiHandler("category")
-  void onCategoryKeyDown(KeyDownEvent event) {
-    if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
-      presenter.ok();
-  }
-  
-  @UiHandler("url")
-  void onUrlKeyDown(KeyDownEvent event) {
-    if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
-      presenter.ok();
-  }
-  
   // ================================================================
-  // BEGIN: EditItemPopupView methods
+  // BEGIN: EditGroupPopupView methods
   // ================================================================
   
   @Override
@@ -128,26 +104,6 @@ public class EditItemPopupViewImpl implements EditItemPopupView {
   }
   
   @Override
-  public void setSurpriseVisible(boolean visible) {
-    surpriseField.setVisible(visible);
-  }
-  
-  @Override
-  public void setSurpriseEnabled(boolean enabled) {
-    surprise.setEnabled(enabled);
-  }
-  
-  @Override
-  public void setSurprise(boolean surprise) {
-    this.surprise.setValue(surprise);
-  }
-  
-  @Override
-  public boolean getSurprise() {
-    return surprise.getValue();
-  }
-  
-  @Override
   public void setName(String name) {
     this.name.setText(name);
   }
@@ -158,16 +114,6 @@ public class EditItemPopupViewImpl implements EditItemPopupView {
   }
   
   @Override
-  public void setCategory(String category) {
-    this.category.setText(category);
-  }
-  
-  @Override
-  public String getCategory() {
-    return category.getText();
-  }
-
-  @Override
   public void setDescription(String description) {
     this.description.setText(description);
   }
@@ -175,16 +121,6 @@ public class EditItemPopupViewImpl implements EditItemPopupView {
   @Override
   public String getDescription() {
     return description.getText();
-  }
-
-  @Override
-  public void setUrl(String url) {
-    this.url.setText(url);
-  }
-  
-  @Override
-  public String getUrl() {
-    return url.getText();
   }
 
   @Override
@@ -198,7 +134,7 @@ public class EditItemPopupViewImpl implements EditItemPopupView {
   }
   
   // ================================================================
-  // END: EditListPopupView methods
+  // END: EditGroupPopupView methods
   // ================================================================
 
-} // EditListPopupViewImpl //
+} // EditGroupPopupViewImpl //

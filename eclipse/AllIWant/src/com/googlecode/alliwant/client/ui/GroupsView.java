@@ -42,6 +42,7 @@ public interface GroupsView extends JhbView {
   AiwMessages getAiwm();
   void setPresenter(Presenter presenter);
   interface Presenter {
+    void createGroup();
     void inviteMember(int index);
     void deleteGroup(int index);
     void leaveGroup(int index);

@@ -192,6 +192,11 @@ public class AiwConstantsTestImpl implements AiwConstants {
   }
 
   @Override
+  public String editGroup() {
+    return "editGroup";
+  }
+
+  @Override
   public String myGroups() {
     return "myGroups";
   }
@@ -319,6 +324,46 @@ public class AiwConstantsTestImpl implements AiwConstants {
   @Override
   public String itemDetail() {
     return "itemDetail";
+  }
+
+  @Override
+  public String add() {
+    return "add";
+  }
+  
+  @Override
+  public String edit() {
+    return "edit";
+  }
+  
+  @Override
+  public String remove() {
+    return "remove";
+  }
+  
+  @Override
+  public String delete() {
+    return "delete";
+  }
+  
+  @Override
+  public String confirmRemoveItem() {
+    return "confirmRemoveItem";
+  }
+  
+  @Override
+  public String noListSelected() {
+    return "noListSelected";
+  }
+  
+  @Override
+  public String confirmDeleteList() {
+    return "confirmDeleteList";
+  }
+  
+  @Override
+  public String surprise() {
+    return "surprise";
   }
   
 } // AiwConstantsTestImpl //

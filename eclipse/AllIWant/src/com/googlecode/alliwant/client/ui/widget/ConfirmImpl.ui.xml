@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <!--
-  File: EditListPopupViewImpl.ui.xml 
+  File: ConfirmImpl.ui.xml 
+  Description: UiBinder definition of ConfirmImpl
   
   Copyright 2011 Adam Meadows 
  
@@ -34,18 +35,10 @@
   <gwt:PopupPanel animationEnabled="true" modal="true" glassEnabled="true"
    addStyleNames="{style.main}">
     <gwt:FlowPanel>
-      <gwt:Label ui:field="header" styleName="{css.main.title}" />
-      <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.name}" addStyleNames="{css.main.label}" />
-        <gwt:TextBox ui:field="name" addStyleNames="{css.main.input}" /> 
-      </gwt:FlowPanel> 
-      <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.description}" addStyleNames="{css.main.label}" />
-        <gwt:TextBox ui:field="description" addStyleNames="{css.main.input}" /> 
-      </gwt:FlowPanel> 
+      <gwt:Label ui:field="message" styleName="{style.msg}" />
       <gwt:FlowPanel styleName="{css.main.buttons}">
-        <gwt:Button ui:field="ok" text="{aiwc.ok}" />
-        <gwt:Button ui:field="cancel" text="{aiwc.cancel}" />
+        <gwt:Button ui:field="yes" text="{aiwc.yes}" />
+        <gwt:Button ui:field="no" text="{aiwc.no}" />
       </gwt:FlowPanel> 
     </gwt:FlowPanel>
   </gwt:PopupPanel>

@@ -38,6 +38,12 @@ import com.googlecode.alliwant.client.ui.SettingsView;
 import com.googlecode.alliwant.client.ui.SettingsViewImpl;
 import com.googlecode.alliwant.client.ui.widget.Alert;
 import com.googlecode.alliwant.client.ui.widget.AlertImpl;
+import com.googlecode.alliwant.client.ui.widget.Confirm;
+import com.googlecode.alliwant.client.ui.widget.ConfirmImpl;
+import com.googlecode.alliwant.client.ui.widget.smart.EditGroupPopup;
+import com.googlecode.alliwant.client.ui.widget.smart.EditGroupPopupPresenter;
+import com.googlecode.alliwant.client.ui.widget.smart.EditGroupPopupView;
+import com.googlecode.alliwant.client.ui.widget.smart.EditGroupPopupViewImpl;
 import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopupPresenter;
 import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopupView;
@@ -60,6 +66,7 @@ public class ClientFactoryImpl implements ClientFactory {
   private EventBus eventBus = new SimpleEventBus();
   private PlaceController placeController = new PlaceController(eventBus);
   private Alert alert = new AlertImpl();
+  private Confirm confirm = new ConfirmImpl();
   private Rpc rpc = new RpcImpl(getAlert());
   private Manager manager = new ManagerImpl(rpc, eventBus);
   private HeaderView headerView = new HeaderViewImpl();
@@ -72,6 +79,8 @@ public class ClientFactoryImpl implements ClientFactory {
   private ItemDetailPopup itemDetailPopup = new ItemDetailPopupPresenter(itemDetailPopupView);
   private EditItemPopupView editItemPopupView = new EditItemPopupViewImpl();
   private EditItemPopup editItemPopup = new EditItemPopupPresenter(editItemPopupView);
+  private EditGroupPopupView editGroupPopupView = new EditGroupPopupViewImpl();
+  private EditGroupPopup editGroupPopup = new EditGroupPopupPresenter(editGroupPopupView);
   private ListsView listsView = new ListsViewImpl();
   private GroupsView groupsView = new GroupsViewImpl();
   private RequestsView requestsView = new RequestsViewImpl();
@@ -91,6 +100,11 @@ public class ClientFactoryImpl implements ClientFactory {
   @Override
   public Alert getAlert() {
     return alert;
+  }
+  
+  @Override
+  public Confirm getConfirm() {
+    return confirm;
   }
   
   @Override
@@ -116,6 +130,11 @@ public class ClientFactoryImpl implements ClientFactory {
   @Override
   public EditItemPopup getEditItemPopup() {
     return editItemPopup;
+  }
+  
+  @Override
+  public EditGroupPopup getEditGroupPopup() {
+    return editGroupPopup;
   }
   
   @Override

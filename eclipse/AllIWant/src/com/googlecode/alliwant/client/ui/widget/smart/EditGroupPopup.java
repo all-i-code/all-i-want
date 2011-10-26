@@ -1,5 +1,5 @@
 /**
- * @file EditItemPopupView.java
+ * @file EditGroupPopup.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -19,29 +19,13 @@
 */
 package com.googlecode.alliwant.client.ui.widget.smart;
 
-import com.googlecode.alliwant.client.i18n.AiwConstants;
+import com.googlecode.alliwant.client.model.Group;
 
-public interface EditItemPopupView {
-  void show();
-  void hide();
-  void setHeader(String header);
-  void setSurpriseVisible(boolean enabled);
-  void setSurpriseEnabled(boolean enabled);
-  void setSurprise(boolean surprise);
-  boolean getSurprise();
-  void setName(String name);
-  String getName();
-  void setCategory(String category);
-  String getCategory();
-  void setDescription(String description);
-  String getDescription();
-  void setUrl(String url);
-  String getUrl();
-
-  AiwConstants getAiwc();
-  void setPresenter(Presenter presenter);
-  public interface Presenter {
-    void ok();
-    void cancel();
+public interface EditGroupPopup {
+  void show(Handler handler);
+  void show(Group group, Handler handler);
+  
+  public interface Handler {
+    void onSave(int groupId, String name, String description);
   }
 }
