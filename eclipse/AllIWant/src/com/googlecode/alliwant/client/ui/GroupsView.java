@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
 import com.googlecode.alliwant.client.i18n.AiwMessages;
 
-public interface GroupsView extends JhbView {
+public interface GroupsView extends AiwView {
   void setHeader(IsWidget header);
   void setNumMyGroups(int num);
   void setMyGroupName(int index, String name);

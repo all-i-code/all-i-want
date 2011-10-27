@@ -21,7 +21,7 @@ package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public class JhbViewTestImpl implements JhbView {
+public class JhbViewTestImpl implements AiwView {
 
   private boolean processingOverlayShowing = false;
   

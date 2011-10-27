@@ -21,7 +21,7 @@
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import RpcParamString, RpcParamInt, RpcParamBoolean
-from core.model import User, ListOwner, AccessReq
+from core.model import User, ListOwner, AccessReq, ListPermission
 from core.exception import PermissionDeniedError
 
 class UserRpcGroup(RpcGroupBase):
@@ -34,6 +34,7 @@ class UserRpcGroup(RpcGroupBase):
         )),
         Rpc(name='get_permissions', params=(
             RpcParamInt('owner_id'),
+            RpcParamBoolean('by_email'),
         )),
         Rpc(name='add_permission', params=(
             RpcParamInt('owner_id'),
@@ -96,14 +97,15 @@ class UserRpcGroup(RpcGroupBase):
         '''
         return ListOwner.from_db(self.db.get_owner(owner_id))
    
-    def get_permissions(self, owner_id):
+    def get_permissions(self, owner_id, by_email):
         '''
         Return the ListPermissions for the given ListOwner
         That's not the ListPermissionDb object with owner=owner, but rather
         those with email=owner.email
         '''
-        owner = self.db.get_owner(owner_id)
         _ = lambda x: ListPermission.from_db(x)
+        owner = self.db.get_owner(owner_id)
+        if not by_email: return [ _(p) for p in owner.permissions ]
         return [ _(p) for p in self.db.get_permissions_by_email(owner.email) ]
    
     def add_permission(self, owner_id, email):
@@ -113,7 +115,8 @@ class UserRpcGroup(RpcGroupBase):
         # TODO: confirm that the currently signed in user is owner_id
         owner = self.db.get_owner(owner_id)
         p = self.db.add_permission(owner, email)
-        return ListPermission.from_db(p)
+        _ = lambda x: ListPermission.from_db(x)
+        return [ _(p) for p in owner.permissions ]
    
     def remove_permission(self, permission_id):
         '''
@@ -121,9 +124,9 @@ class UserRpcGroup(RpcGroupBase):
         '''
         # TODO: confirm that the currently signed in user is owner_id
         p = self.db.get_permission(permission_id)
-        p.delete()
+        self.db.delete(p)
         return []
-   
+
     def update_owner(self, owner_id, name, nickname):
         '''
         Update the name and nickname of the ListOwner object with the given

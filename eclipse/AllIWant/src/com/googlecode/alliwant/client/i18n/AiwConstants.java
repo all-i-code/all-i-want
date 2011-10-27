@@ -236,4 +236,28 @@ public interface AiwConstants extends Constants {
   @DefaultStringValue("Are you sure you want to leave this group?")
   String confirmLeaveGroup();
   
+  @DefaultStringValue("Nickname")
+  String nickname();
+  
+  @DefaultStringValue("Save")
+  String save();
+  
+  @DefaultStringValue("Permissions")
+  String permissions();
+  
+  @DefaultStringValue("Please enter a Name")
+  String pleaseEnterName();
+  
+  @DefaultStringValue("Please enter a Nickname")
+  String pleaseEnterNickname();
+  
+  @DefaultStringValue("Add Permission")
+  String addPermission();
+  
+  @DefaultStringValue("Are you sure you want to delete this permission?")
+  String confirmDeletePermission();
+  
+  @DefaultStringValue("Settings Updated")
+  String settingsUpdated();
+  
 } // AiwConstants //

@@ -1,5 +1,5 @@
 /**
- * @file JhbView.java
+ * @file AiwView.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -21,7 +21,7 @@ package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-public interface JhbView extends IsWidget {
+public interface AiwView extends IsWidget {
   void showProcessingOverlay();
   void hideProcessingOverlay();
 }

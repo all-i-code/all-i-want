@@ -61,7 +61,7 @@ class RpcParamBoolean(RpcParam):
     java_type = 'boolean'
     
     def get_value(self, value):
-        return bool(value)
+        return str(value) not in ('false', 'False', '0')
 
 class RpcParamModel(RpcParam):
     

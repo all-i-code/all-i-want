@@ -376,4 +376,44 @@ public class AiwConstantsTestImpl implements AiwConstants {
     return "confirmLeaveGroup";
   }
   
+  @Override
+  public String nickname() {
+    return "nickname";
+  }
+  
+  @Override
+  public String save() {
+    return "save";
+  }
+  
+  @Override
+  public String permissions() {
+    return "permissions";
+  }
+  
+  @Override
+  public String pleaseEnterName() {
+    return "pleaseEnterName";
+  }
+  
+  @Override
+  public String pleaseEnterNickname() {
+    return "pleaseEnterNickname";
+  }
+  
+  @Override
+  public String addPermission() {
+    return "addPermission";
+  }
+
+  @Override
+  public String confirmDeletePermission() {
+    return "confirmDeletePermission";
+  }
+  
+  @Override
+  public String settingsUpdated() {
+    return "settingsUpdated";
+  }
+  
 } // AiwConstantsTestImpl //

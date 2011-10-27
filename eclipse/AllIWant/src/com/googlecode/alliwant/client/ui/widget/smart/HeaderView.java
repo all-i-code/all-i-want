@@ -21,9 +21,9 @@ package com.googlecode.alliwant.client.ui.widget.smart;
 
 import com.googlecode.alliwant.client.i18n.AiwConstants;
 import com.googlecode.alliwant.client.i18n.AiwMessages;
-import com.googlecode.alliwant.client.ui.JhbView;
+import com.googlecode.alliwant.client.ui.AiwView;
 
-public interface HeaderView extends JhbView {
+public interface HeaderView extends AiwView {
   void setUser(String user);
   void setLogoutURL(String url);
   void setListsActive(boolean active);

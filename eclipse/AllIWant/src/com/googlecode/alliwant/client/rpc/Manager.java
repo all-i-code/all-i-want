@@ -38,7 +38,7 @@ public interface Manager {
    */
   void getOwner(int ownerId);
 
-  void getPermissions(int ownerId);
+  void getPermissions(int ownerId, boolean byEmail);
   
   void addPermission(int ownerId, String email);
   

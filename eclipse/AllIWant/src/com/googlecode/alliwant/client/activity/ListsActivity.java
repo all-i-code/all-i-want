@@ -290,7 +290,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
 
   private void handleUser(User user) {
     this.user = user;
-    manager.getPermissions(user.getOwnerId());
+    manager.getPermissions(user.getOwnerId(), true);
   }
  
   private void handlePermissions(List<ListPermission> permissions) {

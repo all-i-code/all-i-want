@@ -20,7 +20,21 @@
 package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.googlecode.alliwant.client.i18n.AiwConstants;
 
-public interface SettingsView extends JhbView {
+public interface SettingsView extends AiwView {
   void setHeader(IsWidget header);
+  void setOwnerName(String name);
+  String getOwnerName();
+  void setOwnerNickname(String nickname);
+  String getOwnerNickname();
+  void setNumPermissions(int count);
+  void setPermissionEmail(int index, String email);
+  AiwConstants getAiwc();
+  void setPresenter(Presenter presenter);
+  interface Presenter {
+    void updateOwner();
+    void addPermission();
+    void deletePermission(int index);
+  }
 }

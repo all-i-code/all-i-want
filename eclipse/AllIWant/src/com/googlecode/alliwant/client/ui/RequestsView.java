@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
 import com.googlecode.alliwant.client.i18n.AiwMessages;
 
-public interface RequestsView extends JhbView {
+public interface RequestsView extends AiwView {
   void setHeader(IsWidget header);
   void setNumRequests(int num);
   void setEmail(int index, String email);

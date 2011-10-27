@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
 import com.googlecode.alliwant.client.i18n.AiwMessages;
 
-public interface ListsView extends JhbView {
+public interface ListsView extends AiwView {
   void setHeader(IsWidget header);
   void clearOwners();
   void addOwnerItem(String item, String value);

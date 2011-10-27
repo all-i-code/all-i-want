@@ -22,7 +22,7 @@ package com.googlecode.alliwant.client.ui;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
 
 
-public interface GoodbyeView extends JhbView {
+public interface GoodbyeView extends AiwView {
   void setMessage(String message);
   void setLogoutURL(String url);
   void setLogoutVisible(boolean visible);

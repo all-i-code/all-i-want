@@ -96,9 +96,10 @@ public class ManagerImpl implements Manager {
   } // getOwner //
 
   @Override
-  public void getPermissions(int ownerId) {
+  public void getPermissions(int ownerId, boolean byEmail) {
     String url = "/rpc/user/get_permissions?";
     url += rpc.add("owner_id", ownerId, true);
+    url += rpc.add("by_email", byEmail);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
         eventBus.fireEvent(new ModelListEvent<ListPermission>(
@@ -114,8 +115,8 @@ public class ManagerImpl implements Manager {
     url += rpc.add("email", email);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
-        eventBus.fireEvent(new ModelEvent<ListPermission>(
-         ListPermission.class, ListPermissionImpl.decode(result)));
+        eventBus.fireEvent(new ModelListEvent<ListPermission>(
+         ListPermission.class, ListPermissionImpl.decodeList(result)));
       }
     });
   } // addPermission //
