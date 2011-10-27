@@ -21,6 +21,7 @@ package com.googlecode.alliwant.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.alliwant.client.i18n.AiwConstants;
 
 public class SettingsViewTestImpl implements SettingsView {
 
@@ -53,6 +54,54 @@ public class SettingsViewTestImpl implements SettingsView {
  
   public IsWidget getHeader() {
     return header;
+  }
+
+  @Override
+  public void setOwnerName(String name) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getOwnerName() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setOwnerNickname(String nickname) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getOwnerNickname() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setNumPermissions(int count) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setPermissionEmail(int index, String email) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public AiwConstants getAiwc() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setPresenter(Presenter presenter) {
+    // TODO Auto-generated method stub
+    
   }
   
 } // SettingsViewTestImpl //
