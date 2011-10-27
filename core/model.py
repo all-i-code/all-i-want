@@ -91,7 +91,7 @@ class GroupMember(Model):
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.key().id()
-        return cls(id=_(db), group_id=_(db.group),
+        return cls(id=_(db), group_id=_(db.group), name=db.member.name,
             user_id=db.member.user.user_id(), nickname=db.member.nickname,
             email=db.member.email)
 
@@ -108,10 +108,12 @@ class Group(Model):
 
     @classmethod
     def from_db(cls, db):
+        _id = lambda x: x.key().id() if x is not None else -1
+        _lbl = lambda x: x.label() if x is not None else -1
         invitations = [ GroupInvitation.from_db(i) for i in db.invitations ]
         members = [ GroupMember.from_db(m) for m in db.members ]
-        return cls(id=db.key().id(), name=db.name, owner_id=db.owner.key().id(),
-            owner=db.owner.label(), description=db.description,
+        return cls(id=db.key().id(), name=db.name, owner_id=_id(db.owner),
+            owner=_lbl(db.owner), description=db.description,
             invitations=invitations, members=members)
 
 class ListItem(Model):

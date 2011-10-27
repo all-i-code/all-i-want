@@ -84,6 +84,10 @@ public interface Manager {
    * Get my Groups (or all Groups if admin)
    */
   void getGroups();
+
+  void deleteGroup(int groupId);
+ 
+  void leaveGroup(int groupId);
   
   /**
    * Invite someone to join a Group
@@ -91,6 +95,7 @@ public interface Manager {
    * @param email Email address of potential member
    */
   void inviteMember(int groupId, String email);
+
   
   /**
    * Get my GroupInvitations (or all GroupInvitations if admin)

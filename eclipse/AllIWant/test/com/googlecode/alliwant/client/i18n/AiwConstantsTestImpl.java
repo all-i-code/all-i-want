@@ -362,8 +362,18 @@ public class AiwConstantsTestImpl implements AiwConstants {
   }
   
   @Override
+  public String confirmDeleteGroup() {
+    return "confirmDeleteGroup";
+  }
+  
+  @Override
   public String surprise() {
     return "surprise";
+  }
+
+  @Override
+  public String confirmLeaveGroup() {
+    return "confirmLeaveGroup";
   }
   
 } // AiwConstantsTestImpl //

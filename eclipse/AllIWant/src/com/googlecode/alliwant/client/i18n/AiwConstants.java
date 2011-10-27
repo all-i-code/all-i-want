@@ -230,4 +230,10 @@ public interface AiwConstants extends Constants {
   @DefaultStringValue("Surprise")
   String surprise();
   
+  @DefaultStringValue("Are you sure you want to delete this group?")
+  String confirmDeleteGroup();
+  
+  @DefaultStringValue("Are you sure you want to leave this group?")
+  String confirmLeaveGroup();
+  
 } // AiwConstants //

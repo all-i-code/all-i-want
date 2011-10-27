@@ -31,12 +31,14 @@ public class InfoEvent extends GwtEvent<InfoEvent.Handler> {
 
   public static final String REQ_APPROVED = "reqApproved";
   public static final String REQ_DENIED = "reqDenied";
+  public static final String GROUP_DELETED = "groupDeleted";
   public static final String MEMBER_INVITED = "memberInvited";
   public static final String INVITE_ACCEPTED = "inviteAccepted";
   public static final String INVITE_DECLINED = "inviteDeclined";
   public static final String LIST_DELETED = "listDeleted";
   public static final String ITEM_DELETED = "itemDeleted";
   public static final String PERMISSION_DELETED = "permissionDeleted";
+  public static final String LEFT_GROUP = "leftGroup";
   
   private static Map<String, Type<Handler>> TYPES =
     new HashMap<String, Type<Handler>>();

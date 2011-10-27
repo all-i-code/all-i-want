@@ -60,3 +60,4 @@
 .buttons { overflow: hidden; }
 .buttons { padding: 1em; }
 .buttons .gwt-Button { margin-left: 1em;}
+.number { text-align: right; }

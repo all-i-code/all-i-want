@@ -36,7 +36,9 @@ import com.googlecode.alliwant.client.place.GroupsPlace;
 import com.googlecode.alliwant.client.rpc.Manager;
 import com.googlecode.alliwant.client.ui.GroupsView;
 import com.googlecode.alliwant.client.ui.widget.Alert;
+import com.googlecode.alliwant.client.ui.widget.Confirm;
 import com.googlecode.alliwant.client.ui.widget.smart.EditGroupPopup;
+import com.googlecode.alliwant.client.ui.widget.smart.TextFieldPopup;
 
 public class GroupsActivity implements Activity, GroupsView.Presenter {
 
@@ -44,7 +46,9 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
   private GroupsView view;
   private Manager manager;
   private Alert alert;
+  private Confirm confirm;
   private EditGroupPopup editGroupPopup; 
+  private TextFieldPopup textFieldPopup; 
   private User user;
   private List<Group> myGroups = new ArrayList<Group>();
   private List<Group> groups = new ArrayList<Group>();
@@ -76,6 +80,8 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
     view = cf.getGroupsView();
     manager = cf.getManager();
     alert = cf.getAlert();
+    confirm = cf.getConfirm();
+    textFieldPopup = cf.getTextFieldPopup();
     editGroupPopup = cf.getEditGroupPopup();
     panel.setWidget(view.asWidget());
     view.setPresenter(this);
@@ -103,21 +109,34 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
  
   @Override
   public void inviteMember(int index) {
-    // TODO: Implement this
-    alert.show(view.getAiwc().comingSoon());
-  }
+    final int groupId = myGroups.get(index).getId();
+    textFieldPopup.show(view.getAiwc().inviteMember(), view.getAiwc().email(), 
+     "", new TextFieldPopup.Handler() {
+      public void onSave(String text) {
+        reallyInviteMember(groupId, text);
+      }
+    });
+  } // inviteMember //
   
   @Override
   public void deleteGroup(int index) {
-    // TODO: Implement this
-    alert.show(view.getAiwc().comingSoon());
-  }
+    final int groupId = myGroups.get(index).getId();
+    confirm.show(view.getAiwc().confirmDeleteGroup(), new Confirm.Handler() {
+      public void onYes() {
+        reallyDeleteGroup(groupId);
+      }
+    });
+  } // deleteGroup //
   
   @Override
   public void leaveGroup(int index) {
-    // TODO: Implement this
-    alert.show(view.getAiwc().comingSoon());
-  }
+    final int groupId = groups.get(index).getId();
+    confirm.show(view.getAiwc().confirmLeaveGroup(), new Confirm.Handler() {
+      public void onYes() {
+        reallyLeaveGroup(groupId); 
+      }
+    });
+  } // leaveGroup //
   
   @Override
   public void acceptInvite(int index) {
@@ -146,6 +165,15 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
     }
     
     {
+      ModelEvent.Handler<Group> handler = new ModelEvent.Handler<Group>() {
+        public void onModel(ModelEvent<Group> event) {
+          handleGroup(event.getModel());
+        }
+      };
+      ModelEvent.register(eventBus, Group.class, handler);
+    }
+    
+    {
       ModelListEvent.Handler<Group> handler = new ModelListEvent.Handler<Group>() {
         public void onModelList(ModelListEvent<Group> event) {
           handleGroups(event.getModelList());
@@ -161,7 +189,16 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
           handleInvites(event.getModelList());
         }
       };
-      ModelListEvent.register(eventBus, Group.class, handler);
+      ModelListEvent.register(eventBus, GroupInvitation.class, handler);
+    }
+    
+    {
+      InfoEvent.Handler handler = new InfoEvent.Handler() {
+        public void onInfo(InfoEvent event) {
+          handleGroupDeleted();
+        }
+      };
+      InfoEvent.register(eventBus, InfoEvent.GROUP_DELETED, handler);
     }
     
     {
@@ -181,12 +218,34 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
       };
       InfoEvent.register(eventBus, InfoEvent.INVITE_DECLINED, handler);
     }
+    
+    {
+      InfoEvent.Handler handler = new InfoEvent.Handler() {
+        public void onInfo(InfoEvent event) {
+          handleMemberInvited();
+        }
+      };
+      InfoEvent.register(eventBus, InfoEvent.MEMBER_INVITED, handler);
+    }
+    
+    {
+      InfoEvent.Handler handler = new InfoEvent.Handler() {
+        public void onInfo(InfoEvent event) {
+          handleLeftGroup();
+        }
+      };
+      InfoEvent.register(eventBus, InfoEvent.LEFT_GROUP, handler);
+    }
   } // addEventBusHandlers //
 
   private void handleUser(User user) {
     view.showProcessingOverlay();
     this.user = user;
-    manager.getAccessRequests();
+    manager.getGroupInvites();
+  }
+  
+  private void handleGroup(Group g) {
+    manager.getGroups();
   }
   
   private void handleGroups(List<Group> allGroups) {
@@ -204,6 +263,8 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
       Group g = myGroups.get(i);
       view.setMyGroupName(i, g.getName());
       view.setMyGroupDescription(i, g.getDescription());
+      view.setMyGroupInviteCount(i, Integer.toString(g.getInvitations().size()));
+      view.setMyGroupMemberCount(i, Integer.toString(g.getMembers().size()));
     }
     
     view.setNumGroups(groups.size());
@@ -245,6 +306,33 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
   private void addGroup(String name, String description) {
     view.showProcessingOverlay();
     manager.addGroup(name, description);
+  }
+  
+  private void handleGroupDeleted() {
+    manager.getGroups();
+  }
+ 
+  private void reallyDeleteGroup(int groupId) {
+    view.showProcessingOverlay();
+    manager.deleteGroup(groupId);
+  }
+
+  private void reallyInviteMember(int groupId, String email) {
+    view.showProcessingOverlay();
+    manager.inviteMember(groupId, email);
+  }
+  
+  private void handleMemberInvited() {
+    manager.getGroups();
+  }
+  
+  private void reallyLeaveGroup(int groupId) {
+    view.showProcessingOverlay();
+    manager.leaveGroup(groupId);
+  }
+  
+  private void handleLeftGroup() {
+    manager.getGroups();
   }
   
 } // RequestsActivity //

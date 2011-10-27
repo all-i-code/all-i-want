@@ -37,6 +37,7 @@ import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditListPopupTest;
 import com.googlecode.alliwant.client.ui.widget.smart.HeaderTestImpl;
 import com.googlecode.alliwant.client.ui.widget.smart.ItemDetailPopup;
+import com.googlecode.alliwant.client.ui.widget.smart.TextFieldPopup;
 
 public class ClientFactoryTestImpl implements ClientFactory {
 
@@ -131,6 +132,12 @@ public class ClientFactoryTestImpl implements ClientFactory {
 
   @Override
   public EditGroupPopup getEditGroupPopup() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public TextFieldPopup getTextFieldPopup() {
     // TODO Auto-generated method stub
     return null;
   }

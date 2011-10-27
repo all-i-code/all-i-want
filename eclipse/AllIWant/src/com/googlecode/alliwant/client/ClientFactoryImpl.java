@@ -60,6 +60,10 @@ import com.googlecode.alliwant.client.ui.widget.smart.ItemDetailPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.ItemDetailPopupPresenter;
 import com.googlecode.alliwant.client.ui.widget.smart.ItemDetailPopupView;
 import com.googlecode.alliwant.client.ui.widget.smart.ItemDetailPopupViewImpl;
+import com.googlecode.alliwant.client.ui.widget.smart.TextFieldPopup;
+import com.googlecode.alliwant.client.ui.widget.smart.TextFieldPopupPresenter;
+import com.googlecode.alliwant.client.ui.widget.smart.TextFieldPopupView;
+import com.googlecode.alliwant.client.ui.widget.smart.TextFieldPopupViewImpl;
 
 public class ClientFactoryImpl implements ClientFactory {
 
@@ -75,6 +79,8 @@ public class ClientFactoryImpl implements ClientFactory {
   
   private EditListPopupView editListPopupView = new EditListPopupViewImpl();
   private EditListPopup editListPopup = new EditListPopupPresenter(editListPopupView);
+  private TextFieldPopupView textFieldPopupView = new TextFieldPopupViewImpl();
+  private TextFieldPopup textFieldPopup = new TextFieldPopupPresenter(textFieldPopupView);
   private ItemDetailPopupView itemDetailPopupView = new ItemDetailPopupViewImpl();
   private ItemDetailPopup itemDetailPopup = new ItemDetailPopupPresenter(itemDetailPopupView);
   private EditItemPopupView editItemPopupView = new EditItemPopupViewImpl();
@@ -120,6 +126,11 @@ public class ClientFactoryImpl implements ClientFactory {
   @Override
   public EditListPopup getEditListPopup() {
     return editListPopup;
+  }
+  
+  @Override
+  public TextFieldPopup getTextFieldPopup() {
+    return textFieldPopup;
   }
   
   @Override

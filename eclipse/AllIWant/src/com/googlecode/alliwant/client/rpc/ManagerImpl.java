@@ -207,6 +207,28 @@ public class ManagerImpl implements Manager {
   } // getGroups //
   
   @Override
+  public void deleteGroup(int groupId) {
+    String url = "/rpc/group/delete_group?";
+    url += rpc.add("group_id", groupId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.GROUP_DELETED));
+      }
+    });
+  } // deleteGroup //
+  
+  @Override
+  public void leaveGroup(int groupId) {
+    String url = "/rpc/group/leave_group?";
+    url += rpc.add("group_id", groupId, true);
+    rpc.send(url, new Rpc.Handler() {
+      public void onComplete(String result) {
+        eventBus.fireEvent(new InfoEvent(InfoEvent.LEFT_GROUP));
+      }
+    });
+  } // deleteGroup //
+  
+  @Override
   public void inviteMember(int groupId, String email) {
     String url = "/rpc/group/invite_member?";
     url += rpc.add("group_id", groupId, true);

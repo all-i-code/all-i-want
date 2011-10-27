@@ -37,9 +37,16 @@ class GroupRpcGroup(RpcGroupBase):
             RpcParamString('name'),
             RpcParamString('desc'),
         )),
+        Rpc(name='delete_group', params=(
+            RpcParamInt('group_id'),
+        )),
+        Rpc(name='get_invitations'),
         Rpc(name='invite_member', params=(
             RpcParamInt('group_id'),
             RpcParamString('email'),
+        )),
+        Rpc(name='delete_group_member', params=(
+            RpcParamInt('id'),
         )),
         Rpc(name='accept_invitation', params=(
             RpcParamInt('invite_id'),
@@ -65,8 +72,8 @@ class GroupRpcGroup(RpcGroupBase):
         if not self.db.is_group_name_unique(name):
             raise DuplicateNameError(Group, name)
 
-        g = self.db.add_group(name, desc)
-        self.db.add_group_member(g)
+        g = self.db.add_group(name, desc, self.owner)
+        self.db.add_group_member(g, self.owner)
         return Group.from_db(g)
 
     def get_groups(self):
@@ -89,6 +96,14 @@ class GroupRpcGroup(RpcGroupBase):
         g.description = desc
         return Group.from_db(g.put())
 
+    def delete_group(self, group_id):
+        self._verify_owner()
+        g = self.db.get_group(group_id)
+        if g.owner.key().id() != self.owner.key().id():
+            raise PermissionDeniedError()
+        self.db.delete(g)
+        return []
+
     def invite_member(self, group_id, email):
         self._verify_owner()
         g = self.db.get_group(group_id)
@@ -101,15 +116,22 @@ class GroupRpcGroup(RpcGroupBase):
             invites = self.db.get_group_invites()
         else:
             invites = self.db.get_group_invites(self.owner.email)
+        return [ GroupInvitation.from_db(db) for db in invites ]
 
     def accept_invitation(self, invite_id):
         self._verify_owner()
         i = self.db.get_group_invite(invite_id)
-        m = self.db.add_group_member(i.group)
+        m = self.db.add_group_member(i.group, self.owner)
         m.put()
         self.db.delete(i)
         return []
-    
+   
+    def delete_group_member(self, id):
+        self._verify_owner()
+        gm = self.db.get_group_member(id)
+        self.db.delete(gm)
+        return []
+
     def decline_invitation(self, invite_id):
         self._verify_owner()
         i = self.db.get_group_invite(invite_id)

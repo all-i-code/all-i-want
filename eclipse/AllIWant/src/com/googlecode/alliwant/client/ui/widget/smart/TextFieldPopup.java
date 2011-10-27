@@ -1,5 +1,5 @@
 /**
- * @file MainCss.java
+ * @file TextFieldPopup.java
  * @author Adam Meadows
  *
  * Copyright 2011 Adam Meadows 
@@ -17,33 +17,12 @@
  *    limitations under the License.
  *
 */
-package com.googlecode.alliwant.client.ui.css;
+package com.googlecode.alliwant.client.ui.widget.smart;
 
-import com.google.gwt.resources.client.CssResource;
-
-public interface MainCss extends CssResource {
-  String wrap();
-  String shrinkWrap();
-  String left();
-  String right();
-  String centered();
-  String clear();
-  String title();
-  String heading();
-  String subHeading();
-  String instructions();
-  String table();
-  String tableHeader();
-  String tableAlt();
-  String sectionLink();
-  String field();
-  String label();
-  String small();
-  String large();
-  String huge();
-  String input();
-  String url();
-  String area();
-  String buttons();
-  String number();
+public interface TextFieldPopup {
+  void show(String header, String name, String value, Handler handler);
+  
+  public interface Handler {
+    void onSave(String text);
+  }
 }

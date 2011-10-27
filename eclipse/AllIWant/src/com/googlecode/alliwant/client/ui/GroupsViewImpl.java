@@ -64,9 +64,11 @@ public class GroupsViewImpl extends Composite implements GroupsView {
     myGroups.getRowFormatter().addStyleName(0, css.main().tableHeader());
     myGroups.setText(0, mgNameCol = col++, aiwc.name());
     myGroups.setText(0, mgDescCol = col++, aiwc.description());
-    myGroups.setText(0, mgInvitesCol = col++, aiwc.description());
-    myGroups.setText(0, mgMembersCol = col++, aiwc.description());
-    myGroups.setText(0, mgInviteCol = col++, aiwc.description());
+    myGroups.setText(0, mgInvitesCol = col++, aiwc.invitations());
+    myGroups.setText(0, mgMembersCol = col++, aiwc.members());
+    myGroups.getCellFormatter().addStyleName(0, mgInvitesCol, css.main().number());
+    myGroups.getCellFormatter().addStyleName(0, mgMembersCol, css.main().number());
+    myGroups.setText(0, mgInviteCol = col++, "");
     myGroups.setText(0, mgDeleteCol = col++, "");
    
     col = 0;
@@ -116,6 +118,8 @@ public class GroupsViewImpl extends Composite implements GroupsView {
     myGroups.resizeRows(num+1);
     for (int i = 1; i <= num; i++) {
       final int index = i-1;
+      myGroups.getCellFormatter().addStyleName(i, mgInvitesCol, css.main().number());
+      myGroups.getCellFormatter().addStyleName(i, mgMembersCol, css.main().number());
       Anchor invite = new Anchor(aiwc.inviteMember());
       invite.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {

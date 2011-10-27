@@ -34,6 +34,7 @@ import com.googlecode.alliwant.client.ui.widget.smart.EditItemPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.EditListPopup;
 import com.googlecode.alliwant.client.ui.widget.smart.Header;
 import com.googlecode.alliwant.client.ui.widget.smart.ItemDetailPopup;
+import com.googlecode.alliwant.client.ui.widget.smart.TextFieldPopup;
 
 public interface ClientFactory {
   EventBus getEventBus();
@@ -46,6 +47,7 @@ public interface ClientFactory {
   ItemDetailPopup getItemDetailPopup();
   EditItemPopup getEditItemPopup();
   EditGroupPopup getEditGroupPopup();
+  TextFieldPopup getTextFieldPopup();
   
   ListsView getListsView();
   GroupsView getGroupsView();

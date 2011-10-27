@@ -43,8 +43,8 @@ class DbAccess:
             q = q.filter('__key__ !=', key)
         return q.count(1) == 0
 
-    def add_group(self, name, description):
-        g = GroupDb(name=name, description=description)
+    def add_group(self, name, description, owner):
+        g = GroupDb(owner=owner, name=name, description=description)
         return g.put()
 
     def get_group(self, id):
@@ -68,9 +68,12 @@ class DbAccess:
             return q.filter('email =', email)
         return q
 
-    def add_group_member(self, group):
-        return GroupMemberDb(group=group, member=self.user).put()
-  
+    def add_group_member(self, group, member):
+        return GroupMemberDb(group=group, member=member).put()
+ 
+    def get_group_member(self, id):
+        return GroupMemberDb.get_by_id(id)
+
     def get_group_members(self):
         return GroupMemberDb.all().filter('member = ', self.user)
 
@@ -130,5 +133,13 @@ class DbAccess:
         return ListItemDb.get_by_id(item_id)
 
     def delete(self, obj):
-        obj.delete()
+        if isinstance(obj, GroupDb):
+            self._delete_group(obj)
+        else:
+            obj.delete()
+
+    def _delete_group(self, group):
+        [ m.delete() for m in group.members ]
+        [ i.delete() for i in group.invitations ]
+        group.delete()
 
