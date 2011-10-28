@@ -32,7 +32,6 @@ import com.googlecode.alliwant.client.StringUtils;
 import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
-import com.googlecode.alliwant.client.logging.Logging;
 import com.googlecode.alliwant.client.model.ListItem;
 import com.googlecode.alliwant.client.model.ListOwner;
 import com.googlecode.alliwant.client.model.ListPermission;
@@ -312,12 +311,11 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     view.hideProcessingOverlay();
     view.clearOwners();
     ownerMap.clear();
-    Logging.logger().info("handleOwners: " + owners.size());
     for (ListOwner owner : owners) {
       ownerMap.put(owner.getId(), owner);
-      String nickname = owner.getNickname();
-      if (owner.getId() == user.getOwnerId()) nickname = view.getAiwc().me();
-      view.addOwnerItem(nickname, Integer.toString(owner.getId()));
+      String label = owner.getNickname() + "<" + owner.getEmail() + ">";
+      if (owner.getId() == user.getOwnerId()) label = view.getAiwc().me();
+      view.addOwnerItem(label, Integer.toString(owner.getId()));
     }
     userChanged();
   } // handleOwners //
