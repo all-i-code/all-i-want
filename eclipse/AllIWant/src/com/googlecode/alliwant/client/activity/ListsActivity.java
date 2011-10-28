@@ -313,7 +313,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     ownerMap.clear();
     for (ListOwner owner : owners) {
       ownerMap.put(owner.getId(), owner);
-      String label = owner.getNickname() + "<" + owner.getEmail() + ">";
+      String label = owner.getNickname() + " <" + owner.getEmail() + ">";
       if (owner.getId() == user.getOwnerId()) label = view.getAiwc().me();
       view.addOwnerItem(label, Integer.toString(owner.getId()));
     }
