@@ -29,7 +29,6 @@ import com.googlecode.alliwant.client.ClientFactory;
 import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
-import com.googlecode.alliwant.client.logging.Logging;
 import com.googlecode.alliwant.client.model.Group;
 import com.googlecode.alliwant.client.model.GroupInvitation;
 import com.googlecode.alliwant.client.model.User;
@@ -284,7 +283,6 @@ public class GroupsActivity implements Activity, GroupsView.Presenter {
     view.setNumInvites(invites.size());
     for (int i = 0; i < invites.size(); i++) {
       GroupInvitation invite = invites.get(i);
-    Logging.logger().info("handleInvites: id: " + invite.getId());
       view.setInviteName(i, invite.getGroupName());
       view.setInviteOwner(i, invite.getOwnerName());
       view.setInviteEmail(i, invite.getMemberEmail());

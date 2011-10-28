@@ -33,12 +33,12 @@
       <gwt:Anchor ui:field="createGroup" text="{aiwc.createGroup}"
        href="javascript:;" addStyleNames="{css.main.sectionLink}" />
     </gwt:FlowPanel>
-    <gwt:Grid ui:field="myGroups" addStyleNames="{css.main.table}" />
+    <aiw:Table ui:field="myGroups" addStyleNames="{css.main.table}" />
    
     <gwt:Label text="{aiwc.groups}" addStyleNames="{css.main.heading}" />
-    <gwt:Grid ui:field="groups" addStyleNames="{css.main.table}" />
+    <aiw:Table ui:field="groups" addStyleNames="{css.main.table}" />
     
     <gwt:Label text="{aiwc.invitations}" addStyleNames="{css.main.heading}" />
-    <gwt:Grid ui:field="invites" addStyleNames="{css.main.table}" />
+    <aiw:Table ui:field="invites" addStyleNames="{css.main.table}" />
   </gwt:FlowPanel>
 </ui:UiBinder>

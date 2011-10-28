@@ -28,13 +28,13 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
 import com.googlecode.alliwant.client.i18n.AiwMessages;
 import com.googlecode.alliwant.client.ui.css.CSS;
 import com.googlecode.alliwant.client.ui.css.CssBundle;
+import com.googlecode.alliwant.client.ui.widget.Table;
 
 public class GroupsViewImpl extends Composite implements GroupsView {
 
@@ -55,39 +55,37 @@ public class GroupsViewImpl extends Composite implements GroupsView {
   SimplePanel headerWrapper;
 
   @UiField
-  Grid myGroups, groups, invites;
+  Table myGroups, groups, invites;
   
   public GroupsViewImpl() {
     initWidget(uiBinder.createAndBindUi(this));
     int col = 0;
-    myGroups.resize(1, 6);
-    myGroups.getRowFormatter().addStyleName(0, css.main().tableHeader());
-    myGroups.setText(0, mgNameCol = col++, aiwc.name());
-    myGroups.setText(0, mgDescCol = col++, aiwc.description());
-    myGroups.setText(0, mgInvitesCol = col++, aiwc.invitations());
-    myGroups.setText(0, mgMembersCol = col++, aiwc.members());
-    myGroups.getCellFormatter().addStyleName(0, mgInvitesCol, css.main().number());
-    myGroups.getCellFormatter().addStyleName(0, mgMembersCol, css.main().number());
-    myGroups.setText(0, mgInviteCol = col++, "");
-    myGroups.setText(0, mgDeleteCol = col++, "");
+    myGroups.setNumRecords(0);
+    myGroups.setNumColumns(6);
+    myGroups.setHeader(mgNameCol = col++, aiwc.name());
+    myGroups.setHeader(mgDescCol = col++, aiwc.description());
+    myGroups.setHeader(mgInvitesCol = col++, aiwc.invitations());
+    myGroups.setHeader(mgMembersCol = col++, aiwc.members());
+    myGroups.setHeader(mgInviteCol = col++, "", css.main().number());
+    myGroups.setHeader(mgDeleteCol = col++, "", css.main().number());
    
     col = 0;
-    groups.resize(1, 4);
-    groups.getRowFormatter().addStyleName(0, css.main().tableHeader());
-    groups.setText(0, gNameCol = col++, aiwc.name());
-    groups.setText(0, gDescCol = col++, aiwc.description());
-    groups.setText(0, gOwnerCol = col++, aiwc.owner());
-    groups.setText(0, gLeaveCol = col++, "");
+    groups.setNumRecords(0);
+    groups.setNumColumns(4);
+    groups.setHeader(gNameCol = col++, aiwc.name());
+    groups.setHeader(gDescCol = col++, aiwc.description());
+    groups.setHeader(gOwnerCol = col++, aiwc.owner());
+    groups.setHeader(gLeaveCol = col++, "");
    
     col = 0;
-    invites.resize(1, 5);
-    invites.getRowFormatter().addStyleName(0, css.main().tableHeader());
-    invites.setText(0, iNameCol = col++, aiwc.group());
-    invites.setText(0, iOwnerCol = col++, aiwc.owner());
-    invites.setText(0, iEmailCol = col++, aiwc.email());
-    invites.setText(0, iAcceptCol = col++, "");
-    invites.setText(0, iDeclineCol = col++, "");
-  } // RequestsViewImpl //
+    invites.setNumRecords(0);
+    invites.setNumColumns(5);
+    invites.setHeader(iNameCol = col++, aiwc.group());
+    invites.setHeader(iOwnerCol = col++, aiwc.owner());
+    invites.setHeader(iEmailCol = col++, aiwc.email());
+    invites.setHeader(iAcceptCol = col++, "");
+    invites.setHeader(iDeclineCol = col++, "");
+  } // GroupsViewImpl //
 
   @UiHandler("createGroup")
   void createGroupClick(ClickEvent event) {
@@ -95,7 +93,7 @@ public class GroupsViewImpl extends Composite implements GroupsView {
   }
   
   // ================================================================
-  // BEGIN: RequestsView methods
+  // BEGIN: GroupsView methods
   // ================================================================
   
   @Override
@@ -115,11 +113,9 @@ public class GroupsViewImpl extends Composite implements GroupsView {
 
   @Override
   public void setNumMyGroups(int num) {
-    myGroups.resizeRows(num+1);
-    for (int i = 1; i <= num; i++) {
-      final int index = i-1;
-      myGroups.getCellFormatter().addStyleName(i, mgInvitesCol, css.main().number());
-      myGroups.getCellFormatter().addStyleName(i, mgMembersCol, css.main().number());
+    myGroups.setNumRecords(num);
+    for (int i = 0; i < num; i++) {
+      final int index = i;
       Anchor invite = new Anchor(aiwc.inviteMember());
       invite.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {
@@ -135,37 +131,34 @@ public class GroupsViewImpl extends Composite implements GroupsView {
         }
       });
       myGroups.setWidget(i, mgDeleteCol, delete);
-     
-      if (index % 2 != 0)
-        myGroups.getRowFormatter().addStyleName(i, css.main().tableAlt());
     } // for all requests //
   } // setNumGroups //
  
   @Override
   public void setMyGroupName(int index, String name) {
-    myGroups.setText(index+1, mgNameCol, name);
+    myGroups.setText(index, mgNameCol, name);
   }
   
   @Override
   public void setMyGroupDescription(int index, String description) {
-    myGroups.setText(index+1, mgDescCol, description);
+    myGroups.setText(index, mgDescCol, description);
   }
   
   @Override
   public void setMyGroupMemberCount(int index, String memberCount) {
-    myGroups.setText(index+1, mgMembersCol, memberCount);
+    myGroups.setText(index, mgMembersCol, memberCount, css.main().number());
   }
   
   @Override
   public void setMyGroupInviteCount(int index, String inviteCount) {
-    myGroups.setText(index+1, mgInvitesCol, inviteCount);
+    myGroups.setText(index, mgInvitesCol, inviteCount, css.main().number());
   }
   
   @Override
   public void setNumGroups(int num) {
-    groups.resizeRows(num+1);
-    for (int i = 1; i <= num; i++) {
-      final int index = i-1;
+    groups.setNumRecords(num);
+    for (int i = 0; i < num; i++) {
+      final int index = i;
       Anchor leave = new Anchor(aiwc.leaveGroup());
       leave.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {
@@ -173,32 +166,29 @@ public class GroupsViewImpl extends Composite implements GroupsView {
         }
       });
       groups.setWidget(i, gLeaveCol, leave);
-     
-      if (index % 2 != 0)
-        groups.getRowFormatter().addStyleName(i, css.main().tableAlt());
     } // for all requests //
   } // setNumGroups //
  
   @Override
   public void setGroupName(int index, String name) {
-    groups.setText(index+1, gNameCol, name);
+    groups.setText(index, gNameCol, name);
   }
   
   @Override
   public void setGroupDescription(int index, String description) {
-    groups.setText(index+1, gDescCol, description);
+    groups.setText(index, gDescCol, description);
   }
   
   @Override
   public void setGroupOwner(int index, String owner) {
-    groups.setText(index+1, gOwnerCol, owner);
+    groups.setText(index, gOwnerCol, owner);
   }
   
   @Override
   public void setNumInvites(int num) {
-    invites.resizeRows(num+1);
-    for (int i = 1; i <= num; i++) {
-      final int index = i-1;
+    invites.setNumRecords(num);
+    for (int i = 0; i < num; i++) {
+      final int index = i;
       Anchor accept = new Anchor(aiwc.accept());
       accept.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {
@@ -214,25 +204,22 @@ public class GroupsViewImpl extends Composite implements GroupsView {
         }
       });
       invites.setWidget(i, iDeclineCol, decline);
-     
-      if (index % 2 != 0)
-        groups.getRowFormatter().addStyleName(i, css.main().tableAlt());
     } // for all requests //
   } // setNumGroups //
  
   @Override
   public void setInviteName(int index, String name) {
-    invites.setText(index+1, iNameCol, name);
+    invites.setText(index, iNameCol, name);
   }
   
   @Override
   public void setInviteOwner(int index, String owner) {
-    invites.setText(index+1, iOwnerCol, owner);
+    invites.setText(index, iOwnerCol, owner);
   }
   
   @Override
   public void setInviteEmail(int index, String email) {
-    invites.setText(index+1, iEmailCol, email);
+    invites.setText(index, iEmailCol, email);
   }
   
   @Override
@@ -251,7 +238,7 @@ public class GroupsViewImpl extends Composite implements GroupsView {
   }
   
   // ================================================================
-  // END: RequestsView methods
+  // END: GroupsView methods
   // ================================================================
   
-} // RequestsViewImpl //
+} // GroupsViewImpl //
