@@ -11,3 +11,4 @@ syntax: regexp
 ^eclipse/AllIWant/.settings
 ^.coverage
 ^index.yaml
+^build

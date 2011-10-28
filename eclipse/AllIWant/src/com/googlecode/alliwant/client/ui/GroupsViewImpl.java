@@ -208,7 +208,7 @@ public class GroupsViewImpl extends Composite implements GroupsView {
       invites.setWidget(i, iAcceptCol, accept);
      
       Anchor decline = new Anchor(aiwc.decline());
-      accept.addClickHandler(new ClickHandler() {
+      decline.addClickHandler(new ClickHandler() {
         public void onClick(ClickEvent event) {
           presenter.declineInvite(index);
         }

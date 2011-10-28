@@ -248,6 +248,5 @@ class GroupRpcTest(unittest.TestCase):
         actual = set((o.email for o in owners))
         self.assertEquals(expected, actual)
 
-
 if __name__ == '__main__':
     unittest.main()

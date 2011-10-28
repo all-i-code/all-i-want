@@ -24,6 +24,7 @@ import com.google.gwt.user.client.Window;
 import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
+import com.googlecode.alliwant.client.logging.Logging;
 import com.googlecode.alliwant.client.model.AccessReq;
 import com.googlecode.alliwant.client.model.AccessReqImpl;
 import com.googlecode.alliwant.client.model.Group;
@@ -256,6 +257,7 @@ public class ManagerImpl implements Manager {
   public void acceptInvite(int inviteId) {
     String url = "/rpc/group/accept_invitation?";
     url += rpc.add("invite_id", inviteId, true);
+    Logging.logger().info("acceptInvite(" + inviteId + "): \n" + url);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
         eventBus.fireEvent(new InfoEvent(InfoEvent.INVITE_ACCEPTED));
@@ -267,6 +269,7 @@ public class ManagerImpl implements Manager {
   public void declineInvite(int inviteId) {
     String url = "/rpc/group/decline_invitation?";
     url += rpc.add("invite_id", inviteId, true);
+    Logging.logger().info("declineInvite(" + inviteId + "): \n" + url);
     rpc.send(url, new Rpc.Handler() {
       public void onComplete(String result) {
         eventBus.fireEvent(new InfoEvent(InfoEvent.INVITE_DECLINED));

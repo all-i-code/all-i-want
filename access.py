@@ -71,11 +71,8 @@ class DbAccess:
     def add_group_member(self, group, member):
         return GroupMemberDb(group=group, member=member).put()
  
-    def get_group_member(self, id):
-        return GroupMemberDb.get_by_id(id)
-
-    def get_group_members(self):
-        return GroupMemberDb.all().filter('member = ', self.user)
+    def get_group_member(self, owner, group):
+        return owner.memberships.filter('group = ', group).get()
 
     def add_owner(self, user):
         _ = self

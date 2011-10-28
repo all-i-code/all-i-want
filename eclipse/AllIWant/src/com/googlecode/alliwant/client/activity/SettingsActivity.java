@@ -29,7 +29,6 @@ import com.googlecode.alliwant.client.ClientFactory;
 import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
-import com.googlecode.alliwant.client.logging.Logging;
 import com.googlecode.alliwant.client.model.ListOwner;
 import com.googlecode.alliwant.client.model.ListPermission;
 import com.googlecode.alliwant.client.model.User;
@@ -177,6 +176,7 @@ public class SettingsActivity implements Activity, SettingsView.Presenter {
   } // addEventBusHandlers //
 
   private void handleUser(User user) {
+    if (user.getOwnerId() < 0) return;
     manager.getOwner(user.getOwnerId());
   }
   

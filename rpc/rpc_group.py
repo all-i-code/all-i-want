@@ -45,8 +45,8 @@ class GroupRpcGroup(RpcGroupBase):
             RpcParamInt('group_id'),
             RpcParamString('email'),
         )),
-        Rpc(name='delete_group_member', params=(
-            RpcParamInt('id'),
+        Rpc(name='leave_group', params=(
+            RpcParamInt('group_id'),
         )),
         Rpc(name='accept_invitation', params=(
             RpcParamInt('invite_id'),
@@ -126,9 +126,10 @@ class GroupRpcGroup(RpcGroupBase):
         self.db.delete(i)
         return []
    
-    def delete_group_member(self, id):
+    def leave_group(self, group_id):
         self._verify_owner()
-        gm = self.db.get_group_member(id)
+        g = self.db.get_group(group_id)
+        gm = self.db.get_group_member(self.owner, g)
         self.db.delete(gm)
         return []
 
@@ -147,7 +148,13 @@ class GroupRpcGroup(RpcGroupBase):
         owners = [ owner ]
         owners.extend(m.member for g in gs for m in g.members)
         owners.extend(m.member for gm in gms for m in gm.group.members)
-        return [ ListOwner.from_db(o) for o in set(owners) ]
+        unique_owners = []
+        oids = []
+        for owner in owners:
+            if owner.key().id() not in oids:
+                oids.append(owner.key().id())
+                unique_owners.append(owner)
+        return [ ListOwner.from_db(o) for o in unique_owners ]
 
 class GroupRpcReqHandler(RpcReqHandler):
     group_cls = GroupRpcGroup

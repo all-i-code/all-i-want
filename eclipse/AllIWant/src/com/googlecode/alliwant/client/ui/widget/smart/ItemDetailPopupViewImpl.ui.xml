@@ -31,32 +31,33 @@
     <gwt:FlowPanel>
       <gwt:Label text="{aiwc.itemDetail}" styleName="{css.main.title}" />
       <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.name}" addStyleNames="{css.main.label}" />
+        <gwt:Label text="{aiwc.name}" addStyleNames="{css.main.label} {css.main.large}" />
         <gwt:Label ui:field="name" addStyleNames="{css.main.input}" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.category}" addStyleNames="{css.main.label}" />
+        <gwt:Label text="{aiwc.category}" addStyleNames="{css.main.label} {css.main.large}" />
         <gwt:Label ui:field="category" addStyleNames="{css.main.input}" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.description}" addStyleNames="{css.main.label}" />
+        <gwt:Label text="{aiwc.description}" addStyleNames="{css.main.label} {css.main.large}" />
         <gwt:Label ui:field="description" addStyleNames="{css.main.input}" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.url}" addStyleNames="{css.main.label}" />
+        <gwt:Label text="{aiwc.url}" addStyleNames="{css.main.label} {css.main.large}" />
         <gwt:Anchor ui:field="url" addStyleNames="{css.main.input}" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.reservedBy}" addStyleNames="{css.main.label}" />
+        <gwt:Label text="{aiwc.reservedBy}" addStyleNames="{css.main.label} {css.main.large}" />
         <gwt:Label ui:field="reservedBy" addStyleNames="{css.main.input}" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.purchasedBy}" addStyleNames="{css.main.label}" />
+        <gwt:Label text="{aiwc.purchasedBy}" addStyleNames="{css.main.label} {css.main.large}" />
         <gwt:Label ui:field="purchasedBy" addStyleNames="{css.main.input}" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
-        <gwt:Label text="{aiwc.action}" addStyleNames="{css.main.label}" />
-        <gwt:Anchor ui:field="action" addStyleNames="{css.main.input}" /> 
+        <gwt:Label text="{aiwc.action}" addStyleNames="{css.main.label} {css.main.large}" />
+        <gwt:Anchor ui:field="action" addStyleNames="{css.main.input}"
+         href="javascript:;" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.buttons}">
         <gwt:Button ui:field="done" text="{aiwc.done}" />

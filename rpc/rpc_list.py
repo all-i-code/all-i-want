@@ -221,76 +221,91 @@ class ListRpcGroup(RpcGroupBase):
         '''
         Mark the given item as reserved
         '''
+        _ = lambda x: x.key().id()
         self._verify_owner()
         item = self.db.get_item(item_id)
         if not self._can_read_list(item.parent_list.owner.key().id()):
             raise PermissionDeniedError()
 
-        if item.purchased_by is not None and item.purchased_by != self.owner:
+        oid = _(self.owner)
+        if item.purchased_by is not None and _(item.purchased_by) != oid:
             self._item_already_taken('purchased', item.purchased_by)
             
-        if item.reserved_by is not None and item.reserved_by != self.owner:
+        if item.reserved_by is not None and _(item.reserved_by) != oid:
             self._item_already_taken('reserved', item.reserved_by)
 
         item.reserved_by = self.owner
         item.purchased_by = None
-        return WishLilst.from_db(item.put().parent_list)
+        return WishList.from_db(item.put().parent_list)
 
     def unreserve_item(self, item_id):
         '''
         Mark the given item as not reserved if you were the one who reserved it
         '''
+        _ = lambda x: x.key().id()
         self._verify_owner()
         item = self.db.get_item(item_id)
         if not self._can_read_list(item.parent_list.owner.key().id()):
             raise PermissionDeniedError()
 
-        if item.purchased_by is not None and item.purchased_by != self.owner:
+        oid = _(self.owner)
+        if item.purchased_by is not None and _(item.purchased_by) != oid:
             self._item_already_taken('purchased', item.purchased_by)
             
-        if item.reserved_by is not None and item.reserved_by != self.owner:
+        if item.reserved_by is not None and _(item.reserved_by) != oid:
             self._item_already_taken('reserved', item.reserved_by)
 
         item.reserved_by = None
-        return WishLilst.from_db(item.put().parent_list)
+        return WishList.from_db(item.put().parent_list)
 
     def purchase_item(self, item_id):
         '''
         Mark the given item as purchased
         '''
+        _ = lambda x: x.key().id()
         self._verify_owner()
         item = self.db.get_item(item_id)
         if not self._can_read_list(item.parent_list.owner.key().id()):
             raise PermissionDeniedError()
 
-        if item.purchased_by is not None and item.purchased_by != self.owner:
+        oid = _(self.owner)
+        if item.purchased_by is not None and _(item.purchased_by) != oid:
             self._item_already_taken('purchased', item.purchased_by)
             
-        if item.reserved_by is not None and item.reserved_by != self.owner:
+        if item.reserved_by is not None and _(item.reserved_by) != oid:
             self._item_already_taken('reserved', item.reserved_by)
 
         item.reserved_by = None
         item.purchased_by = self.owner
-        return WishLilst.from_db(item.put().parent_list)
+        return WishList.from_db(item.put().parent_list)
     
     def unpurchase_item(self, item_id):
         '''
         Mark the given item as not purchased if you were the one who
         purchased it
         '''
+        _ = lambda x: x.key().id()
         self._verify_owner()
         item = self.db.get_item(item_id)
         if not self._can_read_list(item.parent_list.owner.key().id()):
             raise PermissionDeniedError()
 
-        if item.purchased_by is not None and item.purchased_by != self.owner:
+        oid = _(self.owner)
+        if item.purchased_by is not None and _(item.purchased_by) != oid:
             self._item_already_taken('purchased', item.purchased_by)
             
-        if item.reserved_by is not None and item.reserved_by != self.owner:
+        if item.reserved_by is not None and _(item.reserved_by) != oid:
             self._item_already_taken('reserved', item.reserved_by)
 
-        item.purchased_by = None
-        return WishLilst.from_db(item.put().parent_list)
+        l = None 
+        if item.is_surprise:
+            l = item.parent_list
+            self.db.delete(item)
+        else:
+            item.purchased_by = None
+            l = item.put().parent_list
+
+        return WishList.from_db(l)
 
     def get_reserved_and_purchased_items(self):
         '''

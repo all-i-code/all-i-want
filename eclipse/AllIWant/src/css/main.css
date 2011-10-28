@@ -35,7 +35,7 @@
 .table { clear: left; }
 .tableHeader { color: tblHeadColor; }
 .tableHeader { background-color: tblHeadBgColor; }
-.tableAlt { background-color: grey; }
+.tableAlt { background-color: rgba(0, 0, 0, 0.125); }
 .wrap, .field { overflow: hidden; }
 .shrinkWrap { display: table; }
 .field .label { text-align: right; }

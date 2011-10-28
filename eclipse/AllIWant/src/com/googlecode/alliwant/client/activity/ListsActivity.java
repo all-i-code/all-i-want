@@ -32,6 +32,7 @@ import com.googlecode.alliwant.client.StringUtils;
 import com.googlecode.alliwant.client.event.InfoEvent;
 import com.googlecode.alliwant.client.event.ModelEvent;
 import com.googlecode.alliwant.client.event.ModelListEvent;
+import com.googlecode.alliwant.client.logging.Logging;
 import com.googlecode.alliwant.client.model.ListItem;
 import com.googlecode.alliwant.client.model.ListOwner;
 import com.googlecode.alliwant.client.model.ListPermission;
@@ -159,6 +160,11 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     
   @Override
   public void addItem() {
+    if (null == currentList) {
+      cf.getAlert().show(view.getAiwc().noListSelected());
+      return;
+    }
+    
     boolean isOwnList = (ownerId == user.getOwnerId());
     boolean canAdd = permissionOwnerIds.contains(ownerId);
     editItemPopup.show(isOwnList, canAdd, new EditItemPopup.Handler() {
@@ -289,6 +295,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   } // addEventBusHandlers //
 
   private void handleUser(User user) {
+    if (user.getOwnerId() < 0) return;
     this.user = user;
     manager.getPermissions(user.getOwnerId(), true);
   }
@@ -304,6 +311,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     view.hideProcessingOverlay();
     view.clearOwners();
     ownerMap.clear();
+    Logging.logger().info("handleOwners: " + owners.size());
     for (ListOwner owner : owners) {
       ownerMap.put(owner.getId(), owner);
       String nickname = owner.getNickname();
@@ -359,7 +367,9 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       view.setNumItems(items.size());
       for (int i = 0; i < items.size(); i++) {
         ListItem item = items.get(i);
-        view.setItem(i, item.getName());
+        String extra = "";
+        if (item.isSurprise()) extra = " (" + view.getAiwc().surprise() + ")";
+        view.setItem(i, item.getName() + extra);
         view.setItemCategory(i, item.getCategory());
         view.setItemLinkVisible(i, (item.getUrl().length() > 0));
         

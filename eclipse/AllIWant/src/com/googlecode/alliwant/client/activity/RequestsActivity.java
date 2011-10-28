@@ -140,6 +140,7 @@ public class RequestsActivity implements Activity, RequestsView.Presenter {
   } // addEventBusHandlers //
 
   private void handleUser(User user) {
+    if (user.getOwnerId() < 0) return;
     view.showProcessingOverlay();
     manager.getAccessRequests();
   }

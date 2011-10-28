@@ -38,6 +38,20 @@ py-coverage:
 	$(HIDE)echo -e "\nCoverage Stats:\n" 
 	$(HIDE)coverage report --omit /Applications/*.py
 
+
+build:
+	$(HIDE)echo "Creating build directory"
+	$(HIDE)rm -rf build
+	$(HIDE)mkdir build
+	$(HIDE)cp *.* build/
+	$(HIDE)mkdir build/core
+	$(HIDE)cp core/*.* build/core
+	$(HIDE)mkdir build/rpc
+	$(HIDE)cp rpc/*.* build/rpc
+	$(HIDE)mkdir -p build/eclipse/AllIWant/war
+	$(HIDE)cp eclipse/AllIWant/war/*.* build/eclipse/AllIWant/war
+	$(HIDE)cp -r eclipse/AllIWant/war/alliwant build/eclipse/AllIWant/war/alliwant
+
 #TODO: Add an ant clean here too
 clean:
 	$(HIDE)echo "Removing *.pyc files"

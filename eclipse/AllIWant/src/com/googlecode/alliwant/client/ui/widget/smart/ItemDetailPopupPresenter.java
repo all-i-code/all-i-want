@@ -84,6 +84,7 @@ public class ItemDetailPopupPresenter implements ItemDetailPopup,
     } else {
       handler.reserveItem(item.getId());
     }
+    view.hide();
   } // action //
   
   @Override
