@@ -109,6 +109,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   
   @Override
   public void userChanged() {
+    currentList = null;
     view.showProcessingOverlay();
     ownerId = StringUtils.toInt(view.getOwner());
     view.setCanEditLists(permissionOwnerIds.contains(ownerId));
@@ -350,15 +351,20 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   }
  
   private void showList() {
-    boolean ownList = user.getOwnerId() == ownerId;
-    view.setOwnItemsVisible(ownList);
-    view.setItemsVisible(!ownList);
+    boolean isOwnList = user.getOwnerId() == ownerId;
+    view.setOwnItemsVisible(isOwnList);
+    view.setItemsVisible(!isOwnList);
     
     List<ListItem> items = currentList.getItems();
-    if (ownList) {
-      view.setNumOwnItems(items.size());
-      for (int i = 0; i < items.size(); i++) {
-        ListItem item = items.get(i);
+    if (isOwnList) {
+      // Filter out surprise items
+      List<ListItem> ownItems = new ArrayList<ListItem>();
+      for (ListItem item : items)
+        if (!item.isSurprise()) ownItems.add(item);
+      
+      view.setNumOwnItems(ownItems.size());
+      for (int i = 0; i < ownItems.size(); i++) {
+        ListItem item = ownItems.get(i);
         view.setOwnItem(i, item.getName());
         view.setOwnItemCategory(i, item.getCategory());
         view.setOwnItemLinkVisible(i, (item.getUrl().length() > 0));

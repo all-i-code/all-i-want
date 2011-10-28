@@ -84,12 +84,6 @@ public class EditItemPopupViewImpl implements EditItemPopupView {
       presenter.ok();
   }
   
-  @UiHandler("description")
-  void onDescriptionKeyDown(KeyDownEvent event) {
-    if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
-      presenter.ok();
-  }
-  
   @UiHandler("category")
   void onCategoryKeyDown(KeyDownEvent event) {
     if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)

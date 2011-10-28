@@ -23,6 +23,8 @@ PYTHON ?= python
 include dev.mk
 include codegen.mk
 
+.PHONY : build clean
+
 test.codegen.mk: 
 	$(HIDE)$(PYTHON) codegen.py --makefile > $@.out
 	$(HIDE)diff codegen.mk $@.out
@@ -56,6 +58,8 @@ build:
 clean:
 	$(HIDE)echo "Removing *.pyc files"
 	$(HIDE)find . -name \*.pyc | xargs rm -f
+	$(HIDE)echo "Removing  build directory"
+	$(HIDE)rm -rf build
 
 
 PY := python
