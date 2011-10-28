@@ -18,6 +18,7 @@
 #    limitations under the License.
 #
 '''
+from simplejson import loads
 
 class RpcParam(object):
     '''Base class for RPC parameters'''
@@ -73,7 +74,6 @@ class RpcParamModel(RpcParam):
         return self.model.get_java_iface_type()
 
     def get_value(self, value):
-        from json import loads
         return self.model.from_json_dict(loads(value))
 
 class RpcParamList(RpcParam):
@@ -86,6 +86,5 @@ class RpcParamList(RpcParam):
         return 'java.util.ArrayList<%s>' % self.param.get_java_type()
 
     def get_value(self, value):
-        from json import loads
         return [ param.get_value(v) for v in loads(value) ]
 

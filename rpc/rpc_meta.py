@@ -20,7 +20,7 @@
 '''
 
 import os.path
-from json import dumps
+from simplejson import dumps
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from core.model import FailureReport
