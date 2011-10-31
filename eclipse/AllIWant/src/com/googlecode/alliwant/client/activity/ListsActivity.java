@@ -20,6 +20,8 @@
 package com.googlecode.alliwant.client.activity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +49,8 @@ import com.googlecode.alliwant.client.ui.widget.smart.ItemDetailPopup;
 
 public class ListsActivity implements Activity, ListsView.Presenter {
 
+  private static String NAME = "name", CATEGORY = "category";
+  
   private ClientFactory cf;
   private ListsView view;
   private Manager manager;
@@ -93,6 +97,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     view.setPresenter(this); 
     panel.setWidget(view.asWidget());
     addEventBusHandlers(eventBus);
+    initOrders();
     view.setHeader(cf.getHeader());
     view.showProcessingOverlay();
     cf.getManager().getCurrentUser();
@@ -109,6 +114,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   @Override
   public void userChanged() {
     currentList = null;
+    clearList();
     view.showProcessingOverlay();
     ownerId = StringUtils.toInt(view.getOwner());
     view.setCanEditLists(permissionOwnerIds.contains(ownerId));
@@ -155,9 +161,17 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     view.showProcessingOverlay();
     int lid = StringUtils.toInt(view.getList());
     currentList = listMap.get(lid);
+    String name = currentList.getName().toLowerCase();
+    boolean visible = (name.contains("christmas") || name.contains("navidad")); 
+    view.setChristmasImagesVisible(visible);
     showList();
+  } // listChanged //
+
+  @Override
+  public void orderChanged() {
+    if (null != currentList) showList();
   }
-    
+  
   @Override
   public void addItem() {
     if (null == currentList) {
@@ -354,6 +368,12 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     view.setItemsVisible(!isOwnList);
     
     List<ListItem> items = currentList.getItems();
+    if (StringUtils.areEqual(NAME, view.getOrder())) {
+      sortByName(items);
+    } else if (StringUtils.areEqual(CATEGORY, view.getOrder())) {
+      sortByCategory(items);
+    }
+    
     if (isOwnList) {
       // Filter out surprise items
       List<ListItem> ownItems = new ArrayList<ListItem>();
@@ -408,6 +428,13 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       } // for all items //
     }
   } // showList //
+
+  private void clearList() {
+    view.setNumItems(0);
+    view.setNumOwnItems(0);
+    view.setItemsVisible(false);
+    view.setOwnItemsVisible(false);
+  }
   
   private void addList(String name, String description) {
     view.showProcessingOverlay();
@@ -456,5 +483,29 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     view.showProcessingOverlay();
     manager.deleteList(listId);
   }
+ 
+  private void initOrders() {
+    view.clearOrders();
+    view.addOrderItem(view.getAiwc().name(), NAME);
+    view.addOrderItem(view.getAiwc().category(), CATEGORY);
+  }
+ 
+  private void sortByName(List<ListItem> items) {
+    Collections.sort(items, new Comparator<ListItem>() {
+      public int compare(ListItem o1, ListItem o2) {
+        return o1.getName().compareTo(o2.getName());
+      }
+    });
+  } // sortByName //
+  
+  private void sortByCategory(List<ListItem> items) {
+    Collections.sort(items, new Comparator<ListItem>() {
+      public int compare(ListItem o1, ListItem o2) {
+        if (StringUtils.areEqual(o1.getCategory(), o2.getCategory()))
+          return o1.getName().compareTo(o2.getName());
+        return o1.getCategory().compareTo(o2.getCategory());
+      }
+    });
+  } // sortByName //
   
 } // ListsActivity //

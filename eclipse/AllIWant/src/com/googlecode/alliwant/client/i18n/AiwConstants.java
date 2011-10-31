@@ -260,4 +260,7 @@ public interface AiwConstants extends Constants {
   @DefaultStringValue("Settings Updated")
   String settingsUpdated();
   
+  @DefaultStringValue("Order By")
+  String orderBy();
+
 } // AiwConstants //

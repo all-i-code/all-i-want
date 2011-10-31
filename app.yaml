@@ -24,6 +24,8 @@ api_version: 1
 
 handlers:
 
+- url: /static
+  static_dir: static
 
 - url: /rpc/.*
   script: rpc/rpc_urls.py

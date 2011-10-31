@@ -212,5 +212,35 @@ public class ListsViewTestImpl implements ListsView {
     // TODO Auto-generated method stub
     
   }
+
+  @Override
+  public void setChristmasImagesVisible(boolean visible) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void clearOrders() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void addOrderItem(String item, String value) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setOrder(String order) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getOrder() {
+    // TODO Auto-generated method stub
+    return null;
+  }
   
 } // ListsViewTestImpl //

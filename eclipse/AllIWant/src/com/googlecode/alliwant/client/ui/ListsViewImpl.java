@@ -66,7 +66,10 @@ public class ListsViewImpl extends Composite implements ListsView {
   SimplePanel headerWrapper;
 
   @UiField
-  ListBox listOwner, wishList;
+  FlowPanel christmasImages;
+  
+  @UiField
+  ListBox listOwner, wishList, order;
 
   @UiField
   Anchor addList, editList, deleteList, addItem;
@@ -103,6 +106,11 @@ public class ListsViewImpl extends Composite implements ListsView {
   @UiHandler("wishList")
   void onListChange(ChangeEvent event) {
     presenter.listChanged();
+  }
+  
+  @UiHandler("order")
+  void onOrderChange(ChangeEvent event) {
+    presenter.orderChanged();
   }
   
   @UiHandler("addList")
@@ -199,6 +207,31 @@ public class ListsViewImpl extends Composite implements ListsView {
   @Override
   public String getList() {
     return wishList.getValue(wishList.getSelectedIndex());
+  }
+  
+  @Override
+  public void clearOrders() {
+    order.clear();
+  }
+  
+  @Override
+  public void addOrderItem(String item, String value) {
+    order.addItem(item, value);
+  }
+  
+  @Override
+  public void setOrder(String order) {
+    int index = 0;
+    for (int i = 0; i < this.order.getItemCount(); i++) {
+      String value = this.order.getValue(i);
+      if (0 == value.compareTo(order)) index = i;
+    }
+    this.order.setSelectedIndex(index);
+  } // setOrder //
+  
+  @Override
+  public String getOrder() {
+    return order.getValue(order.getSelectedIndex());
   }
   
   @Override
@@ -331,6 +364,11 @@ public class ListsViewImpl extends Composite implements ListsView {
     itemActionLinks.get(index).setText(text);
   }
 
+  @Override
+  public void setChristmasImagesVisible(boolean visible) {
+    christmasImages.setVisible(visible);
+  }
+  
   @Override
   public void openURL(String url) {
     Window.open(url, "_blank", "");

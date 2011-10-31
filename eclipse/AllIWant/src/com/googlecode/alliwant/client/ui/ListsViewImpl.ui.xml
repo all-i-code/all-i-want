@@ -24,35 +24,49 @@
   <ui:with type="com.googlecode.alliwant.client.i18n.AiwConstants" field="aiwc" />
   <ui:with type="com.googlecode.alliwant.client.ui.css.CssBundle" field="css" />
   
-  <gwt:FlowPanel>
+  <gwt:FlowPanel styleName="{css.main.wrapper}">
     <gwt:SimplePanel ui:field="headerWrapper" addStyleNames="header" />
-    <gwt:Label styleName="{css.main.title} {css.main.centered}" 
-     text="{aiwc.lists}" />
+    <gwt:FlowPanel styleName="{css.main.left}">
+      <gwt:Label styleName="{css.main.title}" text="{aiwc.lists}" />
+      <gwt:FlowPanel styleName="{css.main.field}">
+        <gwt:Label text="{aiwc.user}"
+         addStyleNames="{css.main.label}" />
+        <gwt:ListBox ui:field="listOwner" addStyleNames="{css.main.input}" /> 
+      </gwt:FlowPanel> 
+      <gwt:FlowPanel styleName="{css.main.field}">
+        <gwt:Label text="{aiwc.list}"
+         addStyleNames="{css.main.label}" />
+        <gwt:ListBox ui:field="wishList" addStyleNames="{css.main.input}" /> 
+        <gwt:Anchor ui:field="addList" text="{aiwc.add}" visible="false"
+          href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
+        <gwt:Anchor ui:field="editList" text="{aiwc.edit}" visible="false"
+          href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
+        <gwt:Anchor ui:field="deleteList" text="{aiwc.delete}" visible="false"
+          href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
+      </gwt:FlowPanel> 
+      <gwt:FlowPanel styleName="{css.main.field}">
+        <gwt:Label text="{aiwc.orderBy}"
+         addStyleNames="{css.main.label}" />
+        <gwt:ListBox ui:field="order" addStyleNames="{css.main.input}" /> 
+      </gwt:FlowPanel> 
+      <gwt:FlowPanel styleName="{css.main.left} {css.main.section}">
+        <gwt:Label text="{aiwc.listItems}" addStyleNames="{css.main.heading}" /> 
+        <gwt:Anchor ui:field="addItem" text="{aiwc.add}"
+         href="javascript:;" addStyleNames="{css.main.sectionLink}" />
+      </gwt:FlowPanel>
+      <aiw:Table ui:field="items" addStyleNames="{css.main.table}" />
+      <aiw:Table ui:field="ownItems" addStyleNames="{css.main.table}" />
+    </gwt:FlowPanel> <!-- left -->
     
-    <gwt:FlowPanel styleName="{css.main.field}">
-      <gwt:Label text="{aiwc.user}"
-       addStyleNames="{css.main.label} {css.main.small}" />
-      <gwt:ListBox ui:field="listOwner" addStyleNames="{css.main.input}" /> 
-    </gwt:FlowPanel> 
-    
-    <gwt:FlowPanel styleName="{css.main.field}">
-      <gwt:Label text="{aiwc.list}"
-       addStyleNames="{css.main.label} {css.main.small}" />
-      <gwt:ListBox ui:field="wishList" addStyleNames="{css.main.input}" /> 
-      <gwt:Anchor ui:field="addList" text="{aiwc.add}" visible="false"
-        href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
-      <gwt:Anchor ui:field="editList" text="{aiwc.edit}" visible="false"
-        href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
-      <gwt:Anchor ui:field="deleteList" text="{aiwc.delete}" visible="false"
-        href="javascript:;" addStyleNames="{css.main.sectionLink}" /> 
-    </gwt:FlowPanel> 
-  
-    <gwt:FlowPanel>
-      <gwt:Label text="{aiwc.listItems}" addStyleNames="{css.main.heading}" /> 
-      <gwt:Anchor ui:field="addItem" text="{aiwc.add}"
-       href="javascript:;" addStyleNames="{css.main.sectionLink}" />
+    <gwt:FlowPanel ui:field="christmasImages" styleName="{css.main.rightImages}">
+      <gwt:FlowPanel>
+        <gwt:Image url="/static/images/santa_clause.jpg" /> 
+        <gwt:Image url="/static/images/rudolph.jpg" /> 
+      </gwt:FlowPanel>
+      <gwt:FlowPanel styleName="{css.main.bottom}">
+        <gwt:Image url="/static/images/snowman.jpg" /> 
+        <gwt:Image url="/static/images/christmas_tree.jpg" /> 
+      </gwt:FlowPanel>
     </gwt:FlowPanel>
-    <aiw:Table ui:field="items" addStyleNames="{css.main.table}" />
-    <aiw:Table ui:field="ownItems" addStyleNames="{css.main.table}" />
   </gwt:FlowPanel>
 </ui:UiBinder>

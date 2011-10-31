@@ -19,6 +19,7 @@
 */
 
 @external gwt-Button;
+@external gwt-Image;
 @def titleSize 1.75em;
 @def headingSize 1.5em;
 @def subHeadingSize 1.25em;
@@ -32,7 +33,7 @@
 .title, .table, .field { padding-bottom: 0.5em; }
 .heading { font-size: headingSize; }
 .subHeading { font-size: subHeadingSize; }
-.table { clear: left; }
+.table, .section { clear: left; }
 .tableHeader { color: tblHeadColor; }
 .tableHeader { background-color: tblHeadBgColor; }
 .tableAlt { background-color: rgba(0, 0, 0, 0.125); }
@@ -44,7 +45,7 @@
 .field .label.large { width: 10em; }
 .field .label.huge { width: 14em; }
 .field .label { font-weight: bold; }
-.left, .sectionLink, .heading, .field .label, .field .input { float: left; }
+.left, .sectionLink, .heading, .field .label, .field .input, .table, .rightImages { float: left; }
 .field .input { display: block; }
 .field .input { margin-left: 0.5em; }
 .field .input { width: auto; }
@@ -57,7 +58,10 @@
 .sectionLink { display: block; }
 .sectionLink { padding-left: 0.5em; }
 .sectionLink { margin-top: 0.5em; }
-.buttons { overflow: hidden; }
+.buttons, .wrapper { overflow: hidden; }
 .buttons { padding: 1em; }
 .buttons .gwt-Button { margin-left: 1em;}
 .number { text-align: right; }
+.rightImages .gwt-Image { padding: 2em; }
+.rightImages { padding-left: 5em; }
+.rightImages .bottom { padding-left: 2em; }

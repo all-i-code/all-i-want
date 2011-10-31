@@ -24,11 +24,12 @@
   
   <ui:style>
     .main { padding: 1em; } 
+    .wrapper { min-width: 25em; }
   </ui:style>
   
   <gwt:PopupPanel animationEnabled="true" modal="true" glassEnabled="true"
    addStyleNames="{style.main}">
-    <gwt:FlowPanel>
+    <gwt:FlowPanel styleName="{style.wrapper}">
       <gwt:Label text="{aiwc.itemDetail}" styleName="{css.main.title}" />
       <gwt:FlowPanel styleName="{css.main.field}">
         <gwt:Label text="{aiwc.name}" addStyleNames="{css.main.label} {css.main.large}" />
@@ -44,7 +45,8 @@
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
         <gwt:Label text="{aiwc.url}" addStyleNames="{css.main.label} {css.main.large}" />
-        <gwt:Anchor ui:field="url" addStyleNames="{css.main.input}" /> 
+        <gwt:Anchor ui:field="url" text="{aiwc.link}" href="javascript:;" 
+         addStyleNames="{css.main.input}" /> 
       </gwt:FlowPanel> 
       <gwt:FlowPanel styleName="{css.main.field}">
         <gwt:Label text="{aiwc.reservedBy}" addStyleNames="{css.main.label} {css.main.large}" />

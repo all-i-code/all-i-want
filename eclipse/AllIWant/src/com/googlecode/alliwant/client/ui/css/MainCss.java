@@ -46,4 +46,8 @@ public interface MainCss extends CssResource {
   String area();
   String buttons();
   String number();
+  String rightImages();
+  String section();
+  String wrapper();
+  String bottom();
 }

@@ -50,8 +50,8 @@ public class ItemDetailPopupPresenter implements ItemDetailPopup,
     view.setDescription(item.getDescription());
     
     String actionText = "";
-    boolean available = ((item.getReservedByOwnerId() == 0) && 
-     (item.getPurchasedByOwnerId() == 0));
+    boolean available = ((item.getReservedByOwnerId() < 0) && 
+     (item.getPurchasedByOwnerId() < 0));
     if (available) {
       actionText = view.getAiwc().reserve();
     } else if (item.getReservedByOwnerId() == user.getOwnerId()) {

@@ -36,6 +36,11 @@ public interface ListsView extends AiwView {
   void setList(String list);
   String getList();
   
+  void clearOrders();
+  void addOrderItem(String item, String value);
+  void setOrder(String order);
+  String getOrder();
+  
   void setOwnItemsVisible(boolean visible);
   void setNumOwnItems(int numItems);
   void setOwnItem(int index, String item);
@@ -51,6 +56,7 @@ public interface ListsView extends AiwView {
   void setItemActionVisible(int index, boolean visible);
   void setItemActionText(int index, String text);
 
+  void setChristmasImagesVisible(boolean visible);
   void openURL(String url);
   AiwConstants getAiwc();
   AiwMessages getAiwm();
@@ -61,6 +67,7 @@ public interface ListsView extends AiwView {
     void editList();
     void deleteList();
     void listChanged();
+    void orderChanged();
     void addItem();
     void goToItemUrl(int index);
     void itemDetail(int index);
