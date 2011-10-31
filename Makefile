@@ -50,6 +50,7 @@ build:
 	$(HIDE)cp core/*.* build/core
 	$(HIDE)mkdir build/rpc
 	$(HIDE)cp rpc/*.* build/rpc
+	$(HIDE)cp -r static build/
 	$(HIDE)mkdir -p build/eclipse/AllIWant/war
 	$(HIDE)cp eclipse/AllIWant/war/*.* build/eclipse/AllIWant/war
 	$(HIDE)cp -r eclipse/AllIWant/war/alliwant build/eclipse/AllIWant/war/alliwant
