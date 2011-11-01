@@ -66,7 +66,7 @@ public class ListsViewImpl extends Composite implements ListsView {
   SimplePanel headerWrapper;
 
   @UiField
-  FlowPanel christmasImages;
+  FlowPanel leftPane, christmasImages;
   
   @UiField
   ListBox listOwner, wishList, order;
@@ -152,6 +152,11 @@ public class ListsViewImpl extends Composite implements ListsView {
     headerWrapper.setWidget(header);
   }
 
+  @Override
+  public void setLeftPaneVisible(boolean visible) {
+    leftPane.setVisible(visible);
+  }
+  
   @Override
   public void clearOwners() {
     listOwner.clear();

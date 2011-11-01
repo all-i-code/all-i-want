@@ -115,6 +115,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   public void userChanged() {
     currentList = null;
     clearList();
+    view.setLeftPaneVisible(false);
     view.showProcessingOverlay();
     ownerId = StringUtils.toInt(view.getOwner());
     view.setCanEditLists(permissionOwnerIds.contains(ownerId));
@@ -349,6 +350,8 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     else {
       listChanged();
     }
+    
+    view.setLeftPaneVisible(true);
   } // handleLists //
   
   private void handleList(WishList wl) {

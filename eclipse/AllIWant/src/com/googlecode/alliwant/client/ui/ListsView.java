@@ -25,6 +25,7 @@ import com.googlecode.alliwant.client.i18n.AiwMessages;
 
 public interface ListsView extends AiwView {
   void setHeader(IsWidget header);
+  void setLeftPaneVisible(boolean visible);
   void clearOwners();
   void addOwnerItem(String item, String value);
   void setOwner(String owner);
