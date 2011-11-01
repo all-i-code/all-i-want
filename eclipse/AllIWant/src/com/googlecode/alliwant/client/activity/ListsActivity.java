@@ -162,8 +162,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     int lid = StringUtils.toInt(view.getList());
     currentList = listMap.get(lid);
     String name = currentList.getName().toLowerCase();
-    boolean visible = (name.contains("christmas") || name.contains("navidad")); 
-    view.setChristmasImagesVisible(visible);
+    view.setChristmasImagesVisible(isChristmas(name));
     showList();
   } // listChanged //
 
@@ -507,5 +506,10 @@ public class ListsActivity implements Activity, ListsView.Presenter {
       }
     });
   } // sortByName //
+ 
+  private boolean isChristmas(String name) {
+    return name.contains("christmas") || name.contains("xmas") ||
+     name.contains("navidad");
+  }
   
 } // ListsActivity //
