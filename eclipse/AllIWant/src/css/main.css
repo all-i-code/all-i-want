@@ -33,7 +33,7 @@
 .title, .table, .field { padding-bottom: 0.5em; }
 .heading { font-size: headingSize; }
 .subHeading { font-size: subHeadingSize; }
-.table, .section { clear: left; }
+.table, .section, .heading { clear: left; }
 .tableHeader { color: tblHeadColor; }
 .tableHeader { background-color: tblHeadBgColor; }
 .tableAlt { background-color: rgba(0, 0, 0, 0.125); }
