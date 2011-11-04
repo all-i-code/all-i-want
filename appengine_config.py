@@ -1,6 +1,7 @@
+'''
 #
-# File: app.yaml
-# Description: all-i-want main GAE configuration
+# File: appengine_config.py
+# Description: config to allow appstats 
 # 
 # Copyright 2011 Adam Meadows 
 #
@@ -16,28 +17,10 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
+'''
 
-application: all-i-want
-version: 3 
-runtime: python
-api_version: 1
-
-builtins:
-- appstats: on
-
-handlers:
-
-- url: /static
-  static_dir: static
-
-- url: /rpc/.*
-  script: rpc/rpc_urls.py
-
-- url: / 
-  static_files: eclipse/AllIWant/war/index.html
-  upload: eclipse/AllIWant/war/(.*)
-
-- url: /(.*?) 
-  static_files: eclipse/AllIWant/war/\1
-  upload: eclipse/AllIWant/war/(.*)
+def webapp_add_wsgi_middleware(app):
+    from google.appengine.ext.appstats import recording
+    app = recording.appstats_wsgi_middleware(app)
+    return app
 

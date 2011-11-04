@@ -64,6 +64,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   private Map<Integer, WishList> listMap = new HashMap<Integer, WishList>();
   private Map<Integer, ListOwner> ownerMap = new HashMap<Integer, ListOwner>();
   private List<Integer> permissionOwnerIds = new ArrayList<Integer>();
+  private List<ListItem> items = new ArrayList<ListItem>();
   
   public ListsActivity(ListsPlace place, ClientFactory cf) {
     this.cf = cf;
@@ -214,7 +215,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     
   @Override
   public void itemAction(int index) {
-    ListItem item = currentList.getItems().get(index);
+    ListItem item = items.get(index);
     if (item.getReservedByOwnerId() == user.getOwnerId())
       purchase(item.getId());
     else if (item.getPurchasedByOwnerId() == user.getOwnerId()) 
@@ -225,7 +226,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   
   @Override
   public void editItem(int index) {
-    ListItem item = currentList.getItems().get(index);
+    ListItem item = items.get(index);
 	  editItemPopup.show(item, new EditItemPopup.Handler() {
 	    public void onSave(int itemId, String name, String category,
 	     String description, String url, boolean surprise) {
@@ -236,7 +237,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   
   @Override
   public void deleteItem(int index) {
-    final int itemId = currentList.getItems().get(index).getId();
+    final int itemId = items.get(index).getId();
     confirm.show(view.getAiwc().confirmRemoveItem(), new Confirm.Handler() {
       public void onYes() {
         reallyDeleteItem(itemId);
@@ -367,8 +368,9 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     boolean isOwnList = user.getOwnerId() == ownerId;
     view.setOwnItemsVisible(isOwnList);
     view.setItemsVisible(!isOwnList);
-    
-    List<ListItem> items = currentList.getItems();
+   
+    items.clear();
+    items.addAll(currentList.getItems());
     if (StringUtils.areEqual(NAME, view.getOrder())) {
       sortByName(items);
     } else if (StringUtils.areEqual(CATEGORY, view.getOrder())) {
@@ -507,7 +509,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
         return o1.getCategory().compareTo(o2.getCategory());
       }
     });
-  } // sortByName //
+  } // sortByCategory //
  
   private boolean isChristmas(String name) {
     return name.contains("christmas") || name.contains("xmas") ||
