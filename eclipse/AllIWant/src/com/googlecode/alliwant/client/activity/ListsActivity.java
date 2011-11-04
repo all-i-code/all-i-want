@@ -191,12 +191,12 @@ public class ListsActivity implements Activity, ListsView.Presenter {
   
   @Override
   public void goToItemUrl(int index) {
-    view.openURL(currentList.getItems().get(index).getUrl());
+    view.openURL(items.get(index).getUrl());
   }
    
   @Override
   public void itemDetail(int index) {
-    ListItem item = currentList.getItems().get(index);
+    ListItem item = items.get(index);
     if (permissionOwnerIds.contains(ownerId)) {
       editItemPopup.show(item, new EditItemPopup.Handler() {
         public void onSave(int itemId, String name, String category,
