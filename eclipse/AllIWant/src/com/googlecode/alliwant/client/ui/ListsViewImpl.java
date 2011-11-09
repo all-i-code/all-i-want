@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.alliwant.client.i18n.AiwConstants;
@@ -66,7 +67,10 @@ public class ListsViewImpl extends Composite implements ListsView {
   SimplePanel headerWrapper;
 
   @UiField
-  FlowPanel leftPane, christmasImages;
+  FlowPanel leftPane, christmasImages1;
+  
+  @UiField
+  Label userEmail;
   
   @UiField
   ListBox listOwner, wishList, order;
@@ -180,6 +184,11 @@ public class ListsViewImpl extends Composite implements ListsView {
   @Override
   public String getOwner() {
     return listOwner.getValue(listOwner.getSelectedIndex());
+  }
+  
+  @Override
+  public void setOwnerEmail(String ownerEmail) {
+    userEmail.setText(ownerEmail);
   }
 
   @Override
@@ -371,7 +380,7 @@ public class ListsViewImpl extends Composite implements ListsView {
 
   @Override
   public void setChristmasImagesVisible(boolean visible) {
-    christmasImages.setVisible(visible);
+    christmasImages1.setVisible(visible);
   }
   
   @Override

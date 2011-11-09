@@ -132,7 +132,7 @@ class ListItem(Model):
     
     @classmethod
     def from_db(cls, db):
-        _ = lambda x: x.label() if x is not None else ''
+        _ = lambda x: x.nickname if x is not None else ''
         _id = lambda x: x.key().id() if x is not None else -1
         return cls(id=db.key().id(), name=db.name,
             description=db.description, category=db.category, url=db.url,

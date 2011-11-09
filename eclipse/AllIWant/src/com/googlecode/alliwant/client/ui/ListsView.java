@@ -30,7 +30,8 @@ public interface ListsView extends AiwView {
   void addOwnerItem(String item, String value);
   void setOwner(String owner);
   String getOwner();
- 
+  void setOwnerEmail(String email);
+  
   void setCanEditLists(boolean canEdit);
   void clearLists();
   void addListItem(String item, String value);

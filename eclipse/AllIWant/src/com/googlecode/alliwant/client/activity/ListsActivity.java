@@ -118,6 +118,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     clearList();
     view.showProcessingOverlay();
     ownerId = StringUtils.toInt(view.getOwner());
+    view.setOwnerEmail(ownerMap.get(ownerId).getEmail());
     view.setCanEditLists(permissionOwnerIds.contains(ownerId));
     manager.getLists(ownerId);
   }
@@ -328,7 +329,7 @@ public class ListsActivity implements Activity, ListsView.Presenter {
     ownerMap.clear();
     for (ListOwner owner : owners) {
       ownerMap.put(owner.getId(), owner);
-      String label = owner.getNickname() + " <" + owner.getEmail() + ">";
+      String label = owner.getNickname();
       if (owner.getId() == user.getOwnerId()) label = view.getAiwc().me();
       view.addOwnerItem(label, Integer.toString(owner.getId()));
     }

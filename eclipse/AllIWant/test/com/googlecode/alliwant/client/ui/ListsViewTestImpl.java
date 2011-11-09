@@ -248,5 +248,11 @@ public class ListsViewTestImpl implements ListsView {
     // TODO Auto-generated method stub
     
   }
+
+  @Override
+  public void setOwnerEmail(String email) {
+    // TODO Auto-generated method stub
+    
+  }
   
 } // ListsViewTestImpl //

@@ -64,4 +64,4 @@
 .number { text-align: right; }
 .rightImages .gwt-Image { padding: 2em; }
 .rightImages { padding-left: 5em; }
-.rightImages .bottom { padding-left: 2em; }
+.rightImages.bottom { padding-left: 2em; }
