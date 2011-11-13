@@ -152,9 +152,11 @@ class ListRpcGroup(RpcGroupBase):
         '''
         if not self._can_read_list(owner_id):
             raise PermissionDeniedError()
-        
+       
+        oid = self.owner.key().id()
+        own = oid == owner_id
         owner = self.db.get_owner(owner_id)
-        return [ WishList.from_db(l) for l in owner.lists ]
+        return [ WishList.from_db(l, own=own) for l in owner.lists ]
    
     def add_item(self, list_id, name, cat, desc, url, surprise):
         '''

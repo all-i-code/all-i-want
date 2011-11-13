@@ -150,8 +150,9 @@ class WishList(Model):
     )
 
     @classmethod
-    def from_db(cls, db):
-        items = [ ListItem.from_db(i) for i in db.items ]
+    def from_db(cls, db, own=False):
+        _ = lambda i: (not own) or (not i.is_surprise)
+        items = [ ListItem.from_db(i) for i in db.items if _(i) ]
         return cls(id=db.key().id(), name=db.name, \
             description=db.description, items=items)
 
