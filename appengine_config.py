@@ -1,9 +1,9 @@
 '''
 #
 # File: appengine_config.py
-# Description: config to allow appstats 
-# 
-# Copyright 2011 Adam Meadows 
+# Description: config to allow appstats
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
