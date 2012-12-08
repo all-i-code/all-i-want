@@ -2,8 +2,8 @@
 #
 # File: gaepdb.py
 # Description: A GAE wrapper for pdb to allow pdb.set_trace() to work in GAE
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.

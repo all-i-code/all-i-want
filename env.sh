@@ -17,9 +17,10 @@
 #    limitations under the License.
 #
 
+#export GAE=/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine
 if [ "${GAE}" == "" ] 
 then
-    export GAE=/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine
+    export GAE=/usr/local/google_appengine
 fi
 
-export PYTHONPATH=${PWD}:${GAE}/lib/yaml/lib:${GAE}/lib/webob:${GAE}/lib/django_1_2:${GAE}
+export PYTHONPATH=${PWD}:${GAE}/lib/yaml/lib:${GAE}/lib/webob:${GAE}/lib/django_1_2:${GAE}/lib:${GAE}

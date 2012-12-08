@@ -2,8 +2,8 @@
 #
 # File: rpc_user.py
 # Description: Handler for all User RPCs related to AE User and ListOwnerDb
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ class UserRpcGroup(RpcGroupBase):
         '''
         Return a User object with details of the current authenticated user,
         including a url for logging out.
-        
+
         If user has not yet been authenticated, return a User object with a
         url to allow user to log in.
         '''
@@ -75,7 +75,7 @@ class UserRpcGroup(RpcGroupBase):
             e, n, ui = user.email(), user.nickname(), user.user_id()
             # make sure ListOwnerDb record exists
             owner = self.db.get_owner_by_user(user)
-            req = None 
+            req = None
             if owner is None:
                 if not user.is_admin:
                     req = self.db.get_req_by_user(user)
@@ -84,7 +84,7 @@ class UserRpcGroup(RpcGroupBase):
                 else:
                     owner = self.db.add_owner(user)
             oid = owner.key().id() if owner is not None else -1
-            wrd = req.denied if req is not None else False 
+            wrd = req.denied if req is not None else False
             from core.util import get_base_url
             base = get_base_url(url)
             lo = self.ae.create_logout_url('%s/#Goodbye:' % base)
@@ -96,7 +96,7 @@ class UserRpcGroup(RpcGroupBase):
         Return the ListOwner object with the given owner_id
         '''
         return ListOwner.from_db(self.db.get_owner(owner_id))
-   
+
     def get_permissions(self, owner_id, by_email):
         '''
         Return the ListPermissions for the given ListOwner
@@ -107,20 +107,20 @@ class UserRpcGroup(RpcGroupBase):
         owner = self.db.get_owner(owner_id)
         if not by_email: return [ _(p) for p in owner.permissions ]
         return [ _(p) for p in self.db.get_permissions_by_email(owner.email) ]
-   
+
     def add_permission(self, owner_id, email):
         '''
-        Add a ListPermission record 
+        Add a ListPermission record
         '''
         # TODO: confirm that the currently signed in user is owner_id
         owner = self.db.get_owner(owner_id)
         p = self.db.add_permission(owner, email)
         _ = lambda x: ListPermission.from_db(x)
         return [ _(p) for p in owner.permissions ]
-   
+
     def remove_permission(self, permission_id):
         '''
-        Remove a ListPermission record 
+        Remove a ListPermission record
         '''
         # TODO: confirm that the currently signed in user is owner_id
         p = self.db.get_permission(permission_id)
@@ -143,7 +143,7 @@ class UserRpcGroup(RpcGroupBase):
         '''
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
-      
+
         return [ AccessReq.from_db(db) for db in self.db.get_reqs() ]
 
     def approve_request(self, req_id):
@@ -152,13 +152,13 @@ class UserRpcGroup(RpcGroupBase):
         '''
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
-        
+
         from core.util import extract_name
         req = self.db.get_req(req_id)
         self.db.add_owner(req.user)
         self.db.delete(req)
         to = req.user.email()
-        subject = 'Account Activated' 
+        subject = 'Account Activated'
         body = self.ae.APPROVE_TEMPLATE % extract_name(to)
         self.ae.send_mail(to, subject, body)
         return []
@@ -167,16 +167,16 @@ class UserRpcGroup(RpcGroupBase):
         '''
         Deny the given AccessRequestDb
         '''
-        
+
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
-        
+
         from core.util import extract_name
         req = self.db.get_req(req_id)
         req.denied = True
         req.put()
         to = req.user.email()
-        subject = 'Account Not Activated' 
+        subject = 'Account Not Activated'
         body = self.ae.DENY_TEMPLATE % extract_name(to)
         self.ae.send_mail(to, subject, body)
         return []

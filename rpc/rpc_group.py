@@ -1,10 +1,10 @@
 '''
 #
 # File: rpc_group.py
-# Description: 
-#   Handler for all Group RPCs (setting up Groups and inviting members) 
-# 
-# Copyright 2011 Adam Meadows 
+# Description:
+#   Handler for all Group RPCs (setting up Groups and inviting members)
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ class GroupRpcGroup(RpcGroupBase):
         self._verify_owner()
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
-        
+
         if not self.db.is_group_name_unique(name):
             raise DuplicateNameError(Group, name)
 
@@ -84,11 +84,11 @@ class GroupRpcGroup(RpcGroupBase):
             groups = [ g for g in self.owner.groups ]
             groups.extend([m.group for m in self.owner.memberships])
         return [ Group.from_db(g) for g in groups ]
-  
+
     def update_group(self, id, name, desc):
         self._verify_owner()
         g = self.db.get_group(id)
-     
+
         if not self.db.is_group_name_unique(name, g.key()):
             raise DuplicateNameError(Group, name)
 
@@ -125,7 +125,7 @@ class GroupRpcGroup(RpcGroupBase):
         m.put()
         self.db.delete(i)
         return []
-   
+
     def leave_group(self, group_id):
         self._verify_owner()
         g = self.db.get_group(group_id)
@@ -138,7 +138,7 @@ class GroupRpcGroup(RpcGroupBase):
         i = self.db.get_group_invite(invite_id)
         self.db.delete(i)
         return []
-    
+
     def get_available_owners(self, owner_id):
         self._verify_owner()
         # TODO: optimize this to minimize queries 

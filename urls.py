@@ -1,8 +1,9 @@
+'''
 #
-# File: app.yaml
-# Description: all-i-want main GAE configuration
-# 
-# Copyright 2011 Adam Meadows 
+# File: urls.py
+# Description: GAE app to handle URLs
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -16,32 +17,21 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
+'''
 
-application: all-i-want-hrd
-version: 1 
-runtime: python
-api_version: 1
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app
 
-builtins:
-- appstats: on
+from views import ReqHandler
 
-handlers:
+urls = [
+    ('/.*', ReqHandler),
+]
+application = webapp.WSGIApplication(urls, debug=True)
 
-- url: /static
-  static_dir: static
+def main():
+    run_wsgi_app(application)
 
-- url: /rpc/.*
-  script: rpc/rpc_urls.py
-
-- url: /old
-  static_files: eclipse/AllIWant/war/index.html
-  upload: eclipse/AllIWant/war/(.*)
-
-- url: /old/(.*?) 
-  static_files: eclipse/AllIWant/war/\1
-  upload: eclipse/AllIWant/war/(.*)
-
-- url: .*
-  script: urls.py
-
+if __name__ == '__main__':
+    main()
 

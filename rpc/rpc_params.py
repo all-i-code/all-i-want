@@ -2,8 +2,8 @@
 #
 # File: rpc_params.py
 # Description: Module for defining RPC Parameter classes
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ from simplejson import loads
 
 class RpcParam(object):
     '''Base class for RPC parameters'''
-    
+
     def __init__(self, name):
         self.name = name
 
@@ -54,18 +54,18 @@ class RpcParamString(RpcParam):
 
 class RpcParamFloat(RpcParam):
     java_type = 'double'
-    
+
     def get_value(self, value):
         return float(value)
 
 class RpcParamBoolean(RpcParam):
     java_type = 'boolean'
-    
+
     def get_value(self, value):
         return str(value) not in ('false', 'False', '0')
 
 class RpcParamModel(RpcParam):
-    
+
     def __init__(self, name, model):
         self.name = name
         self.model = model

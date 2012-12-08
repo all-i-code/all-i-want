@@ -1,10 +1,10 @@
 '''
 #
 # File: rpc_list.py
-# Description: 
-#   Handler for all List RPCs (setting up Lists and managing items) 
-# 
-# Copyright 2011 Adam Meadows 
+# Description:
+#   Handler for all List RPCs (setting up Lists and managing items)
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -119,14 +119,14 @@ class ListRpcGroup(RpcGroupBase):
 
     def update_list(self, list_id, name, desc):
         '''
-        Update the name/description of an existing wish list for 
+        Update the name/description of an existing wish list for
         the given owner, ensuring a unique name
         '''
         l = self.db.get_list(list_id)
         oid = l.owner.key().id()
         if not self._can_add_to_list(oid):
             raise PermissionDeniedError()
-        
+
         if not self.db.is_list_name_unique(oid, name, l.key()):
             raise DuplicateNameError(WishList, name)
 
@@ -136,13 +136,13 @@ class ListRpcGroup(RpcGroupBase):
 
     def delete_list(self, list_id):
         '''
-        Delete the given List 
+        Delete the given List
         '''
         l = self.db.get_list(list_id)
         oid = l.owner.key().id()
         if not self._can_add_to_list(oid):
             raise PermissionDeniedError()
-       
+
         l.delete()
         return []
 
@@ -152,12 +152,12 @@ class ListRpcGroup(RpcGroupBase):
         '''
         if not self._can_read_list(owner_id):
             raise PermissionDeniedError()
-       
+
         oid = self.owner.key().id()
         own = oid == owner_id
         owner = self.db.get_owner(owner_id)
         return [ WishList.from_db(l, own=own) for l in owner.lists ]
-   
+
     def add_item(self, list_id, name, cat, desc, url, surprise):
         '''
         Add an item to the given wish list
@@ -232,7 +232,7 @@ class ListRpcGroup(RpcGroupBase):
         oid = _(self.owner)
         if item.purchased_by is not None and _(item.purchased_by) != oid:
             self._item_already_taken('purchased', item.purchased_by)
-            
+
         if item.reserved_by is not None and _(item.reserved_by) != oid:
             self._item_already_taken('reserved', item.reserved_by)
 
@@ -253,7 +253,7 @@ class ListRpcGroup(RpcGroupBase):
         oid = _(self.owner)
         if item.purchased_by is not None and _(item.purchased_by) != oid:
             self._item_already_taken('purchased', item.purchased_by)
-            
+
         if item.reserved_by is not None and _(item.reserved_by) != oid:
             self._item_already_taken('reserved', item.reserved_by)
 
@@ -273,14 +273,14 @@ class ListRpcGroup(RpcGroupBase):
         oid = _(self.owner)
         if item.purchased_by is not None and _(item.purchased_by) != oid:
             self._item_already_taken('purchased', item.purchased_by)
-            
+
         if item.reserved_by is not None and _(item.reserved_by) != oid:
             self._item_already_taken('reserved', item.reserved_by)
 
         item.reserved_by = None
         item.purchased_by = self.owner
         return WishList.from_db(item.put().parent_list)
-    
+
     def unpurchase_item(self, item_id):
         '''
         Mark the given item as not purchased if you were the one who
@@ -295,11 +295,11 @@ class ListRpcGroup(RpcGroupBase):
         oid = _(self.owner)
         if item.purchased_by is not None and _(item.purchased_by) != oid:
             self._item_already_taken('purchased', item.purchased_by)
-            
+
         if item.reserved_by is not None and _(item.reserved_by) != oid:
             self._item_already_taken('reserved', item.reserved_by)
 
-        l = None 
+        l = None
         if item.is_surprise:
             l = item.parent_list
             self.db.delete(item)
@@ -311,7 +311,7 @@ class ListRpcGroup(RpcGroupBase):
 
     def get_reserved_and_purchased_items(self):
         '''
-        Retrieve all items which have been reserved or purchased by you 
+        Retrieve all items which have been reserved or purchased by you
         '''
         # TODO: implement this
         pass

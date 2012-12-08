@@ -2,8 +2,8 @@
 #
 # File: rpc_meta.py
 # Description: Module for meta info when defining RPCs
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ from access import DbAccess
 from ae import Wrapper
 
 class RpcReqHandler(webapp.RequestHandler):
-    
-    @classmethod    
+
+    @classmethod
     def get_rpc_group_cls(cls):
         return getattr(cls, 'group_cls', None)
 
@@ -38,10 +38,10 @@ class RpcReqHandler(webapp.RequestHandler):
         group_cls = self.get_rpc_group_cls()
         self.rpc_group = group_cls(DbAccess(), Wrapper())
         super(RpcReqHandler, self).__init__()
- 
+
     def post(self):
         self.process_req()
- 
+
     def get(self):
         self.process_req()
 
@@ -55,7 +55,7 @@ class RpcReqHandler(webapp.RequestHandler):
                 return
         else:
             self.user.is_admin = users.is_current_user_admin()
-        
+
         self.rpc_group.db.user = self.user
         self.dump(self.rpc_group.call(rpc_name, self))
 
@@ -99,7 +99,7 @@ class RpcGroupMeta(type):
         return nc
 
 class Rpc(object):
-    '''Class to represent a remote procedure call''' 
+    '''Class to represent a remote procedure call'''
     def __init__(self, name='', params=(), rt=None, event=None, rt_array=False):
         tp = lambda x: x.split('.')[-1] if x is not None else x
         pkg = lambda x: '.'.join(x.split('.')[:-1]) if x is not None else x
@@ -109,7 +109,7 @@ class Rpc(object):
         self.event = tp(event)
         self.rt_array = rt_array
         self.imports = (pkg(rt), pkg(event))
-        if not rt_array: return 
+        if not rt_array: return
         self.imports += (
             'java.util.ArrayList',
             'com.google.gwt.core.client.JsArray'
@@ -127,7 +127,7 @@ class Rpc(object):
 
     def get_java_iface(self):
         return self.get_java_prototype() + ';'
- 
+
     def get_java_prototype(self):
         _ = lambda x: '%s %s' % (x.get_java_type(), x.get_java_name())
         nm = self.get_java_name()
@@ -158,18 +158,18 @@ class Rpc(object):
         else:
             method += _('%s data = %sJs.decode(result);\n' % (rt, rt),6)
             method += _('eventBus.fireEvent(new %s(data));\n' % evt,6)
-        
+
         method += _('} // onSuccess //\n',4)
         method += _('} // sendPost //\n')
         return method + '} // %s //' % self.get_java_name()
 
     def validate_params(self, req):
-        '''Validate the parameters in the given request object''' 
+        '''Validate the parameters in the given request object'''
         _ = lambda x: req.get(x, None)
         for p in self.params:
             if _(p.name) is None:
                 raise Exception('Missing required parameter [%s]' % p.name)
-        
+
         for arg in req.arguments():
             if arg not in [ p.name for p in self.params ]:
                 raise Exception('Invalid parameter: [%s]' % arg)
@@ -202,7 +202,7 @@ class RpcGroupBase(object):
     @classmethod
     def get_rpc(cls, name):
         return cls.rpc_dict.get(name, None)
-    
+
     def __init__(self, db, ae):
         self.db = db
         self.ae = ae
