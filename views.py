@@ -1,9 +1,9 @@
 '''
 #
 # File: views.py
-# Description: Module for meta info when defining views
+# Description: URL handlers for html/js pages
 #
-# Copyright 2011 Adam Meadows
+# Copyright 2012 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -19,56 +19,26 @@
 #
 '''
 
-import os.path
-from simplejson import dumps
+import os
+import webapp2
 from google.appengine.api import users
-from google.appengine.ext import webapp
-from core.model import FailureReport
-from core.util import camelize
-from access import DbAccess
-from ae import Wrapper
+from google.appengine.ext.webapp import template
 
-class ReqHandler(webapp.RequestHandler):
-
-    def __init__(self):
-        super(ReqHandler, self).__init__()
-
-    def get(self):
-        self.process_req()
-
-    def process_req(self):
-        view_name = os.path.basename(self.request.path)
-        # TODO: special case if view_name is '' 
+class PageHandler(webapp2.RequestHandler):
+    def __init__(self, *args, **kwargs):
+        super(PageHandler, self).__init__(*args, **kwargs)
         self.user = users.get_current_user()
-        if self.user is None:
-            # TODO: redirect to login?
-            self.response.out.write('500')
-            self.response.set_status(500)
-            return
-        else:
-            self.user.is_admin = users.is_current_user_admin()
+        self.user.is_admin = users.is_current_user_admin()
 
+    def render_template(self, template_name, data=None):
+        data = data or {}
+        data.setdefault('user', self.user)
+        data.setdefault('logout_url', users.create_logout_url('/'))
+        my_path = os.path.dirname(__file__)
+        template_path = os.path.join(my_path, 'templates/%s' % template_name)
+        return template.render(template_path, data)
 
-        fn = getattr(self, view_name, None)
-        if fn is None:
-            # TODO: display 404 message
-            self.response.out.write('404')
-            self.response.set_status(404)
-            return
-        fn()
-        return
-
-    def main(self):
-        my_dir = os.path.dirname(__file__)
-        template_path = os.path.join(my_dir, 'templates/main.html')
-        self.response.out.write(webapp.template.render(''))
-
-    def handle_exception(self, exception, debug_mode):
-        # TODO: display 500 message
-        import traceback, sys
-        nm = lambda e: e.__class__.__name__
-        tb = '\n'.join(traceback.format_exception(*sys.exc_info()))
-        d = dict(error_type=nm(exception), message=str(exception), traceback=tb)
-        self.response.set_status(500)
-        return
+class ListPage(PageHandler):
+    def get(self):
+        self.response.out.write(self.render_template('index.html'))
 

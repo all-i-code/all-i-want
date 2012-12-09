@@ -1,9 +1,9 @@
 '''
 #
-# File: urls.py
-# Description: GAE app to handle URLs
+# File: views.py
+# Description: URL handler for html/js URLs
 #
-# Copyright 2011 Adam Meadows
+# Copyright 2012 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -19,19 +19,10 @@
 #
 '''
 
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
-
-from views import ReqHandler
-
+import webapp2
+from views import ListPage
 urls = [
-    ('.*', ReqHandler),
+    ('/', ListPage),
 ]
-application = webapp.WSGIApplication(urls, debug=True)
-
-def main():
-    run_wsgi_app(application)
-
-if __name__ == '__main__':
-    main()
+app = webapp2.WSGIApplication(urls, debug=True)
 

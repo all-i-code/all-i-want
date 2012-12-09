@@ -28,22 +28,15 @@ builtins:
 
 handlers:
 
-- url: /
-  script: home.app
-  login: required
-
-#- url: /lists
-#    script: lists.py
-#
-#- url: /groups
-#    script: groups.py
-#
 - url: /resources
   static_dir: static/resources
+  login: required
 
-#- url: /rpc/.*
-#  script: rpc/rpc_urls.py
+- url: /rpc/.*
+  script: rpc/rpc_urls.app
+  login: required
 
-#- url: /.*
-#  script: not_found.py
+- url: /.*
+  script: urls.app
+  login: required
 
