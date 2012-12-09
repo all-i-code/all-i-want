@@ -2,8 +2,8 @@
 #
 # File: ae.py
 # Description: wrapper for app engine services
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
 #    limitations under the License.
 #
 '''
+from google.appengine.api import users
+from google.appengine.api import mail
 
 class Wrapper:
 
@@ -35,11 +37,11 @@ Sincerely,
 
 All I Want Mail
 '''
-    
+
     DENY_TEMPLATE = '''
 Dear %s,
 
-We're sorry to inform you that your All I Want account cannot be activated 
+We're sorry to inform you that your All I Want account cannot be activated
 at this time. We are currently in a beta state and can only support limited
 active accounts.
 
@@ -50,7 +52,7 @@ Sincerely,
 
 All I Want Mail
 '''
-    
+
     DELETED_ITEM_TEMPLATE = '''
 Dear %s,
 
@@ -64,20 +66,17 @@ Sincerely,
 
 All I Want Mail
 '''
-  
+
     def create_login_url(self, url):
-        from google.appengine.api import users
         return users.create_login_url(url)
 
     def create_logout_url(self, url):
-        from google.appengine.api import users
         return users.create_logout_url(url)
 
     def send_mail(self, to, subject, body):
         self.send_mail_from(self.FROM_ADDRESS, to, subject, body)
 
     def send_mail_from(self, sender, to, subject, body):
-        from google.appengine.api import mail
         msg = mail.EmailMessage()
         msg.sender = sender
         msg.to = to

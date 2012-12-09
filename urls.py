@@ -20,9 +20,10 @@
 '''
 
 import webapp2
-from views import ListPage
+from views import ListPage, NotFoundPage
 urls = [
     ('/', ListPage),
+    ('/.*', NotFoundPage),
 ]
 app = webapp2.WSGIApplication(urls, debug=True)
 

@@ -42,3 +42,9 @@ class ListPage(PageHandler):
     def get(self):
         self.response.out.write(self.render_template('index.html'))
 
+class NotFoundPage(PageHandler):
+    def get(self):
+        self.response.out.write(self.render_template('404.html'))
+
+
+app = webapp2.WSGIApplication([('/.*', PageHandler)], debug=True)

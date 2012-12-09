@@ -21,17 +21,8 @@ HIDE=@
 PYTHON ?= python
 
 include dev.mk
-include codegen.mk
 
 .PHONY : build clean
-
-test.codegen.mk: 
-	$(HIDE)$(PYTHON) codegen.py --makefile > $@.out
-	$(HIDE)diff codegen.mk $@.out
-	$(HIDE)rm -f $@.out
-
-codegen-test: test.codegen.mk $(CODEGEN_TARGETS)
-	$(HIDE)echo "Done."
 
 py-coverage: export PYTHON := coverage run -a 
 py-coverage:
@@ -40,27 +31,10 @@ py-coverage:
 	$(HIDE)echo -e "\nCoverage Stats:\n" 
 	$(HIDE)coverage report --omit /Applications/*.py
 
-
-build:
-	$(HIDE)echo "Creating build directory"
-	$(HIDE)rm -rf build
-	$(HIDE)mkdir build
-	$(HIDE)cp *.* build/
-	$(HIDE)mkdir build/core
-	$(HIDE)cp core/*.* build/core
-	$(HIDE)mkdir build/rpc
-	$(HIDE)cp rpc/*.* build/rpc
-	$(HIDE)cp -r static build/
-	$(HIDE)mkdir -p build/eclipse/AllIWant/war
-	$(HIDE)cp eclipse/AllIWant/war/*.* build/eclipse/AllIWant/war
-	$(HIDE)cp -r eclipse/AllIWant/war/alliwant build/eclipse/AllIWant/war/alliwant
-
 #TODO: Add an ant clean here too
 clean:
 	$(HIDE)echo "Removing *.pyc files"
 	$(HIDE)find . -name \*.pyc | xargs rm -f
-	$(HIDE)echo "Removing  build directory"
-	$(HIDE)rm -rf build
 
 
 PY := python

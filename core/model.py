@@ -2,8 +2,8 @@
 #
 # File: model.py
 # Description: Model classes
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ class GroupInvitation(Model):
         FieldString(name='owner_name'),
         FieldString(name='member_email'),
     )
-    
+
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.key().id()
@@ -87,7 +87,7 @@ class GroupMember(Model):
         FieldString(name='email'),
         FieldString(name='user_id'),
     )
-    
+
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.key().id()
@@ -129,7 +129,7 @@ class ListItem(Model):
         FieldInt(name='purchased_by_owner_id'),
         FieldBoolean(name='is_surprise'),
     )
-    
+
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.nickname if x is not None else ''

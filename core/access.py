@@ -2,8 +2,8 @@
 #
 # File: access.py
 # Description: AllIWant interface for accessing data (stored model objects)
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 from core.exception import OverrideError
 
 class Access(object):
-    '''Base class for all AllIWant Access interfaces. Should be overridden''' 
+    '''Base class for all AllIWant Access interfaces. Should be overridden'''
 
     def filter(self, cls, field=None, value=None):
         '''Retrieve all model objects by class and a field'''
@@ -38,11 +38,11 @@ class Access(object):
         All fields should already be validated, except id,
         which can None to autofill it with a sequence number.
         A new copy of the object is returned (with id populated if None)
-        ''' 
+        '''
         raise OverrideError('save')
 
 class MemoryAccess(Access):
-    '''In-memory implementation of Access (currently for testing)''' 
+    '''In-memory implementation of Access (currently for testing)'''
 
     def nm(self, cls):
         return cls.get_name()
@@ -74,7 +74,7 @@ class MemoryAccess(Access):
         All fields should already be validated, except id,
         which can None to autofill it with a sequence number.
         A new copy of the object is returned (with id populated if None)
-        ''' 
+        '''
         if obj.id is None:
             mid = 0
             for r in self.data.get(self.nm(obj.get_cls())):

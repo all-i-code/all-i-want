@@ -2,8 +2,8 @@
 #
 # File: access.py
 # Description: Interface into the database
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ class DbAccess:
 
     def add_group_member(self, group, member):
         return GroupMemberDb(group=group, member=member).put()
- 
+
     def get_group_member(self, owner, group):
         return owner.memberships.filter('group = ', group).get()
 
