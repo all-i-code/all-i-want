@@ -59,7 +59,9 @@ class ReqHandler(webapp.RequestHandler):
         return
 
     def main(self):
-        self.response.out.write('main')
+        my_dir = os.path.dirname(__file__)
+        template_path = os.path.join(my_dir, 'templates/main.html')
+        self.response.out.write(webapp.template.render(''))
 
     def handle_exception(self, exception, debug_mode):
         # TODO: display 500 message
