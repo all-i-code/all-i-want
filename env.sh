@@ -1,8 +1,8 @@
 #
 # File: env.sh
 # Description: BASH commands to set up the environment for GAE Python
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -17,8 +17,7 @@
 #    limitations under the License.
 #
 
-#export GAE=/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine
-if [ "${GAE}" == "" ] 
+if [ "${GAE}" == "" ]
 then
     export GAE=/usr/local/google_appengine
 fi

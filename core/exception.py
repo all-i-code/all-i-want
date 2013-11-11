@@ -2,8 +2,8 @@
 #
 # File: exception.py
 # Description: AllIWant specific exceptions
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ class IdError(Exception):
     def __init__(self, mcls, id):
         self.mcls = mcls
         self.id = id
-    
+
     def __str__(self):
         return 'id "%s" not found for class %s' % (self.id, self.mcls.__name__)
 

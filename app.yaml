@@ -1,8 +1,8 @@
 #
 # File: app.yaml
 # Description: all-i-want main GAE configuration
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 #
 
 application: all-i-want-hrd
-version: 2 
+version: 2
 runtime: python27
 api_version: 1
 threadsafe: no

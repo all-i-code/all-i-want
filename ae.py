@@ -24,48 +24,37 @@ from google.appengine.api import mail
 class Wrapper:
 
     FROM_ADDRESS = 'All I Want Mail <mail.all.i.want@gmail.com>'
-    APPROVE_TEMPLATE = '''
-Dear %s,
+    APPROVE_TEMPLATE = (
+        'Dear %s,\n\n'
+        'Your All I Want account has been activated. You can now visit '
+        'http://all-i-want.appspot.com/ and sign in using your '
+        'Google Account to access All I Want.\n\n'
+        'Please let us know if you have any questions.\n'
+        'Sincerely,\n\n'
+        'All I Want Mail\n'
+    )
 
-Your All I Want account has been activated. You can now visit
-http://all-i-want.appspot.com/ and sign in using your Google Account
-to access All I Want.
+    DENY_TEMPLATE = (
+        'Dear %s,\n\n'
+        'We regret to inform you that your All I Want account '
+        'cannot be activated at this time. We are currently in a beta '
+        'state and can only support limited active accounts.\n\n'
+        'When more accounts can be supported, you will be notified '
+        'at this address. We are sorry that we cannot accomodate you '
+        'at this time.\n\n'
+        'Sincerely,\n\n'
+        'All I Want Mail'
+    )
 
-Please let us know if you have any questions.
-
-Sincerely,
-
-All I Want Mail
-'''
-
-    DENY_TEMPLATE = '''
-Dear %s,
-
-We're sorry to inform you that your All I Want account cannot be activated
-at this time. We are currently in a beta state and can only support limited
-active accounts.
-
-When more accounts can be supported, you will be notified at this address.
-We're sorry that we cannot accomodate you at this time.
-
-Sincerely,
-
-All I Want Mail
-'''
-
-    DELETED_ITEM_TEMPLATE = '''
-Dear %s,
-
-This message is to inform you that %s <%s> has removed the
-item "%s" from the list "%s"
-
-Since you marked this item as %s, we thought you ought to know that
-%s <%s> doesn't seem to want it anymore.
-
-Sincerely,
-
-All I Want Mail
-'''
+    DELETED_ITEM_TEMPLATE = (
+        'Dear %s,\n\n'
+        'This message is to inform you that %s <%s> has removed the'
+        'item "%s" from the list "%s"'
+        'Since you marked this item as %s, we thought you ought to know that '
+        '%s <%s> does not seem to want it anymore.\n\n'
+        'Sincerely,\n\n'
+        'All I Want Mail'
+    )
 
     def create_login_url(self, url):
         return users.create_login_url(url)

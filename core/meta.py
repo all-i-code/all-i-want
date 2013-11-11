@@ -2,8 +2,8 @@
 #
 # File: meta.py
 # Description: Meta-class and base classes for AllIWant model objects
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ class Field(object):
     @classmethod
     def get_extra_java_imports(cls):
         return getattr(cls, 'extra_java_imports', [])
-    
+
     @classmethod
     def get_extra_iface_imports(cls):
         return getattr(cls, 'extra_iface_imports', [])
@@ -35,11 +35,11 @@ class Field(object):
     @classmethod
     def get_cls_default(cls):
         return getattr(cls, 'default', None)
-        
+
     @classmethod
     def get_java_type(cls):
         return getattr(cls, 'java_type', None)
-    
+
     @classmethod
     def get_java_iface_type(cls):
         return cls.get_java_type()
@@ -51,10 +51,10 @@ class Field(object):
     def __init__(self, name=None, default=None):
         self.name = name
         self.default = default
-    
+
     def get_java_test_type(self):
         return self.get_java_type()
-    
+
     def get_java_getter_name(self):
         return 'get' + camelize(self.name)
 
@@ -88,7 +88,7 @@ class FieldInt(Field):
     java_type = 'int'
     default = -1
     java_test_getter = 'getInt'
-    
+
 class FieldString(Field):
     java_type = 'String'
     default = ''
@@ -113,7 +113,7 @@ class FieldBoolean(Field):
     java_type = 'boolean'
     default = True
     java_test_getter = 'getBool'
-    
+
     def get_java_getter_name(self):
         return camelize(self.name, trailing=True)
 
@@ -145,7 +145,7 @@ class FieldModelArray(Field):
         return template % (jt, gn, tgn, jn)
 
     def get_java_get_helper(self):
-        _ = lambda x: x + 'Js' 
+        _ = lambda x: x + 'Js'
         template = 'private final native JsArray<%s> %s()/*-{\n' +\
             '    return this.%s;\n' +\
             '  }-*/;\n'
@@ -153,7 +153,7 @@ class FieldModelArray(Field):
         return template % (jt, gn, self.json_name)
 
     def get_java_getter(self):
-        _ = lambda x: x + 'Js' 
+        _ = lambda x: x + 'Js'
         helper = self.get_java_get_helper()
         template = \
             '  @Override\n' +\
@@ -171,11 +171,11 @@ class ModelMeta(type):
     def __new__(cls, class_name, bases, class_dict):
         nc = type.__new__(cls, class_name, bases, class_dict)
         ModelManager.register(nc)
-        letters = 'abcdefghijklmnopqrstuvwxyz' 
+        letters = 'abcdefghijklmnopqrstuvwxyz'
         if len(nc.get_fields()) > len(letters):
             base = 'Class %s has too many fields, max of %s'
             raise Exception(base % (nc.__name__, len(letters)))
-     
+
         for i,f in enumerate(nc.get_fields()): f.json_name = letters[i]
         nc.field_dict = dict((f.get_name(), f) for f in nc.get_fields())
         return nc
@@ -183,7 +183,7 @@ class ModelMeta(type):
 class ModelManager(object):
     models = []
 
-    @classmethod 
+    @classmethod
     def register(cls, mc):
         if mc.is_abstract(): return
         assert(mc not in cls.models)
@@ -233,17 +233,17 @@ class Model(object):
     @classmethod
     def get_java_class(cls):
         return cls.get_name() + 'Impl'
-   
+
     @classmethod
     def get_java_create_params(cls):
         _ = lambda f: '%s %s' % (f.get_java_type(), f.get_java_name())
         return ',\n   '.join( (_(f) for f in cls.get_fields()) )
-    
+
     @classmethod
     def get_java_create_eval(cls):
         _ = lambda f: '"%s": %s' % (f.json_name, f.get_java_name())
         return ',\n      '.join( (_(f) for f in cls.get_fields()) )
- 
+
     @classmethod
     def get_extra_java_imports(cls):
         imports = []
@@ -251,7 +251,7 @@ class Model(object):
         for f in cls.get_fields():
             imports.extend((i for i in f.get_extra_java_imports() if _(i)))
         return imports
-    
+
     @classmethod
     def get_extra_iface_imports(cls):
         imports = []
@@ -283,12 +283,12 @@ class Model(object):
         if v.__class__ == list:
             v = [ i.to_json_dict() for i in v ]
         return v
-   
+
     def to_dict(self):
         v = lambda f: self.get_value(f.get_name())
         n = lambda f: f.get_name()
         return dict( (n(f), v(f)) for f in self.get_fields() )
- 
+
     def to_json_dict(self):
         v = lambda f: self.get_value(f.get_name())
         n = lambda f: self.get_json_name(f.get_name())

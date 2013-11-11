@@ -141,7 +141,7 @@ class GroupRpcGroup(RpcGroupBase):
 
     def get_available_owners(self, owner_id):
         self._verify_owner()
-        # TODO: optimize this to minimize queries 
+        # TODO: optimize this to minimize queries
         owner = self.db.get_owner(owner_id)
         _ = lambda x: ListOwner.from_db(x)
         gs, gms = (owner.groups, owner.memberships)

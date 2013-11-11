@@ -2,8 +2,8 @@
 #
 # File: test_util.py
 # Description: unit tests for core.util methods
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
