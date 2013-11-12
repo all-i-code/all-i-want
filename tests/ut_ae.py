@@ -2,8 +2,8 @@
 #
 # File: ae.py
 # Description: Dummy wrapper for app engine services
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011-2013 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ class DummyWrapper(Wrapper):
 
     def create_logout_url(self, url):
         return 'LOGOUT: %s' % url
-    
+
     def send_mail_from(self, sender, to, subject, body):
         self.msg = dict(f=sender, t=to, s=subject, b=body)
 

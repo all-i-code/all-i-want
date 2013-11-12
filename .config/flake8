@@ -1,0 +1,5 @@
+[flake8]
+# W391: Blank Line EOF
+# E201: whitespace after '['
+# E202: whitespace before ']'
+ignore = W391,E201,E202

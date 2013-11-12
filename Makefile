@@ -1,8 +1,8 @@
 #
 # File: Makefile
-# Description: makefile for jhb-web (the GAE version)
+# Description: makefile for all-i-want
 #
-# Copyright 2011 Adam Meadows
+# Copyright 2011-2013 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -17,31 +17,32 @@
 #    limitations under the License.
 #
 
-HIDE=@
+HIDE := @
 PYTHON ?= python
-
-include dev.mk
+BUILD := build
 
 .PHONY : build clean
 
-py-coverage: export PYTHON := coverage run -a
-py-coverage:
-	$(HIDE)make codegen-test
-	$(HIDE)make pytest
+coverage: export PYTHON := coverage run -a
+coverage:
+	$(HIDE)make python-test
 	$(HIDE)echo -e "\nCoverage Stats:\n"
 	$(HIDE)coverage report --omit /Applications/*.py
 
-#TODO: Add an ant clean here too
+flake8:
+	$(HIDE)flake8 --config=.config/flake8
+
+python-test:
+	$(HIDE) $(PYTHON) -m unittest discover --pattern ut_*.py
+
+build:
+	$(HIDE)mkdir $(BUILD)
+	$(HIDE)cp *.py $(BUILD)
+	$(HIDE)cp *.yaml $(BUILD)
+	$(HIDE)find . -d 1 -type d | grep -v .git | grep -v tests | cp -r $(BUILD)
+
 clean:
+	$(HIDE)rm -rf $(BUILD)
 	$(HIDE)echo "Removing *.pyc files"
 	$(HIDE)find . -name \*.pyc | xargs rm -f
-
-
-PY := python
-PY_LONG := Python >= 2.6
-PY_LINK := http://www.python.org/getit/
-
-GAE := gae
-GAE_LONG := Google App Engine for Python
-GAE_LINK := http://code.google.com/appengine/downloads.html\#Google_App_Engine_SDK_for_Python
 

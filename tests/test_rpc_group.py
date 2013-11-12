@@ -2,8 +2,8 @@
 #
 # File: test_rpc_group.py
 # Description: Unit tests for rpc_group module
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011-2013 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ from tests.ut_models import Group, User, GroupInvitation as Invite,\
     GroupMember as Member, ListOwner as Owner
 
 class GroupRpcTest(unittest.TestCase):
-    
+
     def setUp(self):
         self.db = DummyAccess(User(), add_owner=True)
         self.ae = DummyWrapper()
@@ -53,7 +53,7 @@ class GroupRpcTest(unittest.TestCase):
         self.assertEquals(db.key().id(), group.id)
         self.assertEquals(db.name, group.name)
         self.assertEquals(db.description, group.description)
-    
+
     def setup_groups(self):
         O = self.db.add_owner
         self.a1 = O(User('a1', 'a1@email.com', is_admin=True))
@@ -67,7 +67,7 @@ class GroupRpcTest(unittest.TestCase):
         self.db.add_group_member(self.g1, self.a1)
         self.db.add_group_member(self.g1, self.u1)
         self.db.add_group_member(self.g1, self.u3)
-        
+
         self.db.add_group_member(self.g2, self.a2)
         self.db.add_group_member(self.g2, self.u2)
         self.db.add_group_member(self.g2, self.u3)
@@ -87,7 +87,7 @@ class GroupRpcTest(unittest.TestCase):
     def test_add_group_requires_admin(self):
         '''
         Confirm trying to add group with non admin user raised Exception
-        ''' 
+        '''
         self.assertRaises(UserVisibleError, self.rpc.add_group, 'Name', 'Desc')
 
     def test_add_group_duplicate_name(self):
@@ -194,7 +194,7 @@ class GroupRpcTest(unittest.TestCase):
         expected = set((o.email for o in (self.a1, self.u1, self.u3)))
         actual = set((o.email for o in owners))
         self.assertEquals(expected, actual)
-    
+
     def test_get_available_owners_a2(self):
         '''
         Confirm lookup of all available users for a2 owner
@@ -207,7 +207,7 @@ class GroupRpcTest(unittest.TestCase):
         expected = set((o.email for o in (self.a2, self.u2, self.u3)))
         actual = set((o.email for o in owners))
         self.assertEquals(expected, actual)
-        
+
     def test_get_available_owners_u1(self):
         '''
         Confirm lookup of all available users for u1 owner
@@ -220,7 +220,7 @@ class GroupRpcTest(unittest.TestCase):
         expected = set((o.email for o in (self.a1, self.u1, self.u3)))
         actual = set((o.email for o in owners))
         self.assertEquals(expected, actual)
-    
+
     def test_get_available_owners_u2(self):
         '''
         Confirm lookup of all available users for u2 owner

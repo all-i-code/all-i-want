@@ -1,9 +1,9 @@
 '''
 #
 # File: __init__.py
-# Description: jhb module init
-# 
-# Copyright 2011 Adam Meadows 
+# Description: all-i-want module init
+#
+# Copyright 2011-2013 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -18,4 +18,3 @@
 #    limitations under the License.
 #
 '''
-

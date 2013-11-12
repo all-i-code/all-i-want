@@ -2,8 +2,8 @@
 #
 # File: access.py
 # Description: Dummy Interface into the database for testing
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011-2013 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ class DummyAccess:
         self.item_ids = []
 
         self.user = user
-        self.owner = None 
+        self.owner = None
         if add_owner:
             self.owner = self.add_owner(user)
 
@@ -166,7 +166,7 @@ class DummyAccess:
     def save(self, obj):
         obj._saved = True
         return obj
-    
+
     def delete(self, obj):
         if isinstance(obj, Req):
             self._delete_req(obj)

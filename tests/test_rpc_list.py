@@ -2,8 +2,8 @@
 #
 # File: test_rpc_list.py
 # Description: Unit tests for rpc_list module
-# 
-# Copyright 2011 Adam Meadows 
+#
+# Copyright 2011-2013 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ from tests.ut_ae import DummyWrapper
 from tests.ut_models import User, ListOwner as Owner, List, ListItem as Item
 
 class ListRpcTest(unittest.TestCase):
-    
+
     def setUp(self):
         self.db = DummyAccess(User(), add_owner=True)
         self.ae = DummyWrapper()
@@ -66,7 +66,7 @@ class ListRpcTest(unittest.TestCase):
         _ = lambda x: '%s %s' % (x, i)
         for i in xrange(count):
             self.create_list(oid, i, 2*i)
-        
+
     def compare_all_lists(self, lists, wlists):
         self.assertEquals(len(lists), len(wlists))
         for l, wl in zip(lists, wlists):
@@ -80,7 +80,7 @@ class ListRpcTest(unittest.TestCase):
 
     def compare_items(self, item, witem):
         ga, eq = (getattr, self.assertEquals)
-        _ = lambda x: x.label() if x is not None else '' 
+        _ = lambda x: x.label() if x is not None else ''
         attrs = ('name', 'category', 'description', 'url', 'is_surprise')
         [ eq(ga(item, a), ga(witem, a)) for a in attrs ]
         eq(_(item.purchased_by), witem.purchased_by)
@@ -123,7 +123,7 @@ class ListRpcTest(unittest.TestCase):
         a DuplicateNameError
         '''
         oid = self.db.owner.key().id()
-        name = 'My Wish List' 
+        name = 'My Wish List'
         self.db.add_list(oid, name, 'Description')
         self.assertRaises(DuplicateNameError, self.rpc.add_list, oid, name,
             'Another List Description')
@@ -171,7 +171,7 @@ class ListRpcTest(unittest.TestCase):
         a DuplicateNameError
         '''
         oid = self.db.owner.key().id()
-        name = 'My Wish List' 
+        name = 'My Wish List'
         self.db.add_list(oid, name, 'Description')
         l = self.db.add_list(oid, 'Second Name', 'Second Description')
         lid = l.key().id()
@@ -199,7 +199,7 @@ class ListRpcTest(unittest.TestCase):
 
     def test_get_own_lists(self):
         '''
-        Confirm that get_lists works for current owner 
+        Confirm that get_lists works for current owner
         '''
         oid = self.db.owner.key().id()
         _ = lambda x: self.db.add_list(oid, 'List %s' % x, 'Desc %s' % x)
@@ -209,7 +209,7 @@ class ListRpcTest(unittest.TestCase):
 
     def test_get_lists_from_member_of_my_group(self):
         '''
-        Confirm that get_lists works for an owner who is a member of 
+        Confirm that get_lists works for an owner who is a member of
         a group owned by current owner
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
@@ -221,7 +221,7 @@ class ListRpcTest(unittest.TestCase):
 
     def test_get_lists_from_member_of_group_im_in(self):
         '''
-        Confirm that get_lists works for an owner who is a member of 
+        Confirm that get_lists works for an owner who is a member of
         a group current owner is also in
         '''
         o1 = self.db.add_owner(User('foo', 'foo@email.com'))
@@ -235,7 +235,7 @@ class ListRpcTest(unittest.TestCase):
 
     def test_get_lists_from_owner_of_group_im_in(self):
         '''
-        Confirm that get_lists works for an owner who is the owner of 
+        Confirm that get_lists works for an owner who is the owner of
         a group current owner is in
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
@@ -256,7 +256,7 @@ class ListRpcTest(unittest.TestCase):
         lid = o.lists[0].key().id()
         self.assertRaises(PermissionDeniedError, self.rpc.add_item, lid,
             'item', 'cat', 'desc', 'url', False)
-    
+
     def test_add_surprise_item_to_invalid_owner(self):
         '''
         Confirm that trying to add a surprise item to the list of an invalid
@@ -270,7 +270,7 @@ class ListRpcTest(unittest.TestCase):
 
     def test_add_surprise_item_for_fellow_group_memeber(self):
         '''
-        Confirm ability to add a surprise item to a list you have access to 
+        Confirm ability to add a surprise item to a list you have access to
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
@@ -289,7 +289,7 @@ class ListRpcTest(unittest.TestCase):
 
     def test_add_item_to_own_list(self):
         '''
-        Confirm ability to add an item to your own list 
+        Confirm ability to add an item to your own list
         '''
         self.create_lists(self.db.owner, 1)
         l = self.db.owner.lists[0]
@@ -424,7 +424,7 @@ class ListRpcTest(unittest.TestCase):
 
     def test_reserve_reserved_item(self):
         '''
-        Confirm trying to reserve a reserved item raises UserVisibleError 
+        Confirm trying to reserve a reserved item raises UserVisibleError
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
@@ -435,10 +435,10 @@ class ListRpcTest(unittest.TestCase):
         item.reserved_by = o2
         item.put()
         self.assertRaises(UserVisibleError, self.rpc.reserve_item, iid)
-    
+
     def test_reserve_puchased_item(self):
         '''
-        Confirm trying to reserve a purchased item raises UserVisibleError 
+        Confirm trying to reserve a purchased item raises UserVisibleError
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
@@ -449,10 +449,10 @@ class ListRpcTest(unittest.TestCase):
         item.purchased_by = o2
         item.put()
         self.assertRaises(UserVisibleError, self.rpc.reserve_item, iid)
-    
+
     def test_unreserve_item(self):
         '''
-        Confirm ability to unreserve and item previously reserved by you 
+        Confirm ability to unreserve and item previously reserved by you
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
@@ -466,7 +466,7 @@ class ListRpcTest(unittest.TestCase):
         self.rpc.unreserve_item(iid)
         self.assertEquals(None, item.reserved_by)
         self.assertEquals(None, item.purchased_by)
-    
+
     def test_unreserve_item_not_reserved_by_you(self):
         '''
         Confirm that trying to unrserve an item reserved by someone else
@@ -481,7 +481,7 @@ class ListRpcTest(unittest.TestCase):
         item.reserved_by = o2
         item.put()
         self.assertRaises(UserVisibleError, self.rpc.unreserve_item, iid)
-    
+
     def test_reserve_invalid_item(self):
         '''
         Confirm trying to reserve an item you don't have access to raises
@@ -518,10 +518,10 @@ class ListRpcTest(unittest.TestCase):
         self.rpc.purchase_item(iid)
         self.assertEquals(None, item.reserved_by)
         self.assertEquals(self.db.owner, item.purchased_by)
-    
+
     def test_purchase_reserved_item(self):
         '''
-        Confirm trying to purchase a reserved item raises UserVisibleError 
+        Confirm trying to purchase a reserved item raises UserVisibleError
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
@@ -532,10 +532,10 @@ class ListRpcTest(unittest.TestCase):
         item.reserved_by = o2
         item.put()
         self.assertRaises(UserVisibleError, self.rpc.purchase_item, iid)
-    
+
     def test_purchase_puchased_item(self):
         '''
-        Confirm trying to purchase a purchased item raises UserVisibleError 
+        Confirm trying to purchase a purchased item raises UserVisibleError
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
@@ -546,7 +546,7 @@ class ListRpcTest(unittest.TestCase):
         item.purchased_by = o2
         item.put()
         self.assertRaises(UserVisibleError, self.rpc.purchase_item, iid)
-    
+
     def test_purchase_invalid_item(self):
         '''
         Confirm trying to purchase an item you don't have access to raises
@@ -585,7 +585,7 @@ class ListRpcTest(unittest.TestCase):
         self.rpc.unpurchase_item(iid)
         self.assertEquals(None, item.reserved_by)
         self.assertEquals(None, item.purchased_by)
-    
+
     def test_unpurchase_item_purchased_by_someone_else(self):
         '''
         Confirm trying to unpurchase an item purchased by someone else
@@ -600,7 +600,7 @@ class ListRpcTest(unittest.TestCase):
         item.purchased_by = o2
         item.put()
         self.assertRaises(UserVisibleError, self.rpc.unpurchase_item, iid)
-    
+
 
 if __name__ == '__main__':
     unittest.main()

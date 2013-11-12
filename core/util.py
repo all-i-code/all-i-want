@@ -3,7 +3,7 @@
 # File: util.py
 # Description: Utility methods for use in AllIWant
 #
-# Copyright 2011 Adam Meadows
+# Copyright 2011-2013 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
