@@ -21,7 +21,19 @@ HIDE := @
 PYTHON ?= python
 BUILD := build
 
-.PHONY : build clean
+.PHONY : build coverage flake8 python-test clean
+
+IGNORES := -not -path "*.git" \
+	-not -path "*tests"\
+	-not -path "*build"\
+	-not -path "*.config"
+
+build:
+	$(HIDE)rm -rf $(BUILD)
+	$(HIDE)mkdir $(BUILD)
+	$(HIDE)cp *.py $(BUILD)
+	$(HIDE)cp *.yaml $(BUILD)
+	$(HIDE)find . -type d -d 1 $(IGNORES) -exec cp -R {} $(BUILD) \;
 
 coverage: export PYTHON := coverage run -a
 coverage:
@@ -34,12 +46,6 @@ flake8:
 
 python-test:
 	$(HIDE) $(PYTHON) -m unittest discover --pattern ut_*.py
-
-build:
-	$(HIDE)mkdir $(BUILD)
-	$(HIDE)cp *.py $(BUILD)
-	$(HIDE)cp *.yaml $(BUILD)
-	$(HIDE)find . -d 1 -type d | grep -v .git | grep -v tests | cp -r $(BUILD)
 
 clean:
 	$(HIDE)rm -rf $(BUILD)
