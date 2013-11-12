@@ -20,13 +20,15 @@
 '''
 
 import unittest
-from rpc.rpc_list import ListRpcGroup
-from core.exception import UserVisibleError, DuplicateNameError,\
-    PermissionDeniedError
 
+from core.exception import (
+    UserVisibleError, DuplicateNameError, PermissionDeniedError,
+)
+from rpc.rpc_list import ListRpcGroup
 from tests.ut_access import DummyAccess
 from tests.ut_ae import DummyWrapper
-from tests.ut_models import User, ListOwner as Owner, List, ListItem as Item
+from tests.ut_models import User
+
 
 class ListRpcTest(unittest.TestCase):
 
@@ -59,27 +61,26 @@ class ListRpcTest(unittest.TestCase):
         lid = wl.key().id()
         for idx in xrange(count):
             self.db.add_list_item(lid, _('Item'), _('Cat'), _('Desc'),
-                _('url'), idx % 2 == 0)
+                                  _('url'), idx % 2 == 0)
 
     def create_lists(self, owner, count):
         oid = owner.key().id()
-        _ = lambda x: '%s %s' % (x, i)
         for i in xrange(count):
-            self.create_list(oid, i, 2*i)
+            self.create_list(oid, i, 2 * i)
 
     def compare_all_lists(self, lists, wlists):
-        self.assertEquals(len(lists), len(wlists))
+        self.assertEqual(len(lists), len(wlists))
         for l, wl in zip(lists, wlists):
             self.compare_lists(l, wl)
 
     def compare_lists(self, l, wl):
         l_items, wl_items = (l.items, wl.items)
-        self.assertEquals(len(l_items), len(wl_items))
+        self.assertEqual(len(l_items), len(wl_items))
         for item, witem in zip(l_items, wl_items):
             self.compare_items(item, witem)
 
     def compare_items(self, item, witem):
-        ga, eq = (getattr, self.assertEquals)
+        ga, eq = (getattr, self.assertEqual)
         _ = lambda x: x.label() if x is not None else ''
         attrs = ('name', 'category', 'description', 'url', 'is_surprise')
         [ eq(ga(item, a), ga(witem, a)) for a in attrs ]
@@ -92,11 +93,11 @@ class ListRpcTest(unittest.TestCase):
         '''
         oid = self.db.owner.key().id()
         self.rpc.add_list(oid, 'List Name', 'List Desc')
-        self.assertEquals(1, len(self.db.lists))
+        self.assertEqual(1, len(self.db.lists))
         l = self.db.lists.values()[0]
         self.assertTrue(l.key().id() in range(1, 1001))
-        self.assertEquals('List Name', l.name)
-        self.assertEquals('List Desc', l.description)
+        self.assertEqual('List Name', l.name)
+        self.assertEqual('List Desc', l.description)
 
     def test_add_list_no_owner(self):
         '''
@@ -104,8 +105,8 @@ class ListRpcTest(unittest.TestCase):
         PermissionDeniedError
         '''
         oid = self.delete_owner()
-        self.assertRaises(PermissionDeniedError, self.rpc.add_list,
-            oid, 'Name', 'Desc')
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.add_list(oid, 'Name', 'Desc')
 
     def test_add_list_other_owner(self):
         '''
@@ -114,8 +115,8 @@ class ListRpcTest(unittest.TestCase):
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         oid = o.key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.add_list,
-            oid, 'Name', 'Desc')
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.add_list(oid, 'Name', 'Desc')
 
     def test_add_list_duplicate_name(self):
         '''
@@ -125,8 +126,8 @@ class ListRpcTest(unittest.TestCase):
         oid = self.db.owner.key().id()
         name = 'My Wish List'
         self.db.add_list(oid, name, 'Description')
-        self.assertRaises(DuplicateNameError, self.rpc.add_list, oid, name,
-            'Another List Description')
+        with self.assertRaises(DuplicateNameError):
+            self.rpc.add_list(oid, name, 'Another List Description')
 
     def test_update_list(self):
         '''
@@ -136,10 +137,10 @@ class ListRpcTest(unittest.TestCase):
         l = self.db.add_list(oid, 'Name', 'Description')
         lid = l.key().id()
         self.rpc.update_list(lid, 'New Name', 'New Desc')
-        self.assertEquals(1, len(self.db.lists))
+        self.assertEqual(1, len(self.db.lists))
         l = self.db.lists.values()[0]
-        self.assertEquals('New Name', l.name)
-        self.assertEquals('New Desc', l.description)
+        self.assertEqual('New Name', l.name)
+        self.assertEqual('New Desc', l.description)
 
     def test_update_list_no_owner(self):
         '''
@@ -150,8 +151,8 @@ class ListRpcTest(unittest.TestCase):
         l = self.db.add_list(o.key().id(), 'List Name', 'List Desc')
         lid = l.key().id()
         self.delete_owner()
-        self.assertRaises(PermissionDeniedError, self.rpc.update_list,
-            lid, 'Name', 'Desc')
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.update_list(lid, 'Name', 'Desc')
 
     def test_update_list_invalid_owner(self):
         '''
@@ -162,8 +163,8 @@ class ListRpcTest(unittest.TestCase):
         oid = o.key().id()
         l = self.db.add_list(oid, 'New List', 'New Desc')
         lid = l.key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.update_list,
-            lid, 'Name', 'Desc')
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.update_list(lid, 'Name', 'Desc')
 
     def test_update_list_duplicate_name(self):
         '''
@@ -175,8 +176,8 @@ class ListRpcTest(unittest.TestCase):
         self.db.add_list(oid, name, 'Description')
         l = self.db.add_list(oid, 'Second Name', 'Second Description')
         lid = l.key().id()
-        self.assertRaises(DuplicateNameError, self.rpc.update_list, lid, name,
-            'Another List Description')
+        with self.assertRaises(DuplicateNameError):
+            self.rpc.update_list(lid, name, 'Another List Description')
 
     def test_get_list_no_owner(self):
         '''
@@ -186,7 +187,8 @@ class ListRpcTest(unittest.TestCase):
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         oid = o.key().id()
         self.delete_owner()
-        self.assertRaises(PermissionDeniedError, self.rpc.get_lists, oid)
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.get_lists(oid)
 
     def test_get_lists_invalid_owner(self):
         '''
@@ -195,7 +197,8 @@ class ListRpcTest(unittest.TestCase):
         '''
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         oid = o.key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.get_lists, oid)
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.get_lists(oid)
 
     def test_get_own_lists(self):
         '''
@@ -205,7 +208,7 @@ class ListRpcTest(unittest.TestCase):
         _ = lambda x: self.db.add_list(oid, 'List %s' % x, 'Desc %s' % x)
         lists = [ _(i) for i in '12345' ]
         wls = self.rpc.get_lists(oid)
-        self.assertEquals(len(lists), len(wls))
+        self.assertEqual(len(lists), len(wls))
 
     def test_get_lists_from_member_of_my_group(self):
         '''
@@ -254,8 +257,8 @@ class ListRpcTest(unittest.TestCase):
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
         lid = o.lists[0].key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.add_item, lid,
-            'item', 'cat', 'desc', 'url', False)
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', False)
 
     def test_add_surprise_item_to_invalid_owner(self):
         '''
@@ -265,8 +268,8 @@ class ListRpcTest(unittest.TestCase):
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         lid = o.lists[0].key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.add_item, lid,
-            'item', 'cat', 'desc', 'url', True)
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', True)
 
     def test_add_surprise_item_for_fellow_group_memeber(self):
         '''
@@ -279,13 +282,13 @@ class ListRpcTest(unittest.TestCase):
         count = len(l.items)
         lid = l.key().id()
         witem = self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', True)
-        self.assertEquals(count+1, len(o.lists[2].items))
-        self.assertEquals('item', witem.name)
-        self.assertEquals('cat', witem.category)
-        self.assertEquals('desc', witem.description)
-        self.assertEquals('url', witem.url)
-        self.assertEquals(True, witem.is_surprise)
-        self.assertEquals(self.db.owner.label(), witem.reserved_by)
+        self.assertEqual(count + 1, len(o.lists[2].items))
+        self.assertEqual('item', witem.name)
+        self.assertEqual('cat', witem.category)
+        self.assertEqual('desc', witem.description)
+        self.assertEqual('url', witem.url)
+        self.assertEqual(True, witem.is_surprise)
+        self.assertEqual(self.db.owner.label(), witem.reserved_by)
 
     def test_add_item_to_own_list(self):
         '''
@@ -296,14 +299,14 @@ class ListRpcTest(unittest.TestCase):
         count = len(l.items)
         lid = l.key().id()
         witem = self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', False)
-        self.assertEquals(count+1, len(self.db.owner.lists[0].items))
-        self.assertEquals('item', witem.name)
-        self.assertEquals('cat', witem.category)
-        self.assertEquals('desc', witem.description)
-        self.assertEquals('url', witem.url)
-        self.assertEquals(False, witem.is_surprise)
-        self.assertEquals('', witem.reserved_by)
-        self.assertEquals('', witem.purchased_by)
+        self.assertEqual(count + 1, len(self.db.owner.lists[0].items))
+        self.assertEqual('item', witem.name)
+        self.assertEqual('cat', witem.category)
+        self.assertEqual('desc', witem.description)
+        self.assertEqual('url', witem.url)
+        self.assertEqual(False, witem.is_surprise)
+        self.assertEqual('', witem.reserved_by)
+        self.assertEqual('', witem.purchased_by)
 
     def test_update_item_in_own_list(self):
         '''
@@ -316,11 +319,11 @@ class ListRpcTest(unittest.TestCase):
         iid = item.key().id()
         n, c, d, u = ('New Name', 'New Cat', 'New Desc', 'New URL')
         witem = self.rpc.update_item(iid, n, c, d, u)
-        self.assertEquals(count, len(self.db.owner.lists[1].items))
-        self.assertEquals(n, witem.name)
-        self.assertEquals(c, witem.category)
-        self.assertEquals(d, witem.description)
-        self.assertEquals(u, witem.url)
+        self.assertEqual(count, len(self.db.owner.lists[1].items))
+        self.assertEqual(n, witem.name)
+        self.assertEqual(c, witem.category)
+        self.assertEqual(d, witem.description)
+        self.assertEqual(u, witem.url)
 
     def test_update_item_in_invalid_list(self):
         ''''
@@ -332,8 +335,8 @@ class ListRpcTest(unittest.TestCase):
         self.create_group(o, [self.db.owner])
         item = o.lists[2].items[1]
         iid = item.key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.update_item, iid,
-            'item', 'cat', 'desc', 'url')
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.update_item(iid, 'item', 'cat', 'desc', 'url')
 
     def test_remove_item_from_own_list(self):
         '''
@@ -344,8 +347,8 @@ class ListRpcTest(unittest.TestCase):
         count = len(l.items)
         item = l.items[0]
         iid = item.key().id()
-        wlist = self.rpc.remove_item(iid)
-        self.assertEquals(count-1, len(self.db.owner.lists[3].items))
+        self.rpc.remove_item(iid)
+        self.assertEqual(count - 1, len(self.db.owner.lists[3].items))
         self.assertTrue(item not in self.db.owner.lists[3].items)
 
     def test_remove_reserved_item_from_own_list(self):
@@ -362,15 +365,18 @@ class ListRpcTest(unittest.TestCase):
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         item.reserved_by = o
         item.put()
-        wlist = self.rpc.remove_item(iid)
-        self.assertEquals(count-1, len(self.db.owner.lists[-1].items))
+        self.rpc.remove_item(iid)
+        self.assertEqual(count - 1, len(self.db.owner.lists[-1].items))
         owner = self.db.owner
         subject = 'Wish List Item Deleted'
-        body = self.ae.DELETED_ITEM_TEMPLATE % (item.reserved_by.nickname,
+        template_tuple = (
+            item.reserved_by.nickname,
             owner.nickname, owner.email, item.name, l.name, 'Reserved',
-            owner.nickname, owner.email)
+            owner.nickname, owner.email,
+        )
+        body = self.ae.DELETED_ITEM_TEMPLATE % template_tuple
         msg = dict(f=self.ae.FROM_ADDRESS, t=o.email, s=subject, b=body)
-        self.assertEquals(msg, self.ae.msg)
+        self.assertEqual(msg, self.ae.msg)
 
     def test_remove_purchased_item_from_own_list(self):
         '''
@@ -386,15 +392,18 @@ class ListRpcTest(unittest.TestCase):
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         item.purchased_by = o
         item.put()
-        wlist = self.rpc.remove_item(iid)
-        self.assertEquals(count-1, len(self.db.owner.lists[-1].items))
+        self.rpc.remove_item(iid)
+        self.assertEqual(count - 1, len(self.db.owner.lists[-1].items))
         owner = self.db.owner
         subject = 'Wish List Item Deleted'
-        body = self.ae.DELETED_ITEM_TEMPLATE % (item.purchased_by.nickname,
+        template_tuple = (
+            item.purchased_by.nickname,
             owner.nickname, owner.email, item.name, l.name, 'Purchased',
-            owner.nickname, owner.email)
+            owner.nickname, owner.email,
+        )
+        body = self.ae.DELETED_ITEM_TEMPLATE % template_tuple
         msg = dict(f=self.ae.FROM_ADDRESS, t=o.email, s=subject, b=body)
-        self.assertEquals(msg, self.ae.msg)
+        self.assertEqual(msg, self.ae.msg)
 
     def test_remove_item_from_invalid_list(self):
         '''
@@ -405,7 +414,8 @@ class ListRpcTest(unittest.TestCase):
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
         iid = o.lists[2].items[1].key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.remove_item, iid)
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.remove_item(iid)
 
     def test_reserve_item(self):
         '''
@@ -416,11 +426,11 @@ class ListRpcTest(unittest.TestCase):
         self.create_group(o, [self.db.owner])
         item = o.lists[-1].items[-1]
         iid = item.key().id()
-        self.assertEquals(None, item.reserved_by)
-        self.assertEquals(None, item.purchased_by)
+        self.assertEqual(None, item.reserved_by)
+        self.assertEqual(None, item.purchased_by)
         self.rpc.reserve_item(iid)
-        self.assertEquals(self.db.owner, item.reserved_by)
-        self.assertEquals(None, item.purchased_by)
+        self.assertEqual(self.db.owner, item.reserved_by)
+        self.assertEqual(None, item.purchased_by)
 
     def test_reserve_reserved_item(self):
         '''
@@ -434,7 +444,8 @@ class ListRpcTest(unittest.TestCase):
         iid = item.key().id()
         item.reserved_by = o2
         item.put()
-        self.assertRaises(UserVisibleError, self.rpc.reserve_item, iid)
+        with self.assertRaises(UserVisibleError):
+            self.rpc.reserve_item(iid)
 
     def test_reserve_puchased_item(self):
         '''
@@ -448,7 +459,8 @@ class ListRpcTest(unittest.TestCase):
         iid = item.key().id()
         item.purchased_by = o2
         item.put()
-        self.assertRaises(UserVisibleError, self.rpc.reserve_item, iid)
+        with self.assertRaises(UserVisibleError):
+            self.rpc.reserve_item(iid)
 
     def test_unreserve_item(self):
         '''
@@ -461,11 +473,11 @@ class ListRpcTest(unittest.TestCase):
         item.reserved_by = self.db.owner
         item.put()
         iid = item.key().id()
-        self.assertEquals(self.db.owner, item.reserved_by)
-        self.assertEquals(None, item.purchased_by)
+        self.assertEqual(self.db.owner, item.reserved_by)
+        self.assertEqual(None, item.purchased_by)
         self.rpc.unreserve_item(iid)
-        self.assertEquals(None, item.reserved_by)
-        self.assertEquals(None, item.purchased_by)
+        self.assertEqual(None, item.reserved_by)
+        self.assertEqual(None, item.purchased_by)
 
     def test_unreserve_item_not_reserved_by_you(self):
         '''
@@ -480,7 +492,8 @@ class ListRpcTest(unittest.TestCase):
         iid = item.key().id()
         item.reserved_by = o2
         item.put()
-        self.assertRaises(UserVisibleError, self.rpc.unreserve_item, iid)
+        with self.assertRaises(UserVisibleError):
+            self.rpc.unreserve_item(iid)
 
     def test_reserve_invalid_item(self):
         '''
@@ -491,7 +504,8 @@ class ListRpcTest(unittest.TestCase):
         self.create_lists(o, 5)
         item = o.lists[2].items[1]
         iid = item.key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.reserve_item, iid)
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.reserve_item(iid)
 
     def test_unreserve_invalid_item(self):
         '''
@@ -502,7 +516,8 @@ class ListRpcTest(unittest.TestCase):
         self.create_lists(o, 5)
         item = o.lists[2].items[1]
         iid = item.key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.unreserve_item, iid)
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.unreserve_item(iid)
 
     def test_purchase_item(self):
         '''
@@ -513,11 +528,11 @@ class ListRpcTest(unittest.TestCase):
         self.create_group(o, [self.db.owner])
         item = o.lists[-1].items[-1]
         iid = item.key().id()
-        self.assertEquals(None, item.reserved_by)
-        self.assertEquals(None, item.purchased_by)
+        self.assertEqual(None, item.reserved_by)
+        self.assertEqual(None, item.purchased_by)
         self.rpc.purchase_item(iid)
-        self.assertEquals(None, item.reserved_by)
-        self.assertEquals(self.db.owner, item.purchased_by)
+        self.assertEqual(None, item.reserved_by)
+        self.assertEqual(self.db.owner, item.purchased_by)
 
     def test_purchase_reserved_item(self):
         '''
@@ -531,7 +546,8 @@ class ListRpcTest(unittest.TestCase):
         iid = item.key().id()
         item.reserved_by = o2
         item.put()
-        self.assertRaises(UserVisibleError, self.rpc.purchase_item, iid)
+        with self.assertRaises(UserVisibleError):
+            self.rpc.purchase_item(iid)
 
     def test_purchase_puchased_item(self):
         '''
@@ -545,7 +561,8 @@ class ListRpcTest(unittest.TestCase):
         iid = item.key().id()
         item.purchased_by = o2
         item.put()
-        self.assertRaises(UserVisibleError, self.rpc.purchase_item, iid)
+        with self.assertRaises(UserVisibleError):
+            self.rpc.purchase_item(iid)
 
     def test_purchase_invalid_item(self):
         '''
@@ -556,7 +573,8 @@ class ListRpcTest(unittest.TestCase):
         self.create_lists(o, 5)
         item = o.lists[2].items[1]
         iid = item.key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.purchase_item, iid)
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.purchase_item(iid)
 
     def test_unpurchase_invalid_item(self):
         '''
@@ -567,7 +585,8 @@ class ListRpcTest(unittest.TestCase):
         self.create_lists(o, 5)
         item = o.lists[2].items[1]
         iid = item.key().id()
-        self.assertRaises(PermissionDeniedError, self.rpc.unpurchase_item, iid)
+        with self.assertRaises(PermissionDeniedError):
+            self.rpc.unpurchase_item(iid)
 
     def test_unpurchase_item(self):
         '''
@@ -580,11 +599,11 @@ class ListRpcTest(unittest.TestCase):
         item.purchased_by = self.db.owner
         item.put()
         iid = item.key().id()
-        self.assertEquals(None, item.reserved_by)
-        self.assertEquals(self.db.owner, item.purchased_by)
+        self.assertEqual(None, item.reserved_by)
+        self.assertEqual(self.db.owner, item.purchased_by)
         self.rpc.unpurchase_item(iid)
-        self.assertEquals(None, item.reserved_by)
-        self.assertEquals(None, item.purchased_by)
+        self.assertEqual(None, item.reserved_by)
+        self.assertEqual(None, item.purchased_by)
 
     def test_unpurchase_item_purchased_by_someone_else(self):
         '''
@@ -599,7 +618,8 @@ class ListRpcTest(unittest.TestCase):
         iid = item.key().id()
         item.purchased_by = o2
         item.put()
-        self.assertRaises(UserVisibleError, self.rpc.unpurchase_item, iid)
+        with self.assertRaises(UserVisibleError):
+            self.rpc.unpurchase_item(iid)
 
 
 if __name__ == '__main__':

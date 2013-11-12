@@ -2,8 +2,8 @@
 #
 # File: models.py
 # Description: Dummy Model objects
-# 
-# Copyright 2011-2013 Adam Meadows 
+#
+# Copyright 2011-2013 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -19,8 +19,10 @@
 #
 '''
 
+
 class Db(object):
     _id_map = {}
+
     def __init__(self, id=None):
         if id is None:
             id = self._id_map.setdefault(self.__class__, 1)
@@ -40,15 +42,17 @@ class Db(object):
     def saved(self):
         return getattr(self, '_saved', False)
 
+
 class AccessReq(Db):
     def __init__(self, user, denied=False, **kwargs):
         super(AccessReq, self).__init__(**kwargs)
         self.user = user
         self.denied = denied
 
+
 class User(Db):
-    def __init__(self, nickname='Jobber', email='jobber@email.com', \
-      is_admin=False, **kwargs):
+    def __init__(self, nickname='Jobber', email='jobber@email.com',
+                 is_admin=False, **kwargs):
         super(User, self).__init__(**kwargs)
         self.is_admin = is_admin
         self._nickname = nickname
@@ -64,6 +68,7 @@ class User(Db):
     def user_id(self):
         return self._user_id
 
+
 class ListOwner(Db):
     def __init__(self, user, **kwargs):
         super(ListOwner, self).__init__(**kwargs)
@@ -75,9 +80,10 @@ class ListOwner(Db):
         self.groups = []
         self.memberships = []
         self.lists = []
-    
+
     def label(self):
         return '%s (%s)' % (self.nickname, self.email)
+
 
 class Group(Db):
     def __init__(self, name='', description='', owner=None, **kwargs):
@@ -87,18 +93,21 @@ class Group(Db):
         self.owner = owner
         self.invitations = []
         self.members = []
-    
+
+
 class GroupInvitation(Db):
     def __init__(self, group=None, email='', **kwargs):
         super(GroupInvitation, self).__init__(**kwargs)
         self.group = group
         self.email = email
-    
+
+
 class GroupMember(Db):
     def __init__(self, member=None, group=None, **kwargs):
         super(GroupMember, self).__init__(**kwargs)
         self.member = member
         self.group = group
+
 
 class List(Db):
     def __init__(self, name='', description='', owner=None, **kwargs):
@@ -108,10 +117,11 @@ class List(Db):
         self.owner = owner
         self.items = []
 
+
 class ListItem(Db):
-    def __init__(self, parent_list=None, name='', category='', description='',\
-      url='', reserved_by=None, purchased_by=None, is_surprise=False,\
-      owner=None, **kwargs):
+    def __init__(self, parent_list=None, name='', category='', description='',
+                 url='', reserved_by=None, purchased_by=None,
+                 is_surprise=False, owner=None, **kwargs):
         super(ListItem, self).__init__(**kwargs)
         self.parent_list = parent_list
         self.name = name
@@ -123,11 +133,16 @@ class ListItem(Db):
         self.is_surprise = is_surprise
         self.owner = owner
 
-if '__main__' ==  __name__:
+if '__main__' == __name__:
+    # TODO: Move this to its own module
     import unittest
-    from tests.ut_models import GroupInvitation as Invite,\
-        GroupMember as Member, ListItem as Item, ListOwner as Owner,\
-        AccessReq as Req
+    from tests.ut_models import (
+        GroupInvitation as Invite,
+        GroupMember as Member,
+        ListItem as Item,
+        ListOwner as Owner,
+        AccessReq as Req,
+    )
 
     class DummyModelTest(unittest.TestCase):
 
@@ -137,20 +152,16 @@ if '__main__' ==  __name__:
             '''
             eq = lambda id, obj: self.assertEquals(id, obj.key().id())
             ids = range(1, 100)
-            
+
             classes = ( User, Group, Invite, Member, List, Item )
             for cls in classes:
                 objs = [ cls() for i in ids ]
                 [ eq(id, o) for id, o in zip(ids, objs) ]
-            
+
             u = User()
             u_classes = ( Req, Owner )
             for cls in u_classes:
                 objs = [ cls(u) for i in ids ]
                 [ eq(id, o) for id, o in zip(ids, objs) ]
-            
-
-
-
 
     unittest.main()

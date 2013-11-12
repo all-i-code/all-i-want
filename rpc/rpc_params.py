@@ -18,7 +18,8 @@
 #    limitations under the License.
 #
 '''
-from simplejson import loads
+import json
+
 
 class RpcParam(object):
     '''Base class for RPC parameters'''
@@ -40,11 +41,13 @@ class RpcParam(object):
     def get_value(self, value):
         return value
 
+
 class RpcParamInt(RpcParam):
     java_type = 'int'
 
     def get_value(self, value):
         return int(value)
+
 
 class RpcParamString(RpcParam):
     java_type = 'String'
@@ -52,17 +55,20 @@ class RpcParamString(RpcParam):
     def get_value(self, value):
         return str(value)
 
+
 class RpcParamFloat(RpcParam):
     java_type = 'double'
 
     def get_value(self, value):
         return float(value)
 
+
 class RpcParamBoolean(RpcParam):
     java_type = 'boolean'
 
     def get_value(self, value):
         return str(value) not in ('false', 'False', '0')
+
 
 class RpcParamModel(RpcParam):
 
@@ -74,7 +80,8 @@ class RpcParamModel(RpcParam):
         return self.model.get_java_iface_type()
 
     def get_value(self, value):
-        return self.model.from_json_dict(loads(value))
+        return self.model.from_json_dict(json.loads(value))
+
 
 class RpcParamList(RpcParam):
 
@@ -86,5 +93,5 @@ class RpcParamList(RpcParam):
         return 'java.util.ArrayList<%s>' % self.param.get_java_type()
 
     def get_value(self, value):
-        return [ param.get_value(v) for v in loads(value) ]
+        return [ self.param.get_value(v) for v in json.loads(value) ]
 

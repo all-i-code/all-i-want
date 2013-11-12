@@ -1,6 +1,6 @@
 '''
 #
-# File: access.py
+# File: ut_access.py
 # Description: Dummy Interface into the database for testing
 #
 # Copyright 2011-2013 Adam Meadows
@@ -18,11 +18,18 @@
 #    limitations under the License.
 #
 '''
-from core.util import extract_name as extract
-from tests.ut_models import AccessReq as Req, ListOwner as Owner, Group,\
-    GroupInvitation as Invite, GroupMember as Member, List, ListItem as Item
+from tests.ut_models import (
+    AccessReq as Req,
+    ListOwner as Owner,
+    Group,
+    GroupInvitation as Invite,
+    GroupMember as Member,
+    List,
+    ListItem as Item,
+)
 
-class DummyAccess:
+
+class DummyAccess(object):
     def __init__(self, user=None, add_owner=False):
         self.owners = {}
         self.user_owners = {}
@@ -47,9 +54,6 @@ class DummyAccess:
         if add_owner:
             self.owner = self.add_owner(user)
 
-    def get_owner(self, owner_id):
-        return self.owners.get(owner_id, None)
-
     def add_owner(self, user):
         owner = Owner(user)
         self.user_owners[user] = owner
@@ -63,7 +67,7 @@ class DummyAccess:
         return len(groups) == 0
 
     def add_group(self, name, description, owner=None):
-        if owner is None: owner = self.owner
+        owner = owner or self.owner
         g = Group(name=name, description=description, owner=owner)
         gid = g.key().id()
         self.groups[gid] = g
@@ -91,7 +95,7 @@ class DummyAccess:
         return self.invitations.get(invite_id, None)
 
     def add_group_member(self, group, owner=None):
-        if owner is None: owner = self.owner
+        owner = owner or self.owner
         m = Member(owner, group)
         mid = m.key().id()
         group.members.append(m)
@@ -99,12 +103,6 @@ class DummyAccess:
         self.member_ids.append(mid)
         owner.memberships.append(m)
         return m
-
-    def add_owner(self, user):
-        owner = Owner(user)
-        self.user_owners[user] = owner
-        self.owners[owner.key().id()] = owner
-        return owner
 
     def get_owner(self, owner_id):
         return self.owners.get(owner_id, None)
@@ -152,8 +150,8 @@ class DummyAccess:
     def add_list_item(self, list_id, name, category, desc, url, is_surprise):
         parent = self.lists[list_id]
         item = Item(parent_list=parent, name=name,
-            category=category, description=desc, url=url,
-            is_surprise=is_surprise)
+                    category=category, description=desc, url=url,
+                    is_surprise=is_surprise)
         iid = item.key().id()
         parent.items.append(item)
         self.items[iid] = item
@@ -180,7 +178,6 @@ class DummyAccess:
             self._delete_owner(obj)
         elif isinstance(obj, Item):
             self._delete_item(obj)
-
 
     def _delete_req(self, req):
         rid = req.key().id()

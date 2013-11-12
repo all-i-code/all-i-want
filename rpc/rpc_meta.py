@@ -19,14 +19,16 @@
 #
 '''
 
-import os.path
-from simplejson import dumps
+import os
+import json
 from google.appengine.api import users
 from google.appengine.ext import webapp
+
 from core.model import FailureReport
 from core.util import camelize
 from access import DbAccess
 from ae import Wrapper
+
 
 class RpcReqHandler(webapp.RequestHandler):
 
@@ -65,28 +67,36 @@ class RpcReqHandler(webapp.RequestHandler):
         is_list = result.__class__ == list
         result_json = [ _(o) for o in result ] if is_list else _(result)
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(dumps(result_json))
+        self.response.out.write(json.dumps(result_json))
 
     def handle_exception(self, exception, debug_mode):
-        import traceback, sys
+        import sys
+        import traceback
         nm = lambda e: e.__class__.__name__
         tb = '\n'.join(traceback.format_exception(*sys.exc_info()))
-        d = dict(error_type=nm(exception), message=str(exception), traceback=tb)
+        d = dict(
+            error_type=nm(exception),
+            message=str(exception),
+            traceback=tb,
+        )
         self.response.set_status(500)
         self.dump(FailureReport(**d))
+
 
 class RpcGroupManager(object):
     groups = []
 
     @classmethod
     def register(cls, group):
-        if group.is_abstract(): return
+        if group.is_abstract():
+            return
         assert(group not in cls.groups)
         cls.groups.append(group)
 
     @classmethod
     def get_groups(cls):
         return cls.groups
+
 
 class RpcGroupMeta(type):
     '''Meta class for RPC group classes'''
@@ -98,9 +108,11 @@ class RpcGroupMeta(type):
             nc.rpc_dict[rpc.get_name()] = rpc
         return nc
 
+
 class Rpc(object):
     '''Class to represent a remote procedure call'''
-    def __init__(self, name='', params=(), rt=None, event=None, rt_array=False):
+    def __init__(self, name='', params=(), rt=None,
+                 event=None, rt_array=False):
         tp = lambda x: x.split('.')[-1] if x is not None else x
         pkg = lambda x: '.'.join(x.split('.')[:-1]) if x is not None else x
         self.name = name
@@ -109,7 +121,8 @@ class Rpc(object):
         self.event = tp(event)
         self.rt_array = rt_array
         self.imports = (pkg(rt), pkg(event))
-        if not rt_array: return
+        if not rt_array:
+            return
         self.imports += (
             'java.util.ArrayList',
             'com.google.gwt.core.client.JsArray'
@@ -134,7 +147,7 @@ class Rpc(object):
         return 'void %s(%s)' (nm, ', '.join(( _(p) for p in self.params )))
 
     def get_java_method(self):
-        _ = lambda x, n=2: ' '*n + x
+        _ = lambda x, n=2: ' ' * n + x
         proto, gn = (self.get_java_prototype(), self.get_group_name())
         rt, evt = (self.return_type, self.event)
         template = '@Override\npublic %s {\n' +\
@@ -146,20 +159,20 @@ class Rpc(object):
             method += _(pstr)
 
         method += _('request.sendPost(url, params, new Request.Handler() {\n')
-        method += _('public void onSuccess(String result) {\n',4)
-        if rt_array:
+        method += _('public void onSuccess(String result) {\n', 4)
+        if self.rt_array:
             t = 'ArrayList<%s> al = new ArrayList<%s>();\n'
-            method += _(t % (rt, rt),6)
+            method += _(t % (rt, rt), 6)
             t = 'JsArray<%sJs> jsa = %sJs.decodeArray(result);\n'
-            method += _(t % (rt, rt),6)
+            method += _(t % (rt, rt), 6)
             t = 'for (int i = 0; i < jsa.length(); i++) al.add(jsa.get(i));\n'
-            method += _(t,6)
-            method += _('eventBus.fireEvent(new %s(ar));\n' % evt,6)
+            method += _(t, 6)
+            method += _('eventBus.fireEvent(new %s(ar));\n' % evt, 6)
         else:
-            method += _('%s data = %sJs.decode(result);\n' % (rt, rt),6)
-            method += _('eventBus.fireEvent(new %s(data));\n' % evt,6)
+            method += _('%s data = %sJs.decode(result);\n' % (rt, rt), 6)
+            method += _('eventBus.fireEvent(new %s(data));\n' % evt, 6)
 
-        method += _('} // onSuccess //\n',4)
+        method += _('} // onSuccess //\n', 4)
         method += _('} // sendPost //\n')
         return method + '} // %s //' % self.get_java_name()
 
@@ -181,6 +194,7 @@ class Rpc(object):
         _ = lambda p: p.get_value(req.get(p.name))
         params = dict( (p.name, _(p)) for p in self.params )
         return params
+
 
 class RpcGroupBase(object):
     __metaclass__ = RpcGroupMeta

@@ -21,42 +21,28 @@
 '''
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
-from rpc.rpc_params import RpcParamString, RpcParamInt
-from core.model import Group, GroupInvitation, GroupMember, ListOwner
+from rpc.rpc_params import (
+    RpcParamString as String,
+    RpcParamInt as Integer,
+)
+from core.model import Group, GroupInvitation, ListOwner
 from core.exception import PermissionDeniedError, DuplicateNameError
+
 
 class GroupRpcGroup(RpcGroupBase):
     rpcs = (
-        Rpc(name='add_group', params=(
-            RpcParamString('name'),
-            RpcParamString('desc'),
-        )),
+        Rpc(name='add_group', params=(String('name'), String('desc'),)),
         Rpc(name='get_groups'),
-        Rpc(name='update_group', params=(
-            RpcParamInt('id'),
-            RpcParamString('name'),
-            RpcParamString('desc'),
-        )),
-        Rpc(name='delete_group', params=(
-            RpcParamInt('group_id'),
-        )),
+        Rpc(name='update_group',
+            params=(Integer('id'), String('name'), String('desc'),)),
+        Rpc(name='delete_group', params=(Integer('group_id'),)),
         Rpc(name='get_invitations'),
-        Rpc(name='invite_member', params=(
-            RpcParamInt('group_id'),
-            RpcParamString('email'),
-        )),
-        Rpc(name='leave_group', params=(
-            RpcParamInt('group_id'),
-        )),
-        Rpc(name='accept_invitation', params=(
-            RpcParamInt('invite_id'),
-        )),
-        Rpc(name='decline_invitation', params=(
-            RpcParamInt('invite_id'),
-        )),
-        Rpc(name='get_available_owners', params=(
-            RpcParamInt('owner_id'),
-        )),
+        Rpc(name='invite_member',
+            params=(Integer('group_id'), String('email'),)),
+        Rpc(name='leave_group', params=(Integer('group_id'),)),
+        Rpc(name='accept_invitation', params=(Integer('invite_id'),)),
+        Rpc(name='decline_invitation', params=(Integer('invite_id'),)),
+        Rpc(name='get_available_owners', params=(Integer('owner_id'),)),
     )
 
     def _verify_owner(self):
@@ -143,7 +129,6 @@ class GroupRpcGroup(RpcGroupBase):
         self._verify_owner()
         # TODO: optimize this to minimize queries
         owner = self.db.get_owner(owner_id)
-        _ = lambda x: ListOwner.from_db(x)
         gs, gms = (owner.groups, owner.memberships)
         owners = [ owner ]
         owners.extend(m.member for g in gs for m in g.members)
@@ -155,6 +140,7 @@ class GroupRpcGroup(RpcGroupBase):
                 oids.append(owner.key().id())
                 unique_owners.append(owner)
         return [ ListOwner.from_db(o) for o in unique_owners ]
+
 
 class GroupRpcReqHandler(RpcReqHandler):
     group_cls = GroupRpcGroup

@@ -21,59 +21,38 @@
 '''
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
-from rpc.rpc_params import RpcParamString, RpcParamInt, RpcParamBoolean
-from core.model import ListOwner, WishList, ListItem
-from core.exception import PermissionDeniedError, DuplicateNameError,\
-    UserVisibleError
+from rpc.rpc_params import (
+    RpcParamBoolean as Boolean,
+    RpcParamInt as Integer,
+    RpcParamString as String,
+)
+from core.model import WishList
+from core.exception import (
+    PermissionDeniedError,
+    DuplicateNameError,
+    UserVisibleError,
+)
+
 
 class ListRpcGroup(RpcGroupBase):
     rpcs = (
-        Rpc(name='add_list', params=(
-            RpcParamInt('owner_id'),
-            RpcParamString('name'),
-            RpcParamString('desc'),
-        )),
-        Rpc(name='update_list', params=(
-            RpcParamInt('list_id'),
-            RpcParamString('name'),
-            RpcParamString('desc'),
-        )),
-        Rpc(name='delete_list', params=(
-            RpcParamInt('list_id'),
-        )),
-        Rpc(name='get_lists', params=(
-            RpcParamInt('owner_id'),
-        )),
-        Rpc(name='add_item', params=(
-            RpcParamInt('list_id'),
-            RpcParamString('name'),
-            RpcParamString('cat'),
-            RpcParamString('desc'),
-            RpcParamString('url'),
-            RpcParamBoolean('surprise'),
-        )),
-        Rpc(name='update_item', params=(
-            RpcParamInt('item_id'),
-            RpcParamString('name'),
-            RpcParamString('cat'),
-            RpcParamString('desc'),
-            RpcParamString('url'),
-        )),
-        Rpc(name='remove_item', params=(
-            RpcParamInt('item_id'),
-        )),
-        Rpc(name='reserve_item', params=(
-            RpcParamInt('item_id'),
-        )),
-        Rpc(name='unreserve_item', params=(
-            RpcParamInt('item_id'),
-        )),
-        Rpc(name='purchase_item', params=(
-            RpcParamInt('item_id'),
-        )),
-        Rpc(name='unpurchase_item', params=(
-            RpcParamInt('item_id'),
-        )),
+        Rpc(name='add_list',
+            params=(Integer('owner_id'), String('name'), String('desc'),)),
+        Rpc(name='update_list',
+            params=(Integer('list_id'), String('name'), String('desc'),)),
+        Rpc(name='delete_list', params=(Integer('list_id'),)),
+        Rpc(name='get_lists', params=(Integer('owner_id'),)),
+        Rpc(name='add_item',
+            params=(Integer('list_id'), String('name'), String('cat'),
+                    String('desc'), String('url'), Boolean('surprise'),)),
+        Rpc(name='update_item',
+            params=(Integer('item_id'), String('name'), String('cat'),
+                    String('desc'), String('url'),)),
+        Rpc(name='remove_item', params=(Integer('item_id'),)),
+        Rpc(name='reserve_item', params=(Integer('item_id'),)),
+        Rpc(name='unreserve_item', params=(Integer('item_id'),)),
+        Rpc(name='purchase_item', params=(Integer('item_id'),)),
+        Rpc(name='unpurchase_item', params=(Integer('item_id'),)),
         Rpc(name='get_reserved_and_purchased_items'),
     )
 
@@ -202,17 +181,21 @@ class ListRpcGroup(RpcGroupBase):
             to = item.reserved_by.email
             subject = 'Wish List Item Deleted'
             name, email = self.owner.nickname, self.owner.email
-            body = self.ae.DELETED_ITEM_TEMPLATE % (item.reserved_by.nickname,
-                name, email, item.name, item.parent_list.name, 'Reserved',
-                name, email)
+            template_tuple = (
+                item.reserved_by.nickname, name, email, item.name,
+                item.parent_list.name, 'Reserved', name, email,
+            )
+            body = self.ae.DELETED_ITEM_TEMPLATE % template_tuple
             self.ae.send_mail(to, subject, body)
         elif item.purchased_by is not None:
             to = item.purchased_by.email
             subject = 'Wish List Item Deleted'
             name, email = self.owner.nickname, self.owner.email
-            body = self.ae.DELETED_ITEM_TEMPLATE % (item.purchased_by.nickname,
-                name, email, item.name, item.parent_list.name, 'Purchased',
-                name, email)
+            template_tuple = (
+                item.purchased_by.nickname, name, email, item.name,
+                item.parent_list.name, 'Purchased', name, email,
+            )
+            body = self.ae.DELETED_ITEM_TEMPLATE % template_tuple
             self.ae.send_mail(to, subject, body)
 
         l = item.parent_list

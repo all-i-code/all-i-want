@@ -21,26 +21,36 @@
 
 import core.util as util
 
+#
+# TODO: refactor to use unittest
+#
+
+
 def test_camelize():
     '''Confirm camilzation of string '''
     assert 'CamelCaseString' == util.camelize('camel_case_string')
+
 
 def test_camelize_trailing():
     '''Confirm camilzation of trailing part of string '''
     assert 'longMethodName' == util.camelize('long_method_name', trailing=True)
 
+
 def test_uncamelize():
     '''Confirm converting from camel case to '_' separated'''
     assert 'long_method_name' == util.uncamelize('longMethodName')
+
 
 def test_pluralize():
     '''Confirm converting singulars into plurals'''
     assert 'families' == util.pluralize('family')
     assert 'studs' == util.pluralize('stud')
 
+
 def test_extract_Name():
     '''Confirm extraction of a name from an email address'''
     assert 'First Last' == util.extract_name('first.last@email.com')
+
 
 def test_get_base_url():
     '''Confirm proper extraction of base url'''

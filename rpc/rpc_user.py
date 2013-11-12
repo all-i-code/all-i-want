@@ -19,42 +19,31 @@
 #
 '''
 
-from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
-from rpc.rpc_params import RpcParamString, RpcParamInt, RpcParamBoolean
-from core.model import User, ListOwner, AccessReq, ListPermission
 from core.exception import PermissionDeniedError
+from core.model import User, ListOwner, AccessReq, ListPermission
+from core.util import get_base_url, extract_name
+from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
+from rpc.rpc_params import (
+    RpcParamBoolean as Boolean,
+    RpcParamInt as Integer,
+    RpcParamString as String,
+)
+
 
 class UserRpcGroup(RpcGroupBase):
     rpcs = (
-        Rpc(name='get_current_user', params=(
-            RpcParamString('url'),
-        )),
-        Rpc(name='get_owner', params=(
-            RpcParamInt('owner_id'),
-        )),
-        Rpc(name='get_permissions', params=(
-            RpcParamInt('owner_id'),
-            RpcParamBoolean('by_email'),
-        )),
-        Rpc(name='add_permission', params=(
-            RpcParamInt('owner_id'),
-            RpcParamString('email'),
-        )),
-        Rpc(name='remove_permission', params=(
-            RpcParamInt('permission_id'),
-        )),
-        Rpc(name='update_owner', params=(
-            RpcParamInt('owner_id'),
-            RpcParamString('name'),
-            RpcParamString('nickname'),
-        )),
+        Rpc(name='get_current_user', params=(String('url'),)),
+        Rpc(name='get_owner', params=(Integer('owner_id'),)),
+        Rpc(name='get_permissions',
+            params=(Integer('owner_id'), Boolean('by_email'),)),
+        Rpc(name='add_permission',
+            params=(Integer('owner_id'), String('email'),)),
+        Rpc(name='remove_permission', params=(Integer('permission_id'),)),
+        Rpc(name='update_owner',
+            params=(Integer('owner_id'), String('name'), String('nickname'),)),
         Rpc(name='get_requests'),
-        Rpc(name='approve_request', params=(
-            RpcParamInt('req_id'),
-        )),
-        Rpc(name='deny_request', params=(
-            RpcParamInt('req_id'),
-        )),
+        Rpc(name='approve_request', params=(Integer('req_id'),)),
+        Rpc(name='deny_request', params=(Integer('req_id'),)),
     )
 
     def get_current_user(self, url):
@@ -85,11 +74,11 @@ class UserRpcGroup(RpcGroupBase):
                     owner = self.db.add_owner(user)
             oid = owner.key().id() if owner is not None else -1
             wrd = req.denied if req is not None else False
-            from core.util import get_base_url
             base = get_base_url(url)
             lo = self.ae.create_logout_url('%s/#Goodbye:' % base)
         return User(email=e, nickname=n, user_id=ui, login_url=li,
-            logout_url=lo, owner_id=oid, was_req_denied=wrd, is_admin=ia)
+                    logout_url=lo, owner_id=oid, was_req_denied=wrd,
+                    is_admin=ia)
 
     def get_owner(self, owner_id):
         '''
@@ -105,8 +94,11 @@ class UserRpcGroup(RpcGroupBase):
         '''
         _ = lambda x: ListPermission.from_db(x)
         owner = self.db.get_owner(owner_id)
-        if not by_email: return [ _(p) for p in owner.permissions ]
-        return [ _(p) for p in self.db.get_permissions_by_email(owner.email) ]
+        if not by_email:
+            return [ _(p) for p in owner.permissions ]
+        return [
+            _(p) for p in self.db.get_permissions_by_email(owner.email)
+        ]
 
     def add_permission(self, owner_id, email):
         '''
@@ -114,7 +106,7 @@ class UserRpcGroup(RpcGroupBase):
         '''
         # TODO: confirm that the currently signed in user is owner_id
         owner = self.db.get_owner(owner_id)
-        p = self.db.add_permission(owner, email)
+        self.db.add_permission(owner, email)
         _ = lambda x: ListPermission.from_db(x)
         return [ _(p) for p in owner.permissions ]
 
@@ -153,7 +145,6 @@ class UserRpcGroup(RpcGroupBase):
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
 
-        from core.util import extract_name
         req = self.db.get_req(req_id)
         self.db.add_owner(req.user)
         self.db.delete(req)
@@ -171,7 +162,6 @@ class UserRpcGroup(RpcGroupBase):
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
 
-        from core.util import extract_name
         req = self.db.get_req(req_id)
         req.denied = True
         req.put()
@@ -180,6 +170,7 @@ class UserRpcGroup(RpcGroupBase):
         body = self.ae.DENY_TEMPLATE % extract_name(to)
         self.ae.send_mail(to, subject, body)
         return []
+
 
 class UserRpcReqHandler(RpcReqHandler):
     group_cls = UserRpcGroup
