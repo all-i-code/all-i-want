@@ -21,6 +21,7 @@
 
 from core.util import camelize, uncamelize, pluralize
 
+
 class Field(object):
     '''Class to represent a field in a Model object'''
 
@@ -84,30 +85,36 @@ class Field(object):
     def get_default(self):
         return self.default
 
+
 class FieldInt(Field):
     java_type = 'int'
     default = -1
     java_test_getter = 'getInt'
+
 
 class FieldString(Field):
     java_type = 'String'
     default = ''
     java_test_getter = 'getStr'
 
+
 class FieldText(Field):
     java_type = 'String'
     default = ''
     java_test_getter = 'getStr'
+
 
 class FieldFloat(Field):
     java_type = 'double'
     default = 0.0
     java_test_getter = 'getDbl'
 
+
 class FieldUser(Field):
     java_type = 'String'
     default = ''
     java_test_getter = 'getStr'
+
 
 class FieldBoolean(Field):
     java_type = 'boolean'
@@ -117,16 +124,18 @@ class FieldBoolean(Field):
     def get_java_getter_name(self):
         return camelize(self.name, trailing=True)
 
+
 class FieldModelArray(Field):
     java_test_getter = 'getArray'
     extra_iface_imports = (
         'java.util.List',
     )
 
-    def __init__(self, type=None, name=None, default=[]):
+    def __init__(self, type=None, name=None, default=None):
+        default = default or []
         _ = lambda x: pluralize(uncamelize(x.__name__))
         self.type = type
-        self.name = name if name is not None else _(x)
+        self.name = name if name is not None else _(self.__class__)
         self.default = default
 
     def get_java_test_type(self):
@@ -166,6 +175,7 @@ class FieldModelArray(Field):
         getter = template % (it, gn, jt, hn)
         return '\n'.join((helper, getter))
 
+
 class ModelMeta(type):
     '''Meta class for  object classes'''
     def __new__(cls, class_name, bases, class_dict):
@@ -173,21 +183,25 @@ class ModelMeta(type):
         ModelManager.register(nc)
         letters = 'abcdefghijklmnopqrstuvwxyz'
         if len(nc.get_fields()) > len(letters):
-            base = 'Class %s has too many fields, max of %s'
-            raise Exception(base % (nc.__name__, len(letters)))
+            base = 'Class {} has too many fields, max of {}'
+            raise Exception(base.format(nc.__name__, len(letters)))
 
-        for i,f in enumerate(nc.get_fields()): f.json_name = letters[i]
+        for i, f in enumerate(nc.get_fields()):
+            f.json_name = letters[i]
         nc.field_dict = dict((f.get_name(), f) for f in nc.get_fields())
         return nc
+
 
 class ModelManager(object):
     models = []
 
     @classmethod
     def register(cls, mc):
-        if mc.is_abstract(): return
+        if mc.is_abstract():
+            return
         assert(mc not in cls.models)
         cls.models.append(mc)
+
 
 class Model(object):
     '''Base class for all model objects'''
@@ -247,7 +261,7 @@ class Model(object):
     @classmethod
     def get_extra_java_imports(cls):
         imports = []
-        _ = lambda x : x not in imports
+        _ = lambda x: x not in imports
         for f in cls.get_fields():
             imports.extend((i for i in f.get_extra_java_imports() if _(i)))
         return imports
@@ -255,7 +269,7 @@ class Model(object):
     @classmethod
     def get_extra_iface_imports(cls):
         imports = []
-        _ = lambda x : x not in imports
+        _ = lambda x: x not in imports
         for f in cls.get_fields():
             imports.extend((i for i in f.get_extra_iface_imports() if _(i)))
         return imports
@@ -300,6 +314,7 @@ class Model(object):
 
     def equals(self, obj):
         for n in (f.get_name() for f in self.get_fields()):
-            if getattr(self, n) != getattr(obj, n): return False
+            if getattr(self, n) != getattr(obj, n):
+                return False
         return True
 

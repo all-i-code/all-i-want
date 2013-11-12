@@ -19,12 +19,15 @@
 #
 '''
 
+
 class UserVisibleError(Exception):
     pass
+
 
 class PermissionDeniedError(UserVisibleError):
     def __init__(self):
         super(PermissionDeniedError, self).__init__('Permission Denied')
+
 
 class DuplicateNameError(UserVisibleError):
     def __init__(self, cls, name):
@@ -35,18 +38,21 @@ class DuplicateNameError(UserVisibleError):
         n, c = (self.name, self.cls.__name__)
         return 'A %s with name "%s" already exists' % (c, n)
 
+
 class IdError(Exception):
     def __init__(self, mcls, id):
         self.mcls = mcls
         self.id = id
 
     def __str__(self):
-        return 'id "%s" not found for class %s' % (self.id, self.mcls.__name__)
+        tmpl = 'id "{}" not found for class {}'
+        return tmpl.format(self.id, self.mcls.__name__)
+
 
 class OverrideError(Exception):
     def __init__(self, function):
         self.function = function
 
     def __str__(self):
-        return 'The function "%s" should be overriden' % self.function
+        return 'The function "{}" should be overriden'.format(self.function)
 

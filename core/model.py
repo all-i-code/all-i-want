@@ -22,26 +22,37 @@
 # TODO: update these to user Model.property.get_value_for_datastore(instance)
 # to get ids for reference properties
 
-from core.meta import Model, FieldBoolean, FieldInt, FieldString, FieldText,\
-    FieldModelArray
+from core.meta import (
+    Model,
+    FieldBoolean as Boolean,
+    FieldInt as Integer,
+    FieldString as String,
+    FieldText as Text,
+    FieldModelArray as ModelArray,
+)
+
 
 class AccessReq(Model):
     fields = (
-        FieldInt(name='id'),
-        FieldBoolean(name='was_denied'),
-        FieldString(name='email'),
+        Integer(name='id'),
+        Boolean(name='was_denied'),
+        String(name='email'),
     )
 
     @classmethod
     def from_db(cls, db):
-        return cls(id=db.key().id(), was_denied=db.denied,
-            email=db.user.email())
+        return cls(
+            id=db.key().id(),
+            was_denied=db.denied,
+            email=db.user.email(),
+        )
+
 
 class ListPermission(Model):
     fields = (
-        FieldInt(name='id'),
-        FieldInt(name='owner_id'),
-        FieldString(name='email'),
+        Integer(name='id'),
+        Integer(name='owner_id'),
+        String(name='email'),
     )
 
     @classmethod
@@ -49,61 +60,79 @@ class ListPermission(Model):
         _ = lambda x: x.key().id()
         return cls(id=_(db), owner_id=_(db.owner), email=db.email)
 
+
 class ListOwner(Model):
     fields = (
-        FieldInt(name='id'),
-        FieldString(name='name'),
-        FieldString(name='nickname'),
-        FieldString(name='email'),
+        Integer(name='id'),
+        String(name='name'),
+        String(name='nickname'),
+        String(name='email'),
     )
 
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.key().id()
-        return cls(id=_(db), name=db.name, nickname=db.nickname, email=db.email)
+        return cls(
+            id=_(db),
+            name=db.name,
+            nickname=db.nickname,
+            email=db.email,
+        )
+
 
 class GroupInvitation(Model):
     fields = (
-        FieldInt(name='id'),
-        FieldInt(name='group_id'),
-        FieldString(name='group_name'),
-        FieldString(name='owner_name'),
-        FieldString(name='member_email'),
+        Integer(name='id'),
+        Integer(name='group_id'),
+        String(name='group_name'),
+        String(name='owner_name'),
+        String(name='member_email'),
     )
 
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.key().id()
-        return cls(id=_(db), group_id=_(db.group),
-            group_name=db.group.name, owner_name=db.group.owner.label(),
-            member_email=db.email)
+        return cls(
+            id=_(db),
+            group_id=_(db.group),
+            group_name=db.group.name,
+            owner_name=db.group.owner.label(),
+            member_email=db.email,
+        )
+
 
 class GroupMember(Model):
     fields = (
-        FieldInt(name='id'),
-        FieldInt(name='group_id'),
-        FieldString(name='name'),
-        FieldString(name='nickname'),
-        FieldString(name='email'),
-        FieldString(name='user_id'),
+        Integer(name='id'),
+        Integer(name='group_id'),
+        String(name='name'),
+        String(name='nickname'),
+        String(name='email'),
+        String(name='user_id'),
     )
 
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.key().id()
-        return cls(id=_(db), group_id=_(db.group), name=db.member.name,
-            user_id=db.member.user.user_id(), nickname=db.member.nickname,
-            email=db.member.email)
+        return cls(
+            id=_(db),
+            group_id=_(db.group),
+            name=db.member.name,
+            user_id=db.member.user.user_id(),
+            nickname=db.member.nickname,
+            email=db.member.email,
+        )
+
 
 class Group(Model):
     fields = (
-        FieldInt(name='id'),
-        FieldString(name='name'),
-        FieldString(name='owner'),
-        FieldInt(name='owner_id'),
-        FieldText(name='description'),
-        FieldModelArray(type=GroupInvitation, name='invitations'),
-        FieldModelArray(type=GroupMember, name='members'),
+        Integer(name='id'),
+        String(name='name'),
+        String(name='owner'),
+        Integer(name='owner_id'),
+        Text(name='description'),
+        ModelArray(type=GroupInvitation, name='invitations'),
+        ModelArray(type=GroupMember, name='members'),
     )
 
     @classmethod
@@ -112,70 +141,90 @@ class Group(Model):
         _lbl = lambda x: x.label() if x is not None else -1
         invitations = [ GroupInvitation.from_db(i) for i in db.invitations ]
         members = [ GroupMember.from_db(m) for m in db.members ]
-        return cls(id=db.key().id(), name=db.name, owner_id=_id(db.owner),
-            owner=_lbl(db.owner), description=db.description,
-            invitations=invitations, members=members)
+        return cls(
+            id=db.key().id(),
+            name=db.name,
+            owner_id=_id(db.owner),
+            owner=_lbl(db.owner),
+            description=db.description,
+            invitations=invitations,
+            members=members,
+        )
+
 
 class ListItem(Model):
     fields = (
-        FieldInt(name='id'),
-        FieldString(name='name'),
-        FieldText(name='description'),
-        FieldString(name='category'),
-        FieldString(name='url'),
-        FieldString(name='reserved_by'),
-        FieldInt(name='reserved_by_owner_id'),
-        FieldString(name='purchased_by'),
-        FieldInt(name='purchased_by_owner_id'),
-        FieldBoolean(name='is_surprise'),
+        Integer(name='id'),
+        String(name='name'),
+        Text(name='description'),
+        String(name='category'),
+        String(name='url'),
+        String(name='reserved_by'),
+        Integer(name='reserved_by_owner_id'),
+        String(name='purchased_by'),
+        Integer(name='purchased_by_owner_id'),
+        Boolean(name='is_surprise'),
     )
 
     @classmethod
     def from_db(cls, db):
         _ = lambda x: x.nickname if x is not None else ''
         _id = lambda x: x.key().id() if x is not None else -1
-        return cls(id=db.key().id(), name=db.name,
-            description=db.description, category=db.category, url=db.url,
-            reserved_by=_(db.reserved_by), purchased_by=_(db.purchased_by),
+        return cls(
+            id=db.key().id(),
+            name=db.name,
+            description=db.description,
+            category=db.category,
+            url=db.url,
+            reserved_by=_(db.reserved_by),
+            purchased_by=_(db.purchased_by),
             reserved_by_owner_id=_id(db.reserved_by),
             purchased_by_owner_id=_id(db.purchased_by),
-            is_surprise=db.is_surprise)
+            is_surprise=db.is_surprise,
+        )
+
 
 class WishList(Model):
     fields = (
-        FieldInt(name='id'),
-        FieldString(name='name'),
-        FieldString(name='description'),
-        FieldModelArray(type=ListItem, name='items'),
+        Integer(name='id'),
+        String(name='name'),
+        String(name='description'),
+        ModelArray(type=ListItem, name='items'),
     )
 
     @classmethod
     def from_db(cls, db, own=False):
         _ = lambda i: (not own) or (not i.is_surprise)
         items = [ ListItem.from_db(i) for i in db.items if _(i) ]
-        return cls(id=db.key().id(), name=db.name, \
-            description=db.description, items=items)
+        return cls(
+            id=db.key().id(),
+            name=db.name,
+            description=db.description,
+            items=items,
+        )
+
 
 class User(Model):
     fields = (
-        FieldString(name='email'),
-        FieldString(name='nickname'),
-        FieldString(name='user_id'),
-        FieldString(name='login_url'),
-        FieldString(name='logout_url'),
-        FieldInt(name='owner_id'),
-        FieldBoolean(name='was_req_denied'),
-        FieldBoolean(name='is_admin'),
+        String(name='email'),
+        String(name='nickname'),
+        String(name='user_id'),
+        String(name='login_url'),
+        String(name='logout_url'),
+        Integer(name='owner_id'),
+        Boolean(name='was_req_denied'),
+        Boolean(name='is_admin'),
     )
+
 
 class FailureReport(Model):
     fields = (
-        FieldString(name='error_type'),
-        FieldString(name='message'),
-        FieldString(name='traceback'),
+        String(name='error_type'),
+        String(name='message'),
+        String(name='traceback'),
     )
+
 
 def get_all_classes():
     from core.meta import ModelManager as manager
     return manager.models
-

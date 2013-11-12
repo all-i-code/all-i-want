@@ -21,6 +21,7 @@
 
 from core.exception import OverrideError
 
+
 class Access(object):
     '''Base class for all AllIWant Access interfaces. Should be overridden'''
 
@@ -41,6 +42,7 @@ class Access(object):
         '''
         raise OverrideError('save')
 
+
 class MemoryAccess(Access):
     '''In-memory implementation of Access (currently for testing)'''
 
@@ -59,9 +61,13 @@ class MemoryAccess(Access):
 
     def filter(self, cls, field=None, value=None):
         '''Retrieve all model objects by class and a field'''
-        e = lambda f,v: f is not None and v is not None
-        _ = lambda r,f,v: getattr(r, f) == v if e(f,v) else True
-        return [ r for r in self.data.get(self.nm(cls)) if _(r, field, value) ]
+        e = lambda f, v: f is not None and v is not None
+        _ = lambda r, f, v: getattr(r, f) == v if e(f, v) else True
+        return [
+            r
+            for r in self.data.get(self.nm(cls))
+            if _(r, field, value)
+        ]
 
     def get(self, cls, id):
         '''Retrieve a particular  model object(s) by class and id'''

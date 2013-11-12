@@ -21,7 +21,8 @@
 from google.appengine.api import users
 from google.appengine.api import mail
 
-class Wrapper:
+
+class Wrapper(object):
 
     FROM_ADDRESS = 'All I Want Mail <mail.all.i.want@gmail.com>'
     APPROVE_TEMPLATE = (

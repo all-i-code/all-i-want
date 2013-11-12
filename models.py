@@ -21,6 +21,7 @@
 
 from google.appengine.ext import db
 
+
 class Db(db.Model):
     last_modified = db.DateTimeProperty(indexed=False, auto_now=True)
 
@@ -28,9 +29,11 @@ class Db(db.Model):
         super(Db, self).put()
         return self
 
+
 class AccessReqDb(Db):
     user = db.UserProperty(auto_current_user_add=True)
     denied = db.BooleanProperty(default=False)
+
 
 class ListOwnerDb(Db):
     name = db.StringProperty(indexed=False)
@@ -41,27 +44,33 @@ class ListOwnerDb(Db):
     def label(self):
         return '%s (%s)' % (self.name, self.email)
 
+
 class ListPermissionDb(Db):
     owner = db.ReferenceProperty(ListOwnerDb, collection_name='permissions')
     email = db.StringProperty()
+
 
 class GroupDb(Db):
     name = db.StringProperty()
     description = db.StringProperty(indexed=False, multiline=True)
     owner = db.ReferenceProperty(ListOwnerDb, collection_name='groups')
 
+
 class GroupInvitationDb(Db):
     group = db.ReferenceProperty(GroupDb, collection_name='invitations')
     email = db.StringProperty()
+
 
 class GroupMemberDb(Db):
     member = db.ReferenceProperty(ListOwnerDb, collection_name='memberships')
     group = db.ReferenceProperty(GroupDb, collection_name='members')
 
+
 class ListDb(Db):
     name = db.StringProperty()
     description = db.StringProperty(indexed=False)
     owner = db.ReferenceProperty(ListOwnerDb, collection_name='lists')
+
 
 class ListItemDb(Db):
     parent_list = db.ReferenceProperty(ListDb, collection_name='items')
@@ -69,9 +78,15 @@ class ListItemDb(Db):
     category = db.StringProperty(indexed=False)
     description = db.StringProperty(indexed=False, multiline=True)
     url = db.StringProperty(indexed=False)
-    reserved_by = db.ReferenceProperty(ListOwnerDb,
-        collection_name='reservations', default=None)
-    purchased_by = db.ReferenceProperty(ListOwnerDb,
-        collection_name='purchases', default=None)
+    reserved_by = db.ReferenceProperty(
+        ListOwnerDb,
+        collection_name='reservations',
+        default=None,
+    )
+    purchased_by = db.ReferenceProperty(
+        ListOwnerDb,
+        collection_name='purchases',
+        default=None,
+    )
     is_surprise = db.BooleanProperty(indexed=False, default=False)
 

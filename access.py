@@ -20,10 +20,13 @@
 '''
 from google.appengine.ext.db import Key
 from core.util import extract_name as extract
-from models import AccessReqDb, ListOwnerDb, GroupDb, GroupInvitationDb,\
-    GroupMemberDb, ListDb, ListItemDb, ListPermissionDb
+from models import (
+    AccessReqDb, ListOwnerDb, GroupDb, GroupInvitationDb,
+    GroupMemberDb, ListDb, ListItemDb, ListPermissionDb,
+)
 
-class DbAccess:
+
+class DbAccess(object):
     def __init__(self, user=None):
         self.user = user
         self.owner = None
@@ -123,8 +126,14 @@ class DbAccess:
 
     def add_list_item(self, list_id, name, category, desc, url, is_surprise):
         key = Key.from_path('ListDb', list_id)
-        return ListItemDb(parent_list=key, name=name, category=category,
-            description=desc, url=url, is_surprise=is_surprise).put()
+        return ListItemDb(
+            parent_list=key,
+            name=name,
+            category=category,
+            description=desc,
+            url=url,
+            is_surprise=is_surprise,
+        ).put()
 
     def get_item(self, item_id):
         return ListItemDb.get_by_id(item_id)

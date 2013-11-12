@@ -21,7 +21,7 @@ HIDE := @
 PYTHON ?= python
 BUILD := build
 
-.PHONY : build coverage flake8 python-test clean
+.PHONY : build coverage flake8-test python-test test clean
 
 IGNORES := -not -path "*.git" \
 	-not -path "*tests"\
@@ -41,11 +41,13 @@ coverage:
 	$(HIDE)echo -e "\nCoverage Stats:\n"
 	$(HIDE)coverage report --omit /Applications/*.py
 
-flake8:
-	$(HIDE)flake8 --config=.config/flake8
+flake8-test:
+	$(HIDE)flake8 --config=.config/flake8 .
 
 python-test:
 	$(HIDE) $(PYTHON) -m unittest discover --pattern ut_*.py
+
+test: flake8-test python-test
 
 clean:
 	$(HIDE)rm -rf $(BUILD)

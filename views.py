@@ -24,6 +24,7 @@ import webapp2
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
 
+
 class PageHandler(webapp2.RequestHandler):
     def __init__(self, *args, **kwargs):
         super(PageHandler, self).__init__(*args, **kwargs)
@@ -38,9 +39,11 @@ class PageHandler(webapp2.RequestHandler):
         template_path = os.path.join(my_path, 'templates/%s' % template_name)
         return template.render(template_path, data)
 
+
 class ListPage(PageHandler):
     def get(self):
         self.response.out.write(self.render_template('index.html'))
+
 
 class NotFoundPage(PageHandler):
     def get(self):
