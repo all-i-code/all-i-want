@@ -1,7 +1,7 @@
 '''
 #
-# File: models.py
-# Description: Dummy Model objects
+# File: mock_models.py
+# Description: Mock Model objects
 #
 # Copyright 2011-2013 Adam Meadows
 #
@@ -18,7 +18,6 @@
 #    limitations under the License.
 #
 '''
-
 
 class Db(object):
     _id_map = {}
@@ -136,7 +135,7 @@ class ListItem(Db):
 if '__main__' == __name__:
     # TODO: Move this to its own module
     import unittest
-    from tests.ut_models import (
+    from tests.mock_models import (
         GroupInvitation as Invite,
         GroupMember as Member,
         ListItem as Item,

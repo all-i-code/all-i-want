@@ -25,16 +25,16 @@ from core.exception import (
     UserVisibleError, DuplicateNameError, PermissionDeniedError,
 )
 from rpc.rpc_list import ListRpcGroup
-from tests.ut_access import DummyAccess
-from tests.ut_ae import DummyWrapper
-from tests.ut_models import User
+from tests.mock_access import MockAccess
+from tests.mock_ae import MockWrapper
+from tests.mock_models import User
 
 
 class ListRpcTest(unittest.TestCase):
 
     def setUp(self):
-        self.db = DummyAccess(User(), add_owner=True)
-        self.ae = DummyWrapper()
+        self.db = MockAccess(User(), add_owner=True)
+        self.ae = MockWrapper()
         self.rpc = ListRpcGroup(self.db, self.ae)
 
     def set_user(self, user):

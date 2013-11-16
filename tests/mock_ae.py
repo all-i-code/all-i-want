@@ -1,6 +1,6 @@
 '''
 #
-# File: ae.py
+# File: mock_ae.py
 # Description: Dummy wrapper for app engine services
 #
 # Copyright 2011-2013 Adam Meadows
@@ -22,7 +22,7 @@
 from ae import Wrapper
 
 
-class DummyWrapper(Wrapper):
+class MockWrapper(Wrapper):
 
     def __init__(self):
         self.msg = {}
