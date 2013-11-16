@@ -1,6 +1,6 @@
 '''
 #
-# File: test_rpc_group.py
+# File: test_group.py
 # Description: Unit tests for rpc_group module
 #
 # Copyright 2011-2013 Adam Meadows
@@ -22,16 +22,16 @@
 import unittest
 from core.exception import UserVisibleError, DuplicateNameError
 from rpc.rpc_group import GroupRpcGroup
-from tests.ut_access import DummyAccess
-from tests.ut_ae import DummyWrapper
-from tests.ut_models import User
+from mocks.mock_access import MockAccess
+from mocks.mock_ae import MockWrapper
+from mocks.mock_models import User
 
 
 class GroupRpcTest(unittest.TestCase):
 
     def setUp(self):
-        self.db = DummyAccess(User(), add_owner=True)
-        self.ae = DummyWrapper()
+        self.db = MockAccess(User(), add_owner=True)
+        self.ae = MockWrapper()
         self.rpc = GroupRpcGroup(self.db, self.ae)
 
     def set_user(self, user):
@@ -43,11 +43,11 @@ class GroupRpcTest(unittest.TestCase):
 
     def add_groups(self, count, include_invites=False):
         for i in xrange(1, count + 1):
-            g = self.db.add_group('Name %s' % i, 'Desc %s' % i)
+            g = self.db.add_group('Name {}'.format(i), 'Desc {}'.format(i))
             self.assertEqual([], g.invitations)
             self.assertEqual([], g.members)
             if include_invites:
-                self.db.add_group_invite(g, 'email_%s@domain.com' % i)
+                self.db.add_group_invite(g, 'email_{}@domain.com'.format(i))
 
     def compare_group(self, db, group):
         self.assertEqual(db.key().id(), group.id)

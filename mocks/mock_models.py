@@ -1,7 +1,7 @@
 '''
 #
-# File: models.py
-# Description: Dummy Model objects
+# File: mock_models.py
+# Description: Mock Model objects
 #
 # Copyright 2011-2013 Adam Meadows
 #
@@ -132,36 +132,3 @@ class ListItem(Db):
         self.purchased_by = purchased_by
         self.is_surprise = is_surprise
         self.owner = owner
-
-if '__main__' == __name__:
-    # TODO: Move this to its own module
-    import unittest
-    from tests.ut_models import (
-        GroupInvitation as Invite,
-        GroupMember as Member,
-        ListItem as Item,
-        ListOwner as Owner,
-        AccessReq as Req,
-    )
-
-    class DummyModelTest(unittest.TestCase):
-
-        def test_increasing_ids(self):
-            '''
-            Make sure that ids are increasing with each object
-            '''
-            eq = lambda id, obj: self.assertEquals(id, obj.key().id())
-            ids = range(1, 100)
-
-            classes = ( User, Group, Invite, Member, List, Item )
-            for cls in classes:
-                objs = [ cls() for i in ids ]
-                [ eq(id, o) for id, o in zip(ids, objs) ]
-
-            u = User()
-            u_classes = ( Req, Owner )
-            for cls in u_classes:
-                objs = [ cls(u) for i in ids ]
-                [ eq(id, o) for id, o in zip(ids, objs) ]
-
-    unittest.main()

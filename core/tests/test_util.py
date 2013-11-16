@@ -19,43 +19,42 @@
 #
 '''
 
+import unittest
 import core.util as util
 
-#
-# TODO: refactor to use unittest
-#
 
+class UtilTest(unittest.TestCase):
 
-def test_camelize():
-    '''Confirm camilzation of string '''
-    assert 'CamelCaseString' == util.camelize('camel_case_string')
+    def test_camelize(self):
+        '''Confirm camilzation of string '''
+        self.assertEqual(util.camelize('camel_case_string'),
+                         'CamelCaseString')
 
+    def test_camelize_trailing(self):
+        '''Confirm camilzation of trailing part of string '''
+        self.assertEqual(util.camelize('long_method_name', trailing=True),
+                         'longMethodName')
 
-def test_camelize_trailing():
-    '''Confirm camilzation of trailing part of string '''
-    assert 'longMethodName' == util.camelize('long_method_name', trailing=True)
+    def test_uncamelize(self):
+        '''Confirm converting from camel case to '_' separated'''
+        self.assertEqual(util.uncamelize('longMethodName'),
+                         'long_method_name')
 
+    def test_pluralize(self):
+        '''Confirm converting singulars into plurals'''
+        self.assertEqual(util.pluralize('family'), 'families')
+        self.assertEqual(util.pluralize('stud'), 'studs')
 
-def test_uncamelize():
-    '''Confirm converting from camel case to '_' separated'''
-    assert 'long_method_name' == util.uncamelize('longMethodName')
+    def test_extract_name(self):
+        '''Confirm extraction of a name from an email address'''
+        self.assertEqual(util.extract_name('first.last@email.com'),
+                         'First Last')
 
+    def test_get_base_url(self):
+        '''Confirm proper extraction of base url'''
+        base = 'http://www.domain.com'
+        url = '{}/extra/stuff/at/the/end.html'.format(base)
+        self.assertEqual(util.get_base_url(url), base)
 
-def test_pluralize():
-    '''Confirm converting singulars into plurals'''
-    assert 'families' == util.pluralize('family')
-    assert 'studs' == util.pluralize('stud')
-
-
-def test_extract_Name():
-    '''Confirm extraction of a name from an email address'''
-    assert 'First Last' == util.extract_name('first.last@email.com')
-
-
-def test_get_base_url():
-    '''Confirm proper extraction of base url'''
-    base = 'http://www.domain.com'
-    url = '%s/extra/stuff/at/the/end.html' % base
-    assert base == util.get_base_url(url)
-
-
+if __name__ == '__main__':
+    unittest.main()

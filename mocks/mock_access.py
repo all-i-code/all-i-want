@@ -1,7 +1,7 @@
 '''
 #
-# File: ut_access.py
-# Description: Dummy Interface into the database for testing
+# File: mock_access.py
+# Description: Mock Interface into the database for testing
 #
 # Copyright 2011-2013 Adam Meadows
 #
@@ -18,7 +18,7 @@
 #    limitations under the License.
 #
 '''
-from tests.ut_models import (
+from mocks.mock_models import (
     AccessReq as Req,
     ListOwner as Owner,
     Group,
@@ -29,7 +29,7 @@ from tests.ut_models import (
 )
 
 
-class DummyAccess(object):
+class MockAccess(object):
     def __init__(self, user=None, add_owner=False):
         self.owners = {}
         self.user_owners = {}
@@ -57,7 +57,7 @@ class DummyAccess(object):
     def add_owner(self, user):
         owner = Owner(user)
         self.user_owners[user] = owner
-        self.owners[owner.id] = owner
+        self.owners[owner.key().id()] = owner
         return owner
 
     def is_group_name_unique(self, name, key=None):
@@ -216,4 +216,6 @@ class DummyAccess(object):
         del self.items[item.key().id()]
         item.parent_list.items.remove(item)
 
+    def get_permissions_by_email(self, email):
+        return []
 

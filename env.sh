@@ -22,4 +22,4 @@ then
     export GAE=/usr/local/google_appengine
 fi
 
-export PYTHONPATH=${PWD}:${GAE}/lib/yaml/lib:${GAE}/lib/webob:${GAE}/lib/django_1_2:${GAE}/lib:${GAE}
+export PYTHONPATH=${PWD}:${GAE}/lib/yaml/lib:${GAE}/lib/webob-1.1.1:${GAE}/lib/django-1.4:${GAE}/lib:${GAE}

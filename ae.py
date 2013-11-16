@@ -25,6 +25,7 @@ from google.appengine.api import mail
 class Wrapper(object):
 
     FROM_ADDRESS = 'All I Want Mail <mail.all.i.want@gmail.com>'
+    # TODO: update these templates to use .format()
     APPROVE_TEMPLATE = (
         'Dear %s,\n\n'
         'Your All I Want account has been activated. You can now visit '
