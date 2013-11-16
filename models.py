@@ -20,6 +20,15 @@
 '''
 
 from google.appengine.ext import db
+import model_fields as mf
+
+FIELD_MAP = {
+    db.DateTimeProperty: mf.DateTime,
+    db.StringProperty: mf.String,
+    db.ReferenceProperty: mf.Reference,
+    db.BooleanProperty: mf.Boolean,
+    db.UserProperty: mf.User,
+}
 
 
 class Db(db.Model):
@@ -42,7 +51,7 @@ class ListOwnerDb(Db):
     user = db.UserProperty(auto_current_user_add=True)
 
     def label(self):
-        return '%s (%s)' % (self.name, self.email)
+        return '{} ({})'.format(self.name, self.email)
 
 
 class ListPermissionDb(Db):
@@ -78,15 +87,10 @@ class ListItemDb(Db):
     category = db.StringProperty(indexed=False)
     description = db.StringProperty(indexed=False, multiline=True)
     url = db.StringProperty(indexed=False)
-    reserved_by = db.ReferenceProperty(
-        ListOwnerDb,
-        collection_name='reservations',
-        default=None,
-    )
-    purchased_by = db.ReferenceProperty(
-        ListOwnerDb,
-        collection_name='purchases',
-        default=None,
-    )
+    reserved_by = db.ReferenceProperty(ListOwnerDb,
+                                       collection_name='reservations',
+                                       default=None)
+    purchased_by = db.ReferenceProperty(ListOwnerDb,
+                                        collection_name='purchases',
+                                        default=None)
     is_surprise = db.BooleanProperty(indexed=False, default=False)
-

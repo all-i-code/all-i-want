@@ -18,7 +18,9 @@
 #    limitations under the License.
 #
 '''
+from google.appengine.api import mail
 from google.appengine.ext.db import Key
+
 from core.util import extract_name as extract
 from models import (
     AccessReqDb, ListOwnerDb, GroupDb, GroupInvitationDb,
@@ -32,7 +34,6 @@ class DbAccess(object):
         self.owner = None
 
     def send_mail(self, sender, to, subject, message_body):
-        from google.appengine.api import mail
         message = mail.EmailMessage()
         message.sender = sender
         message.to = to
