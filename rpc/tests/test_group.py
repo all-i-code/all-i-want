@@ -1,6 +1,6 @@
 '''
 #
-# File: test_rpc_group.py
+# File: test_group.py
 # Description: Unit tests for rpc_group module
 #
 # Copyright 2011-2013 Adam Meadows
@@ -22,9 +22,9 @@
 import unittest
 from core.exception import UserVisibleError, DuplicateNameError
 from rpc.rpc_group import GroupRpcGroup
-from tests.mock_access import MockAccess
-from tests.mock_ae import MockWrapper
-from tests.mock_models import User
+from mocks.mock_access import MockAccess
+from mocks.mock_ae import MockWrapper
+from mocks.mock_models import User
 
 
 class GroupRpcTest(unittest.TestCase):

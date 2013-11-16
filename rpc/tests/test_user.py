@@ -24,9 +24,9 @@ import unittest
 from core.exception import PermissionDeniedError
 from core.util import get_base_url, extract_name
 from rpc.rpc_user import UserRpcGroup
-from tests.mock_access import MockAccess
-from tests.mock_ae import MockWrapper
-from tests.mock_models import User
+from mocks.mock_access import MockAccess
+from mocks.mock_ae import MockWrapper
+from mocks.mock_models import User
 
 
 class UserRpcTest(unittest.TestCase):

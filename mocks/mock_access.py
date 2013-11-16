@@ -18,7 +18,7 @@
 #    limitations under the License.
 #
 '''
-from tests.mock_models import (
+from mocks.mock_models import (
     AccessReq as Req,
     ListOwner as Owner,
     Group,

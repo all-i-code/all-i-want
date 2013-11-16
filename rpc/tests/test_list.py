@@ -25,9 +25,9 @@ from core.exception import (
     UserVisibleError, DuplicateNameError, PermissionDeniedError,
 )
 from rpc.rpc_list import ListRpcGroup
-from tests.mock_access import MockAccess
-from tests.mock_ae import MockWrapper
-from tests.mock_models import User
+from mocks.mock_access import MockAccess
+from mocks.mock_ae import MockWrapper
+from mocks.mock_models import User
 
 
 class ListRpcTest(unittest.TestCase):
