@@ -19,6 +19,7 @@
 #
 '''
 
+
 class Db(object):
     _id_map = {}
 

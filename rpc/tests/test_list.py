@@ -56,7 +56,7 @@ class ListRpcTest(unittest.TestCase):
         return g
 
     def create_list(self, oid, idx, count):
-        _ = lambda x: '%s %s' % (x, idx)
+        _ = lambda x: '{} {}'.format(x, idx)
         wl = self.db.add_list(oid, _('List'), _('List Desc'))
         lid = wl.key().id()
         for idx in xrange(count):
@@ -205,8 +205,12 @@ class ListRpcTest(unittest.TestCase):
         Confirm that get_lists works for current owner
         '''
         oid = self.db.owner.key().id()
-        _ = lambda x: self.db.add_list(oid, 'List %s' % x, 'Desc %s' % x)
-        lists = [ _(i) for i in '12345' ]
+
+        def _add(i):
+            return self.db.add_list(oid, 'List {}'.format(i),
+                                    'Desc {}'.format(i))
+
+        lists = [ _add(i) for i in '12345' ]
         wls = self.rpc.get_lists(oid)
         self.assertEqual(len(lists), len(wls))
 

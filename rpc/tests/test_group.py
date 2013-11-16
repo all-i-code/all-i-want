@@ -43,11 +43,11 @@ class GroupRpcTest(unittest.TestCase):
 
     def add_groups(self, count, include_invites=False):
         for i in xrange(1, count + 1):
-            g = self.db.add_group('Name %s' % i, 'Desc %s' % i)
+            g = self.db.add_group('Name {}'.format(i), 'Desc {}'.format(i))
             self.assertEqual([], g.invitations)
             self.assertEqual([], g.members)
             if include_invites:
-                self.db.add_group_invite(g, 'email_%s@domain.com' % i)
+                self.db.add_group_invite(g, 'email_{}@domain.com'.format(i))
 
     def compare_group(self, db, group):
         self.assertEqual(db.key().id(), group.id)

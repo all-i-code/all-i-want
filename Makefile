@@ -26,6 +26,7 @@ BUILD := build
 IGNORES := -not -path "*.git" \
 	-not -path "*tests"\
 	-not -path "*build"\
+	-not -path "*mocks"\
 	-not -path "*.config"
 
 build:
@@ -34,6 +35,7 @@ build:
 	$(HIDE)cp *.py $(BUILD)
 	$(HIDE)cp *.yaml $(BUILD)
 	$(HIDE)find . -type d -d 1 $(IGNORES) -exec cp -R {} $(BUILD) \;
+	$(HIDE)find $(BUILD) -name tests | xargs rm -rf
 
 coverage: export PYTHON := coverage run -a
 coverage:

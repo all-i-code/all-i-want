@@ -75,7 +75,7 @@ class UserRpcTest(unittest.TestCase):
 
         # Verify correct user details are returned
         base = get_base_url(url)
-        goodbye = '%s/#Goodbye:' % base
+        goodbye = '{}/#Goodbye:'.format(base)
         self.assertEqual(self.ae.create_logout_url(goodbye), user.logout_url)
         self.assertEqual(self.user.nickname(), user.nickname)
         self.assertEqual(self.user.email(), user.email)
@@ -122,7 +122,7 @@ class UserRpcTest(unittest.TestCase):
 
         # Verify correct user details are returned
         base = get_base_url(url)
-        goodbye = '%s/#Goodbye:' % base
+        goodbye = '{}/#Goodbye:'.format(base)
         self.assertEqual(self.ae.create_logout_url(goodbye), user.logout_url)
         self.assertEqual(self.user.nickname(), user.nickname)
         self.assertEqual(self.user.email(), user.email)
