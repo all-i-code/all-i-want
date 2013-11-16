@@ -57,7 +57,7 @@ class DummyAccess(object):
     def add_owner(self, user):
         owner = Owner(user)
         self.user_owners[user] = owner
-        self.owners[owner.id] = owner
+        self.owners[owner.key().id()] = owner
         return owner
 
     def is_group_name_unique(self, name, key=None):
@@ -216,4 +216,6 @@ class DummyAccess(object):
         del self.items[item.key().id()]
         item.parent_list.items.remove(item)
 
+    def get_permissions_by_email(self, email):
+        return []
 

@@ -281,14 +281,15 @@ class ListRpcTest(unittest.TestCase):
         l = o.lists[2]
         count = len(l.items)
         lid = l.key().id()
-        witem = self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', True)
+        w_list = self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', True)
+        witem = w_list.items[-1]
         self.assertEqual(count + 1, len(o.lists[2].items))
         self.assertEqual('item', witem.name)
         self.assertEqual('cat', witem.category)
         self.assertEqual('desc', witem.description)
         self.assertEqual('url', witem.url)
         self.assertEqual(True, witem.is_surprise)
-        self.assertEqual(self.db.owner.label(), witem.reserved_by)
+        self.assertEqual(self.db.owner.nickname, witem.reserved_by)
 
     def test_add_item_to_own_list(self):
         '''
@@ -298,7 +299,8 @@ class ListRpcTest(unittest.TestCase):
         l = self.db.owner.lists[0]
         count = len(l.items)
         lid = l.key().id()
-        witem = self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', False)
+        w_list = self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', False)
+        witem = w_list.items[0]
         self.assertEqual(count + 1, len(self.db.owner.lists[0].items))
         self.assertEqual('item', witem.name)
         self.assertEqual('cat', witem.category)
@@ -318,7 +320,8 @@ class ListRpcTest(unittest.TestCase):
         item = l.items[0]
         iid = item.key().id()
         n, c, d, u = ('New Name', 'New Cat', 'New Desc', 'New URL')
-        witem = self.rpc.update_item(iid, n, c, d, u)
+        w_list = self.rpc.update_item(iid, n, c, d, u)
+        witem = w_list.items[0]
         self.assertEqual(count, len(self.db.owner.lists[1].items))
         self.assertEqual(n, witem.name)
         self.assertEqual(c, witem.category)

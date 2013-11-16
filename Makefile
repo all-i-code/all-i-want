@@ -45,7 +45,8 @@ flake8-test:
 	$(HIDE)flake8 --config=.config/flake8 .
 
 python-test:
-	$(HIDE) $(PYTHON) -m unittest discover --pattern ut_*.py
+	$(HIDE)nosetests
+	#$(HIDE) $(PYTHON) -m unittest discover --pattern ut_*.py
 
 test: flake8-test python-test
 

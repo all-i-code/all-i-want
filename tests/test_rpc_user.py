@@ -52,12 +52,12 @@ class UserRpcTest(unittest.TestCase):
         user = self.rpc.get_current_user(url)
 
         # Verify nothing but login url is returned
-        self.assertEquals(None, user.logout_url)
-        self.assertEquals(None, user.email)
-        self.assertEquals(None, user.user_id)
-        self.assertEquals(None, user.nickname)
+        self.assertEqual(None, user.logout_url)
+        self.assertEqual(None, user.email)
+        self.assertEqual(None, user.user_id)
+        self.assertEqual(None, user.nickname)
         login_url = self.ae.create_login_url(url)
-        self.assertEquals(login_url, user.login_url)
+        self.assertEqual(login_url, user.login_url)
 
     def test_get_user(self):
         '''
@@ -67,7 +67,7 @@ class UserRpcTest(unittest.TestCase):
 
         self.set_user(User(is_admin=True))
         # Verify no owner exists before call
-        self.assertEquals(None, self.db.user_owners.get(self.user, None))
+        self.assertEqual(None, self.db.user_owners.get(self.user, None))
         num_owners = len(self.db.owners)
 
         url = 'http://www.domain.com/some/extra/path/'
@@ -76,19 +76,19 @@ class UserRpcTest(unittest.TestCase):
         # Verify correct user details are returned
         base = get_base_url(url)
         goodbye = '%s/#Goodbye:' % base
-        self.assertEquals(self.ae.create_logout_url(goodbye), user.logout_url)
-        self.assertEquals(self.user.nickname(), user.nickname)
-        self.assertEquals(self.user.email(), user.email)
-        self.assertEquals(None, user.login_url)
+        self.assertEqual(self.ae.create_logout_url(goodbye), user.logout_url)
+        self.assertEqual(self.user.nickname(), user.nickname)
+        self.assertEqual(self.user.email(), user.email)
+        self.assertEqual(None, user.login_url)
 
         # Verify owner was created correctly
         owner = self.db.user_owners.get(self.user)
-        self.assertEquals(num_owners + 1, len(self.db.owners))
-        self.assertEquals(self.user, owner.user)
-        self.assertEquals(owner.key().id(), user.owner_id)
-        self.assertEquals(self.user.nickname(), owner.nickname)
-        self.assertEquals(self.user.email(), owner.email)
-        self.assertEquals(extract_name(self.user.email()), owner.name)
+        self.assertEqual(num_owners + 1, len(self.db.owners))
+        self.assertEqual(self.user, owner.user)
+        self.assertEqual(owner.key().id(), user.owner_id)
+        self.assertEqual(self.user.nickname(), owner.nickname)
+        self.assertEqual(self.user.email(), owner.email)
+        self.assertEqual(extract_name(self.user.email()), owner.name)
 
     def test_get_user_owner_exists(self):
         '''
@@ -103,9 +103,9 @@ class UserRpcTest(unittest.TestCase):
         user = self.rpc.get_current_user(url)
 
         # verify still the same owner after the call
-        self.assertEquals(num_owners, len(self.db.owners))
-        self.assertEquals(owner.key().id(), user.owner_id)
-        self.assertEquals(owner, self.db.user_owners[self.user])
+        self.assertEqual(num_owners, len(self.db.owners))
+        self.assertEqual(owner.key().id(), user.owner_id)
+        self.assertEqual(owner, self.db.user_owners[self.user])
 
     def test_get_user_add_req(self):
         '''
@@ -114,7 +114,7 @@ class UserRpcTest(unittest.TestCase):
         '''
 
         # Verify no owner exists before call
-        self.assertEquals(None, self.db.user_owners.get(self.user, None))
+        self.assertEqual(None, self.db.user_owners.get(self.user, None))
         num_owners = len(self.db.owners)
 
         url = 'http://www.domain.com/some/extra/path/'
@@ -123,17 +123,17 @@ class UserRpcTest(unittest.TestCase):
         # Verify correct user details are returned
         base = get_base_url(url)
         goodbye = '%s/#Goodbye:' % base
-        self.assertEquals(self.ae.create_logout_url(goodbye), user.logout_url)
-        self.assertEquals(self.user.nickname(), user.nickname)
-        self.assertEquals(self.user.email(), user.email)
-        self.assertEquals(None, user.login_url)
-        self.assertEquals(-1, user.owner_id)
-        self.assertEquals(num_owners, len(self.db.owners))
+        self.assertEqual(self.ae.create_logout_url(goodbye), user.logout_url)
+        self.assertEqual(self.user.nickname(), user.nickname)
+        self.assertEqual(self.user.email(), user.email)
+        self.assertEqual(None, user.login_url)
+        self.assertEqual(-1, user.owner_id)
+        self.assertEqual(num_owners, len(self.db.owners))
 
         # Verify access request was created correctly
-        self.assertEquals(1, len(self.db.request_ids))
+        self.assertEqual(1, len(self.db.request_ids))
         req = self.db.requests.values()[0]
-        self.assertEquals(self.user, req.user)
+        self.assertEqual(self.user, req.user)
 
     def test_get_user_req_exists(self):
         '''
@@ -142,23 +142,23 @@ class UserRpcTest(unittest.TestCase):
         '''
 
         # Verify no owner exists before call
-        self.assertEquals(None, self.db.user_owners.get(self.user, None))
+        self.assertEqual(None, self.db.user_owners.get(self.user, None))
         num_owners = len(self.db.owners)
 
         # Create the request that already exists
         self.db.add_req(self.user)
-        self.assertEquals(1, len(self.db.request_ids))
+        self.assertEqual(1, len(self.db.request_ids))
 
         url = 'http://www.domain.com/some/extra/path/'
         user = self.rpc.get_current_user(url)
 
         # Verify correct user details are returned
-        self.assertEquals(None, user.login_url)
-        self.assertEquals(-1, user.owner_id)
-        self.assertEquals(num_owners, len(self.db.owners))
+        self.assertEqual(None, user.login_url)
+        self.assertEqual(-1, user.owner_id)
+        self.assertEqual(num_owners, len(self.db.owners))
 
         # Verify no additional request was created correctly
-        self.assertEquals(1, len(self.db.request_ids))
+        self.assertEqual(1, len(self.db.request_ids))
 
     def test_get_owner(self):
         '''
@@ -169,10 +169,10 @@ class UserRpcTest(unittest.TestCase):
         oid = owner.key().id()
         lo = self.rpc.get_owner(oid)
 
-        self.assertEquals(oid, lo.id)
-        self.assertEquals(owner.email, lo.email)
-        self.assertEquals(owner.nickname, lo.nickname)
-        self.assertEquals(owner.name, lo.name)
+        self.assertEqual(oid, lo.id)
+        self.assertEqual(owner.email, lo.email)
+        self.assertEqual(owner.nickname, lo.nickname)
+        self.assertEqual(owner.name, lo.name)
 
     def test_update_owner(self):
         '''
@@ -187,8 +187,8 @@ class UserRpcTest(unittest.TestCase):
         self.rpc.update_owner(owner.key().id(), 'Joe Smith', 'Joe')
 
         self.assertTrue(owner.saved())
-        self.assertEquals('Joe Smith', owner.name)
-        self.assertEquals('Joe', owner.nickname)
+        self.assertEqual('Joe Smith', owner.name)
+        self.assertEqual('Joe', owner.nickname)
 
     def test_approve_request_no_admin(self):
         '''
@@ -211,19 +211,19 @@ class UserRpcTest(unittest.TestCase):
         self.set_user(User(is_admin=True))
         user = User(email='joe.smith@email.com')
         req = self.db.add_req(user)
-        self.assertEquals({}, self.ae.msg)
+        self.assertEqual({}, self.ae.msg)
 
         self.rpc.approve_request(req.key().id())
 
-        self.assertEquals(0, len(self.db.request_ids))
+        self.assertEqual(0, len(self.db.request_ids))
         owner = self.db.owners.values()[0]
-        self.assertEquals(user, owner.user)
+        self.assertEqual(user, owner.user)
         msg = self.ae.msg
-        self.assertEquals(self.ae.FROM_ADDRESS, msg['f'])
-        self.assertEquals(owner.email, msg['t'])
-        self.assertEquals('Account Activated', msg['s'])
+        self.assertEqual(self.ae.FROM_ADDRESS, msg['f'])
+        self.assertEqual(owner.email, msg['t'])
+        self.assertEqual('Account Activated', msg['s'])
         body = self.ae.APPROVE_TEMPLATE % extract_name(owner.email)
-        self.assertEquals(body, msg['b'])
+        self.assertEqual(body, msg['b'])
 
     def test_deny_request(self):
         '''
@@ -233,19 +233,19 @@ class UserRpcTest(unittest.TestCase):
         self.set_user(User(is_admin=True))
         user = User(email='joe.smith@email.com')
         req = self.db.add_req(user)
-        self.assertEquals({}, self.ae.msg)
+        self.assertEqual({}, self.ae.msg)
 
         self.rpc.approve_request(req.key().id())
 
-        self.assertEquals(0, len(self.db.request_ids))
+        self.assertEqual(0, len(self.db.request_ids))
         owner = self.db.owners.values()[0]
-        self.assertEquals(user, owner.user)
+        self.assertEqual(user, owner.user)
         msg = self.ae.msg
-        self.assertEquals(self.ae.FROM_ADDRESS, msg['f'])
-        self.assertEquals(owner.email, msg['t'])
-        self.assertEquals('Account Activated', msg['s'])
+        self.assertEqual(self.ae.FROM_ADDRESS, msg['f'])
+        self.assertEqual(owner.email, msg['t'])
+        self.assertEqual('Account Activated', msg['s'])
         body = self.ae.APPROVE_TEMPLATE % extract_name(owner.email)
-        self.assertEquals(body, msg['b'])
+        self.assertEqual(body, msg['b'])
 
 if __name__ == '__main__':
     unittest.main()
