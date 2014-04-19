@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: mock_ae.py
 # Description: Dummy wrapper for app engine services
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 from ae import Wrapper
 
@@ -35,4 +35,3 @@ class MockWrapper(Wrapper):
 
     def send_mail_from(self, sender, to, subject, body):
         self.msg = dict(f=sender, t=to, s=subject, b=body)
-

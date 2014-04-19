@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: access.py
 # Description: Interface into the database
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 from google.appengine.api import mail
 from google.appengine.ext.db import Key
 
@@ -146,7 +146,6 @@ class DbAccess(object):
             obj.delete()
 
     def _delete_group(self, group):
-        [ m.delete() for m in group.members ]
-        [ i.delete() for i in group.invitations ]
+        [m.delete() for m in group.members]
+        [i.delete() for i in group.invitations]
         group.delete()
-

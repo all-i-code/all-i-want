@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: meta.py
 # Description: Meta-class and base classes for AllIWant model objects
@@ -17,13 +17,13 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 from core.util import camelize, uncamelize, pluralize
 
 
 class Field(object):
-    '''Class to represent a field in a Model object'''
+    """Class to represent a field in a Model object"""
 
     @classmethod
     def get_extra_java_imports(cls):
@@ -177,7 +177,7 @@ class FieldModelArray(Field):
 
 
 class ModelMeta(type):
-    '''Meta class for  object classes'''
+    """Meta class for  object classes"""
     def __new__(cls, class_name, bases, class_dict):
         nc = type.__new__(cls, class_name, bases, class_dict)
         ModelManager.register(nc)
@@ -204,7 +204,7 @@ class ModelManager(object):
 
 
 class Model(object):
-    '''Base class for all model objects'''
+    """Base class for all model objects"""
     __metaclass__ = ModelMeta
     abstract = True
 
@@ -238,7 +238,7 @@ class Model(object):
 
     @classmethod
     def get_field_names(cls):
-        return ( f.get_name() for f in cls.get_fields() )
+        return (f.get_name() for f in cls.get_fields())
 
     @classmethod
     def get_java_iface(cls):
@@ -251,12 +251,12 @@ class Model(object):
     @classmethod
     def get_java_create_params(cls):
         _ = lambda f: '%s %s' % (f.get_java_type(), f.get_java_name())
-        return ',\n   '.join( (_(f) for f in cls.get_fields()) )
+        return ',\n   '.join((_(f) for f in cls.get_fields()))
 
     @classmethod
     def get_java_create_eval(cls):
         _ = lambda f: '"%s": %s' % (f.json_name, f.get_java_name())
-        return ',\n      '.join( (_(f) for f in cls.get_fields()) )
+        return ',\n      '.join((_(f) for f in cls.get_fields()))
 
     @classmethod
     def get_extra_java_imports(cls):
@@ -282,7 +282,7 @@ class Model(object):
     def from_json_dict(cls, json_dict):
         j = lambda n: cls.get_json_name(n)
         v = lambda n: json_dict.get(j(n))
-        return cls(dict((n, v(n)) for n in cls.get_field_names() ))
+        return cls(dict((n, v(n)) for n in cls.get_field_names()))
 
     def __init__(self, **kwargs):
         fields = ((f.get_name(), f.get_default()) for f in self.get_fields())
@@ -295,18 +295,18 @@ class Model(object):
     def get_value(self, name):
         v = getattr(self, name, None)
         if v.__class__ == list:
-            v = [ i.to_json_dict() for i in v ]
+            v = [i.to_json_dict() for i in v]
         return v
 
     def to_dict(self):
         v = lambda f: self.get_value(f.get_name())
         n = lambda f: f.get_name()
-        return dict( (n(f), v(f)) for f in self.get_fields() )
+        return dict((n(f), v(f)) for f in self.get_fields())
 
     def to_json_dict(self):
         v = lambda f: self.get_value(f.get_name())
         n = lambda f: self.get_json_name(f.get_name())
-        return dict( (n(f), v(f)) for f in self.get_fields() )
+        return dict((n(f), v(f)) for f in self.get_fields())
 
     def clone(self):
         d = self.to_dict()
@@ -317,4 +317,3 @@ class Model(object):
             if getattr(self, n) != getattr(obj, n):
                 return False
         return True
-

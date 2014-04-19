@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: ae.py
 # Description: wrapper for app engine services
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 from google.appengine.api import users
 from google.appengine.api import mail
 
@@ -74,4 +74,3 @@ class Wrapper(object):
         msg.subject = subject
         msg.body = body
         msg.send()
-

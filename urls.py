@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: views.py
 # Description: URL handler for html/js URLs
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 import webapp2
 from views import ListPage, NotFoundPage
@@ -26,4 +26,3 @@ urls = [
     ('/.*', NotFoundPage),
 ]
 app = webapp2.WSGIApplication(urls, debug=True)
-

@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: util.py
 # Description: Utility methods for use in AllIWant
@@ -17,18 +17,18 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 
 def camelize(s, trailing=False):
-    '''Translate string into camel-case'''
+    """Translate string into camel-case"""
     u = lambda i: not trailing or i > 0
     _ = lambda x, i: x[0].upper() + x[1:] if u(i) else x
     return ''.join(_(w, i) for i, w in enumerate(s.split('_')))
 
 
 def uncamelize(s):
-    '''Convert camel-case into underscore-separated'''
+    """Convert camel-case into underscore-separated"""
     news = s[0]
     for c in s[1:]:
         news += '_' + c if c.upper() == c else c
@@ -36,23 +36,23 @@ def uncamelize(s):
 
 
 def pluralize(s):
-    '''Pluralize singular string'''
+    """Pluralize singular string"""
     if s[-1] == 'y':
         return s[:-1] + 'ies'
     return s + 's'
 
 
 def extract_name(email):
-    '''
+    """
     Extracts a name from an email assuming the email is in the form:
         first.last@domain.com
-    '''
+    """
     username = email.split('@')[0]
     return ' '.join((w[0].upper() + w[1:] for w in username.split('.')))
 
 
 def get_base_url(url):
-    '''Extract the base (root) URL from a complete URL'''
+    """Extract the base (root) URL from a complete URL"""
     from urlparse import urlparse  # Deferred
 
     parts = urlparse(url)
@@ -60,10 +60,10 @@ def get_base_url(url):
 
 
 def prefetch_refprops(entities, *props):
-    '''
+    """
     Wonderful little method provided by Nick Johnson at
     http://blog.notdot.net/2010/01/ReferenceProperty-prefetching-in-App-Engine
-    '''
+    """
     from google.appengine.ext import db  # Deferred
 
     fields = [(entity, prop) for entity in entities for prop in props]

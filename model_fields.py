@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: model_fields.py
 # Description: Model field classes
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 from datetime import datetime
 
 

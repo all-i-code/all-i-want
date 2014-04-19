@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: exception.py
 # Description: AllIWant specific exceptions
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 
 class UserVisibleError(Exception):
@@ -55,4 +55,3 @@ class OverrideError(Exception):
 
     def __str__(self):
         return 'The function "{}" should be overriden'.format(self.function)
-

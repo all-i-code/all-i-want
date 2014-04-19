@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: rpc_user.py
 # Description: Handler for all User RPCs related to AE User and ListOwnerDb
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 from core.exception import PermissionDeniedError
 from core.model import User, ListOwner, AccessReq, ListPermission
@@ -47,13 +47,13 @@ class UserRpcGroup(RpcGroupBase):
     )
 
     def get_current_user(self, url):
-        '''
+        """
         Return a User object with details of the current authenticated user,
         including a url for logging out.
 
         If user has not yet been authenticated, return a User object with a
         url to allow user to log in.
-        '''
+        """
         e, n, ui, li, lo, oid, wrd = (None, None, None, None, None, -1, False)
         user = self.db.user
         ia = False
@@ -81,67 +81,67 @@ class UserRpcGroup(RpcGroupBase):
                     is_admin=ia)
 
     def get_owner(self, owner_id):
-        '''
+        """
         Return the ListOwner object with the given owner_id
-        '''
+        """
         return ListOwner.from_db(self.db.get_owner(owner_id))
 
     def get_permissions(self, owner_id, by_email):
-        '''
+        """
         Return the ListPermissions for the given ListOwner
         That's not the ListPermissionDb object with owner=owner, but rather
         those with email=owner.email
-        '''
+        """
         _ = lambda x: ListPermission.from_db(x)
         owner = self.db.get_owner(owner_id)
         if not by_email:
-            return [ _(p) for p in owner.permissions ]
+            return [_(p) for p in owner.permissions]
         return [
             _(p) for p in self.db.get_permissions_by_email(owner.email)
         ]
 
     def add_permission(self, owner_id, email):
-        '''
+        """
         Add a ListPermission record
-        '''
+        """
         # TODO: confirm that the currently signed in user is owner_id
         owner = self.db.get_owner(owner_id)
         self.db.add_permission(owner, email)
         _ = lambda x: ListPermission.from_db(x)
-        return [ _(p) for p in owner.permissions ]
+        return [_(p) for p in owner.permissions]
 
     def remove_permission(self, permission_id):
-        '''
+        """
         Remove a ListPermission record
-        '''
+        """
         # TODO: confirm that the currently signed in user is owner_id
         p = self.db.get_permission(permission_id)
         self.db.delete(p)
         return []
 
     def update_owner(self, owner_id, name, nickname):
-        '''
+        """
         Update the name and nickname of the ListOwner object with the given
         owner_id and return the updated object.
-        '''
+        """
         owner = self.db.get_owner(owner_id)
         owner.name = name
         owner.nickname = nickname
         return ListOwner.from_db(owner.put())
 
     def get_requests(self):
-        '''
+        """
         Return a list of all requests
-        '''
+        """
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
 
-        return [ AccessReq.from_db(db) for db in self.db.get_reqs() ]
+        return [AccessReq.from_db(db) for db in self.db.get_reqs()]
 
     def approve_request(self, req_id):
-        '''
+        """
         Approve the given AccessRequestDb
-        '''
+        """
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
 
@@ -155,9 +155,9 @@ class UserRpcGroup(RpcGroupBase):
         return []
 
     def deny_request(self, req_id):
-        '''
+        """
         Deny the given AccessRequestDb
-        '''
+        """
 
         if not self.db.user.is_admin:
             raise PermissionDeniedError()
@@ -174,4 +174,3 @@ class UserRpcGroup(RpcGroupBase):
 
 class UserRpcReqHandler(RpcReqHandler):
     group_cls = UserRpcGroup
-

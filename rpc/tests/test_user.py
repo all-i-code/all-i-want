@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: test_rpc_user.py
 # Description: Unit tests for rpc_group module
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 import unittest
 
@@ -41,10 +41,10 @@ class UserRpcTest(unittest.TestCase):
         self.rpc = UserRpcGroup(self.db, self.ae)
 
     def test_get_user_none(self):
-        '''
+        """
         Verify that calling get_current_user without being logged in
         provides you with a login url
-        '''
+        """
         # Start with no user logged in
         self.set_user(None)
 
@@ -60,10 +60,10 @@ class UserRpcTest(unittest.TestCase):
         self.assertEqual(login_url, user.login_url)
 
     def test_get_user(self):
-        '''
+        """
         Verify that calling get_current_user while logged in provides you
         with a logout url and your login info
-        '''
+        """
 
         self.set_user(User(is_admin=True))
         # Verify no owner exists before call
@@ -91,10 +91,10 @@ class UserRpcTest(unittest.TestCase):
         self.assertEqual(extract_name(self.user.email()), owner.name)
 
     def test_get_user_owner_exists(self):
-        '''
+        """
         Verify that a duplicate owner is not created when get_current_user
         is called
-        '''
+        """
         # Make sure owner exists before call
         owner = self.db.add_owner(self.user)
         num_owners = len(self.db.owners)
@@ -108,10 +108,10 @@ class UserRpcTest(unittest.TestCase):
         self.assertEqual(owner, self.db.user_owners[self.user])
 
     def test_get_user_add_req(self):
-        '''
+        """
         Verify that when non-admin user tries to log in, an Access Request is
         created for them.
-        '''
+        """
 
         # Verify no owner exists before call
         self.assertEqual(None, self.db.user_owners.get(self.user, None))
@@ -136,10 +136,10 @@ class UserRpcTest(unittest.TestCase):
         self.assertEqual(self.user, req.user)
 
     def test_get_user_req_exists(self):
-        '''
+        """
         Verify that the second time get_current_user is called, a second
         AccessRequest is not created.
-        '''
+        """
 
         # Verify no owner exists before call
         self.assertEqual(None, self.db.user_owners.get(self.user, None))
@@ -161,9 +161,9 @@ class UserRpcTest(unittest.TestCase):
         self.assertEqual(1, len(self.db.request_ids))
 
     def test_get_owner(self):
-        '''
+        """
         Verify ability to lookup owner by id
-        '''
+        """
         # Make sure the owner exists
         owner = self.db.add_owner(self.user)
         oid = owner.key().id()
@@ -175,9 +175,9 @@ class UserRpcTest(unittest.TestCase):
         self.assertEqual(owner.name, lo.name)
 
     def test_update_owner(self):
-        '''
+        """
         Make sure user can change name and nickname of list owner
-        '''
+        """
         # Make sure the owner exists
         self.set_user(User('John Doe', 'Johnny'))
         self.db.add_owner(self.user)
@@ -191,23 +191,23 @@ class UserRpcTest(unittest.TestCase):
         self.assertEqual('Joe', owner.nickname)
 
     def test_approve_request_no_admin(self):
-        '''
+        """
         Verify that attempting to approve a request as non admin user
         raises a PermissionDeniedError
-        '''
+        """
         self.assertRaises(PermissionDeniedError, self.rpc.approve_request, 1)
 
     def test_deny_request_no_admin(self):
-        '''
+        """
         Verify that attempting to approve a request as non admin user
         raises a PermissionDeniedError
-        '''
+        """
         self.assertRaises(PermissionDeniedError, self.rpc.approve_request, 1)
 
     def test_approve_request(self):
-        '''
+        """
         Confirm approving a request for access to all i want
-        '''
+        """
         self.set_user(User(is_admin=True))
         user = User(email='joe.smith@email.com')
         req = self.db.add_req(user)
@@ -226,9 +226,9 @@ class UserRpcTest(unittest.TestCase):
         self.assertEqual(body, msg['b'])
 
     def test_deny_request(self):
-        '''
+        """
         Confirm verifying a request for access to all i want
-        '''
+        """
 
         self.set_user(User(is_admin=True))
         user = User(email='joe.smith@email.com')

@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: model.py
 # Description: Model classes
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 # TODO: update these to user Model.property.get_value_for_datastore(instance)
 # to get ids for reference properties
@@ -139,8 +139,8 @@ class Group(Model):
     def from_db(cls, db):
         _id = lambda x: x.key().id() if x is not None else -1
         _lbl = lambda x: x.label() if x is not None else -1
-        invitations = [ GroupInvitation.from_db(i) for i in db.invitations ]
-        members = [ GroupMember.from_db(m) for m in db.members ]
+        invitations = [GroupInvitation.from_db(i) for i in db.invitations]
+        members = [GroupMember.from_db(m) for m in db.members]
         return cls(
             id=db.key().id(),
             name=db.name,
@@ -195,7 +195,7 @@ class WishList(Model):
     @classmethod
     def from_db(cls, db, own=False):
         _ = lambda i: (not own) or (not i.is_surprise)
-        items = [ ListItem.from_db(i) for i in db.items if _(i) ]
+        items = [ListItem.from_db(i) for i in db.items if _(i)]
         return cls(
             id=db.key().id(),
             name=db.name,

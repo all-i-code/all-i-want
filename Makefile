@@ -44,7 +44,7 @@ coverage:
 	$(HIDE)coverage report --omit /Applications/*.py
 
 flake8-test:
-	$(HIDE)flake8 --config=.config/flake8 .
+	$(HIDE)flake8 .
 
 python-test:
 	$(HIDE)nosetests

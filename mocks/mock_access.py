@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: mock_access.py
 # Description: Mock Interface into the database for testing
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 from mocks.mock_models import (
     AccessReq as Req,
     ListOwner as Owner,
@@ -61,9 +61,9 @@ class MockAccess(object):
         return owner
 
     def is_group_name_unique(self, name, key=None):
-        groups = [ g for g in self.groups.values() if g.name == name ]
+        groups = [g for g in self.groups.values() if g.name == name]
         if key is not None:
-            groups = [ g for g in groups if g.key() != key ]
+            groups = [g for g in groups if g.key() != key]
         return len(groups) == 0
 
     def add_group(self, name, description, owner=None):
@@ -142,9 +142,9 @@ class MockAccess(object):
     def is_list_name_unique(self, owner_id, name, key=None):
         owner = self.get_owner(owner_id)
         _ = lambda l: l.owner == owner and l.name == name
-        lists = [ l for l in self.lists.values() if _(l) ]
+        lists = [l for l in self.lists.values() if _(l)]
         if key is not None:
-            lists = [ l for l in lists if l.key() != key ]
+            lists = [l for l in lists if l.key() != key]
         return len(lists) == 0
 
     def add_list_item(self, list_id, name, category, desc, url, is_surprise):
@@ -218,4 +218,3 @@ class MockAccess(object):
 
     def get_permissions_by_email(self, email):
         return []
-

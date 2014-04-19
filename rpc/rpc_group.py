@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: rpc_group.py
 # Description:
@@ -18,7 +18,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import (
@@ -67,9 +67,9 @@ class GroupRpcGroup(RpcGroupBase):
         if self.db.user.is_admin:
             groups = self.db.get_groups()
         else:
-            groups = [ g for g in self.owner.groups ]
+            groups = [g for g in self.owner.groups]
             groups.extend([m.group for m in self.owner.memberships])
-        return [ Group.from_db(g) for g in groups ]
+        return [Group.from_db(g) for g in groups]
 
     def update_group(self, id, name, desc):
         self._verify_owner()
@@ -102,7 +102,7 @@ class GroupRpcGroup(RpcGroupBase):
             invites = self.db.get_group_invites()
         else:
             invites = self.db.get_group_invites(self.owner.email)
-        return [ GroupInvitation.from_db(db) for db in invites ]
+        return [GroupInvitation.from_db(db) for db in invites]
 
     def accept_invitation(self, invite_id):
         self._verify_owner()
@@ -130,7 +130,7 @@ class GroupRpcGroup(RpcGroupBase):
         # TODO: optimize this to minimize queries
         owner = self.db.get_owner(owner_id)
         gs, gms = (owner.groups, owner.memberships)
-        owners = [ owner ]
+        owners = [owner]
         owners.extend(m.member for g in gs for m in g.members)
         owners.extend(m.member for gm in gms for m in gm.group.members)
         unique_owners = []
@@ -139,9 +139,8 @@ class GroupRpcGroup(RpcGroupBase):
             if owner.key().id() not in oids:
                 oids.append(owner.key().id())
                 unique_owners.append(owner)
-        return [ ListOwner.from_db(o) for o in unique_owners ]
+        return [ListOwner.from_db(o) for o in unique_owners]
 
 
 class GroupRpcReqHandler(RpcReqHandler):
     group_cls = GroupRpcGroup
-

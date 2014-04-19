@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: rpc_meta.py
 # Description: Module for meta info when defining RPCs
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 import os
 import json
@@ -65,7 +65,7 @@ class RpcReqHandler(webapp.RequestHandler):
         from core.meta import Model
         _ = lambda x: x.to_json_dict() if isinstance(x, Model) else x
         is_list = result.__class__ == list
-        result_json = [ _(o) for o in result ] if is_list else _(result)
+        result_json = [_(o) for o in result] if is_list else _(result)
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(result_json))
 
@@ -99,7 +99,7 @@ class RpcGroupManager(object):
 
 
 class RpcGroupMeta(type):
-    '''Meta class for RPC group classes'''
+    """Meta class for RPC group classes"""
     def __new__(cls, class_name, bases, class_dict):
         nc = type.__new__(cls, class_name, bases, class_dict)
         RpcGroupManager.register(nc)
@@ -110,7 +110,7 @@ class RpcGroupMeta(type):
 
 
 class Rpc(object):
-    '''Class to represent a remote procedure call'''
+    """Class to represent a remote procedure call"""
     def __init__(self, name='', params=(), rt=None,
                  event=None, rt_array=False):
         tp = lambda x: x.split('.')[-1] if x is not None else x
@@ -132,7 +132,7 @@ class Rpc(object):
         return self.name
 
     def get_group_name(self):
-        '''Get the group name assigned to this rpc by parent group'''
+        """Get the group name assigned to this rpc by parent group"""
         return self.group_name
 
     def get_java_name(self):
@@ -144,7 +144,7 @@ class Rpc(object):
     def get_java_prototype(self):
         _ = lambda x: '%s %s' % (x.get_java_type(), x.get_java_name())
         nm = self.get_java_name()
-        return 'void %s(%s)' (nm, ', '.join(( _(p) for p in self.params )))
+        return 'void %s(%s)' (nm, ', '.join((_(p) for p in self.params)))
 
     def get_java_method(self):
         _ = lambda x, n=2: ' ' * n + x
@@ -177,22 +177,22 @@ class Rpc(object):
         return method + '} // %s //' % self.get_java_name()
 
     def validate_params(self, req):
-        '''Validate the parameters in the given request object'''
+        """Validate the parameters in the given request object"""
         _ = lambda x: req.get(x, None)
         for p in self.params:
             if _(p.name) is None:
                 raise Exception('Missing required parameter [%s]' % p.name)
 
         for arg in req.arguments():
-            if arg not in [ p.name for p in self.params ]:
+            if arg not in [p.name for p in self.params]:
                 raise Exception('Invalid parameter: [%s]' % arg)
 
     def get_param_values(self, handler):
-        '''Get the parameter values from the given request'''
+        """Get the parameter values from the given request"""
         req = handler.request
         self.validate_params(req)
         _ = lambda p: p.get_value(req.get(p.name))
-        params = dict( (p.name, _(p)) for p in self.params )
+        params = dict((p.name, _(p)) for p in self.params)
         return params
 
 
@@ -222,9 +222,8 @@ class RpcGroupBase(object):
         self.ae = ae
 
     def call(self, rpc_name, handler):
-        '''Call the given rpc with the given request object'''
+        """Call the given rpc with the given request object"""
         f = getattr(self, rpc_name)
         rpc = self.get_rpc(rpc_name)
         params = rpc.get_param_values(handler)
         return f(**params)
-

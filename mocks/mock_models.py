@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: mock_models.py
 # Description: Mock Model objects
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 
 class Db(object):

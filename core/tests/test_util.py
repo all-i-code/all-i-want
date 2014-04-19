@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: test_util.py
 # Description: unit tests for core.util methods
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 import unittest
 import core.util as util
@@ -26,32 +26,32 @@ import core.util as util
 class UtilTest(unittest.TestCase):
 
     def test_camelize(self):
-        '''Confirm camilzation of string '''
+        """Confirm camilzation of string """
         self.assertEqual(util.camelize('camel_case_string'),
                          'CamelCaseString')
 
     def test_camelize_trailing(self):
-        '''Confirm camilzation of trailing part of string '''
+        """Confirm camilzation of trailing part of string """
         self.assertEqual(util.camelize('long_method_name', trailing=True),
                          'longMethodName')
 
     def test_uncamelize(self):
-        '''Confirm converting from camel case to '_' separated'''
+        """Confirm converting from camel case to '_' separated"""
         self.assertEqual(util.uncamelize('longMethodName'),
                          'long_method_name')
 
     def test_pluralize(self):
-        '''Confirm converting singulars into plurals'''
+        """Confirm converting singulars into plurals"""
         self.assertEqual(util.pluralize('family'), 'families')
         self.assertEqual(util.pluralize('stud'), 'studs')
 
     def test_extract_name(self):
-        '''Confirm extraction of a name from an email address'''
+        """Confirm extraction of a name from an email address"""
         self.assertEqual(util.extract_name('first.last@email.com'),
                          'First Last')
 
     def test_get_base_url(self):
-        '''Confirm proper extraction of base url'''
+        """Confirm proper extraction of base url"""
         base = 'http://www.domain.com'
         url = '{}/extra/stuff/at/the/end.html'.format(base)
         self.assertEqual(util.get_base_url(url), base)
