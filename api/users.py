@@ -1,9 +1,9 @@
 """
 #
-# File: views.py
-# Description: URL handler for html/js URLs
+# File: users.py
+# Description: Module for defining Users API Handler
 #
-# Copyright 2012 Adam Meadows
+# Copyright 2011-2014 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -19,12 +19,13 @@
 #
 """
 
+import json
 import webapp2
-from api.users import UsersHandler
-from views import ListPage, NotFoundPage
-urls = [
-    ('/', ListPage),
-    ('/api/v1/users.*', UsersHandler),
-    ('/.*', NotFoundPage),
-]
-app = webapp2.WSGIApplication(urls, debug=True)
+
+
+class UsersHandler(webapp2.RequestHandler):
+
+    def get(self):
+        self.response.headers['Content-Type'] = 'application/json'
+        result = {'first': 'adam', 'last': 'meadows'}
+        self.response.write(json.dumps(result))

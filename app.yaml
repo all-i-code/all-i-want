@@ -32,10 +32,6 @@ handlers:
   static_dir: static/resources
   login: required
 
-- url: /rpc/.*
-  script: rpc/rpc_urls.app
-  login: required
-
 - url: /.*
   script: urls.app
   login: required

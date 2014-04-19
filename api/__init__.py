@@ -1,9 +1,9 @@
 """
 #
-# File: views.py
-# Description: URL handler for html/js URLs
+# File: __init__.py
+# Description: api module init
 #
-# Copyright 2012 Adam Meadows
+# Copyright 2011-2014 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -18,13 +18,3 @@
 #    limitations under the License.
 #
 """
-
-import webapp2
-from api.users import UsersHandler
-from views import ListPage, NotFoundPage
-urls = [
-    ('/', ListPage),
-    ('/api/v1/users.*', UsersHandler),
-    ('/.*', NotFoundPage),
-]
-app = webapp2.WSGIApplication(urls, debug=True)
