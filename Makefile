@@ -55,4 +55,5 @@ clean:
 	$(HIDE)rm -rf $(BUILD)
 	$(HIDE)echo "Removing *.pyc files"
 	$(HIDE)find . -name \*.pyc | xargs rm -f
-
+	$(HIDE)echo "Removing *.py-e files"
+	$(HIDE)find . -name \*.py-e | xargs rm -f
