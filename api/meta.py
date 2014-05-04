@@ -23,8 +23,8 @@ import json
 import sys
 import traceback
 
+import webapp2
 from google.appengine.api import users
-from google.appengine.ext import webapp
 
 from access import DbAccess
 from ae import Wrapper
@@ -32,17 +32,17 @@ from core.meta import Model
 from core.model import FailureReport
 
 
-class ApiHandler(webapp.RequestHandler):
+class ApiHandler(webapp2.RequestHandler):
 
-    def __init__(self, db=None, ae=None):
-        self.db = db or DbAccess()
-        self.ae = ae or Wrapper()
+    def __init__(self, *args, **kwargs):
+        self.db = kwargs.pop('db') if 'db' in kwargs else DbAccess()
+        self.ae = kwargs.pop('ae') if 'ae' in kwargs else Wrapper()
         self.user = users.get_current_user()
         if self.user is not None:
             self.db.user = self.user
             self.user.is_admin = users.is_current_user_admin()
-
-        super(ApiHandler, self).__init__()
+            self.owner = self.db.get_owner_by_user(self.user)
+        super(ApiHandler, self).__init__(*args, **kwargs)
 
     def dump(self, result):
         _ = lambda x: x.to_json_dict() if isinstance(x, Model) else x

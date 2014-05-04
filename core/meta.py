@@ -26,58 +26,12 @@ class Field(object):
     """Class to represent a field in a Model object"""
 
     @classmethod
-    def get_extra_java_imports(cls):
-        return getattr(cls, 'extra_java_imports', [])
-
-    @classmethod
-    def get_extra_iface_imports(cls):
-        return getattr(cls, 'extra_iface_imports', [])
-
-    @classmethod
     def get_cls_default(cls):
         return getattr(cls, 'default', None)
-
-    @classmethod
-    def get_java_type(cls):
-        return getattr(cls, 'java_type', None)
-
-    @classmethod
-    def get_java_iface_type(cls):
-        return cls.get_java_type()
-
-    @classmethod
-    def get_java_test_getter_name(cls):
-        return getattr(cls, 'java_test_getter', None)
 
     def __init__(self, name=None, default=None):
         self.name = name
         self.default = default
-
-    def get_java_test_type(self):
-        return self.get_java_type()
-
-    def get_java_getter_name(self):
-        return 'get' + camelize(self.name)
-
-    def get_java_getter(self):
-        template = '@Override\n' +\
-            '  public final native %s %s() /*-{\n' +\
-            '    return this.%s;\n' +\
-            '  }-*/;\n'
-        jt, gn = (self.get_java_type(), self.get_java_getter_name())
-        return template % (jt, gn, self.json_name)
-
-    def get_java_test_getter(self):
-        template = '@Override\n' +\
-            '  public %s %s() {\n' +\
-            '    return %s("%s");\n' +\
-            '  }\n'
-        jt, gn = (self.get_java_test_type(), self.get_java_getter_name())
-        jn, tgn = (self.json_name, self.get_java_test_getter_name())
-        return template % (jt, gn, tgn, jn)
-
-    def get_java_name(self):
-        return camelize(self.name, trailing=True)
 
     def get_name(self):
         return self.name
@@ -87,50 +41,29 @@ class Field(object):
 
 
 class FieldInt(Field):
-    java_type = 'int'
     default = -1
-    java_test_getter = 'getInt'
 
 
 class FieldString(Field):
-    java_type = 'String'
     default = ''
-    java_test_getter = 'getStr'
 
 
 class FieldText(Field):
-    java_type = 'String'
     default = ''
-    java_test_getter = 'getStr'
 
 
 class FieldFloat(Field):
-    java_type = 'double'
     default = 0.0
-    java_test_getter = 'getDbl'
 
 
 class FieldUser(Field):
-    java_type = 'String'
     default = ''
-    java_test_getter = 'getStr'
 
 
 class FieldBoolean(Field):
-    java_type = 'boolean'
     default = True
-    java_test_getter = 'getBool'
-
-    def get_java_getter_name(self):
-        return camelize(self.name, trailing=True)
-
 
 class FieldModelArray(Field):
-    java_test_getter = 'getArray'
-    extra_iface_imports = (
-        'java.util.List',
-    )
-
     def __init__(self, type=None, name=None, default=None):
         default = default or []
         _ = lambda x: pluralize(uncamelize(x.__name__))
@@ -138,56 +71,12 @@ class FieldModelArray(Field):
         self.name = name if name is not None else _(self.__class__)
         self.default = default
 
-    def get_java_test_type(self):
-        return self.get_java_iface_type()
-
-    def get_java_iface_type(self):
-        return 'List<%s>' % self.type.get_java_iface()
-
-    def get_java_test_getter(self):
-        template = '@Override\n' +\
-            '  public %s %s() {\n' +\
-            '    return %s.parseArray(getArray("%s"));\n' +\
-            '  }\n'
-        jt, gn = (self.get_java_test_type(), self.get_java_getter_name())
-        jn, tgn = (self.json_name, self.type.get_java_test_class())
-        return template % (jt, gn, tgn, jn)
-
-    def get_java_get_helper(self):
-        _ = lambda x: x + 'Js'
-        template = 'private final native JsArray<%s> %s()/*-{\n' +\
-            '    return this.%s;\n' +\
-            '  }-*/;\n'
-        jt, gn = (self.type.get_java_class(), _(self.get_java_getter_name()))
-        return template % (jt, gn, self.json_name)
-
-    def get_java_getter(self):
-        _ = lambda x: x + 'Js'
-        helper = self.get_java_get_helper()
-        template = \
-            '  @Override\n' +\
-            '  public final %s %s() {\n' +\
-            '    return %s.decodeList(%s());\n' +\
-            '  }\n'
-        it = self.get_java_iface_type()
-        gn = self.get_java_getter_name()
-        jt, hn = (self.type.get_java_class(), _(gn))
-        getter = template % (it, gn, jt, hn)
-        return '\n'.join((helper, getter))
-
 
 class ModelMeta(type):
     """Meta class for  object classes"""
     def __new__(cls, class_name, bases, class_dict):
         nc = type.__new__(cls, class_name, bases, class_dict)
         ModelManager.register(nc)
-        letters = 'abcdefghijklmnopqrstuvwxyz'
-        if len(nc.get_fields()) > len(letters):
-            base = 'Class {} has too many fields, max of {}'
-            raise Exception(base.format(nc.__name__, len(letters)))
-
-        for i, f in enumerate(nc.get_fields()):
-            f.json_name = letters[i]
         nc.field_dict = dict((f.get_name(), f) for f in nc.get_fields())
         return nc
 
@@ -226,7 +115,7 @@ class Model(object):
 
     @classmethod
     def get_json_name(cls, field_name):
-        return cls.field_dict.get(field_name).json_name
+        return camelize(field_name, trailing=True)
 
     @classmethod
     def get_fields(cls):
@@ -239,44 +128,6 @@ class Model(object):
     @classmethod
     def get_field_names(cls):
         return (f.get_name() for f in cls.get_fields())
-
-    @classmethod
-    def get_java_iface(cls):
-        return cls.get_name()
-
-    @classmethod
-    def get_java_class(cls):
-        return cls.get_name() + 'Impl'
-
-    @classmethod
-    def get_java_create_params(cls):
-        _ = lambda f: '%s %s' % (f.get_java_type(), f.get_java_name())
-        return ',\n   '.join((_(f) for f in cls.get_fields()))
-
-    @classmethod
-    def get_java_create_eval(cls):
-        _ = lambda f: '"%s": %s' % (f.json_name, f.get_java_name())
-        return ',\n      '.join((_(f) for f in cls.get_fields()))
-
-    @classmethod
-    def get_extra_java_imports(cls):
-        imports = []
-        _ = lambda x: x not in imports
-        for f in cls.get_fields():
-            imports.extend((i for i in f.get_extra_java_imports() if _(i)))
-        return imports
-
-    @classmethod
-    def get_extra_iface_imports(cls):
-        imports = []
-        _ = lambda x: x not in imports
-        for f in cls.get_fields():
-            imports.extend((i for i in f.get_extra_iface_imports() if _(i)))
-        return imports
-
-    @classmethod
-    def get_java_test_class(cls):
-        return cls.get_name() + 'TestImpl'
 
     @classmethod
     def from_json_dict(cls, json_dict):

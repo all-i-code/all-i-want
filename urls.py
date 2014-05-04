@@ -20,11 +20,12 @@
 """
 
 import webapp2
-from api.users import UsersHandler
+from api.users import CurrentUserHandler
 from views import ListPage, NotFoundPage
+
 urls = [
     ('/', ListPage),
-    ('/api/v1/users.*', UsersHandler),
+    ('/api/v1/users/current', CurrentUserHandler),
     ('/.*', NotFoundPage),
 ]
 app = webapp2.WSGIApplication(urls, debug=True)

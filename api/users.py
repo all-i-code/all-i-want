@@ -20,12 +20,32 @@
 """
 
 import json
-import webapp2
 
+from api.meta import ApiHandler
+from core.model import User as UserModel
+from core.util import get_base_url
 
-class UsersHandler(webapp2.RequestHandler):
+class CurrentUserHandler(ApiHandler):
+    """ Current User Handler """
 
     def get(self):
-        self.response.headers['Content-Type'] = 'application/json'
-        result = {'first': 'adam', 'last': 'meadows'}
-        self.response.write(json.dumps(result))
+        """Fetch the currently logged in User"""
+        url = self.request.get('url', '/')
+
+        if self.user is None:
+            login_url = self.ae.create_login_url(url)
+            model = UserModel(login_url=login_url)
+            self.dump(model)
+            return
+
+        model = UserModel(
+            user_id=self.user.user_id(),
+            nickname=self.user.nickname(),
+            email=self.user.email(),
+            is_admin=self.user.is_admin,
+            owner_id=self.owner.id() if self.owner else -1,
+            login_url='',
+            logout_url=self.ae.create_logout_url('/')
+        )
+
+        self.dump(model)
