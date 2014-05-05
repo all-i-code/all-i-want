@@ -19,33 +19,37 @@
 #
 """
 
-import json
 
 from api.meta import ApiHandler
-from core.model import User as UserModel
-from core.util import get_base_url
+from core.model import (
+    User as JsUser,
+)
+
 
 class CurrentUserHandler(ApiHandler):
     """ Current User Handler """
 
     def get(self):
         """Fetch the currently logged in User"""
-        url = self.request.get('url', '/')
 
-        if self.user is None:
-            login_url = self.ae.create_login_url(url)
-            model = UserModel(login_url=login_url)
-            self.dump(model)
-            return
+        # If user is not yet a list owner, either submit a request
+        # or, if user is an admin, create owner record
+        if self.owner is None:
+            if self.user.is_admin:
+                self.owner = self.db.add_owner(self.user)
+            else:
+                req = self.db.get_req_by_user(self.user)
+                if req is None:
+                    req = self.db.add_req(self.user)
 
-        model = UserModel(
+        js_user = JsUser(
             user_id=self.user.user_id(),
             nickname=self.user.nickname(),
             email=self.user.email(),
+            was_request_denied=req.denied if req else False,
             is_admin=self.user.is_admin,
             owner_id=self.owner.id() if self.owner else -1,
-            login_url='',
-            logout_url=self.ae.create_logout_url('/')
+            logout_url=self.ae.create_logout_url('/goodbye')
         )
 
-        self.dump(model)
+        self.dump(js_user)

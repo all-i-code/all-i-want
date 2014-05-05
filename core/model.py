@@ -23,12 +23,12 @@
 # to get ids for reference properties
 
 from core.meta import (
+    Boolean,
+    Integer,
     Model,
-    FieldBoolean as Boolean,
-    FieldInt as Integer,
-    FieldString as String,
-    FieldText as Text,
-    FieldModelArray as ModelArray,
+    ModelArray,
+    String,
+    Text,
 )
 
 
@@ -209,7 +209,6 @@ class User(Model):
         String(name='email'),
         String(name='nickname'),
         String(name='user_id'),
-        String(name='login_url'),
         String(name='logout_url'),
         Integer(name='owner_id'),
         Boolean(name='was_req_denied'),
@@ -218,10 +217,18 @@ class User(Model):
 
 
 class FailureReport(Model):
+    db = False
     fields = (
         String(name='error_type'),
         String(name='message'),
         String(name='traceback'),
+    )
+
+
+class Redirect(Model):
+    db = False
+    fields = (
+        String(name='url'),
     )
 
 

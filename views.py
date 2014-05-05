@@ -49,5 +49,9 @@ class NotFoundPage(PageHandler):
     def get(self):
         self.response.out.write(self.render_template('404.html'))
 
+class GoodbyePage(PageHandler):
+    def get(self):
+        self.response.out.write(self.render_template('bye.html'))
+
 
 app = webapp2.WSGIApplication([('/.*', PageHandler)], debug=True)

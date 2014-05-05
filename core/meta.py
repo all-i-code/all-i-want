@@ -40,30 +40,31 @@ class Field(object):
         return self.default
 
 
-class FieldInt(Field):
+class Integer(Field):
     default = -1
 
 
-class FieldString(Field):
+class String(Field):
     default = ''
 
 
-class FieldText(Field):
+class Text(Field):
     default = ''
 
 
-class FieldFloat(Field):
+class Float(Field):
     default = 0.0
 
 
-class FieldUser(Field):
+class User(Field):
     default = ''
 
 
-class FieldBoolean(Field):
+class Boolean(Field):
     default = True
 
-class FieldModelArray(Field):
+
+class ModelArray(Field):
     def __init__(self, type=None, name=None, default=None):
         default = default or []
         _ = lambda x: pluralize(uncamelize(x.__name__))
