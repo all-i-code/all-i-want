@@ -1,7 +1,7 @@
 """
 #
 # File: meta.py
-# Description: Module for meta API handler
+# Description: Module for meta API Resource handlers
 #
 # Copyright 2014 Adam Meadows
 #
@@ -20,13 +20,13 @@
 """
 
 import json
+import logging
 import sys
 import traceback
 
 import webapp2
-from webob.exc import (
-    HTTPException,
-)
+from webapp2_extras import routes
+from webob.exc import HTTPException
 from google.appengine.api import users
 
 from access import DbAccess
@@ -35,9 +35,52 @@ from core.meta import Model
 from core.model import FailureReport
 
 
-class ApiHandler(webapp2.RequestHandler):
+class Resource(webapp2.RequestHandler):
+
+    @classmethod
+    def get_name(cls):
+        """Return URI-friendly name of this resource"""
+        return getattr(cls, 'name', cls.__name__.lower())
+
+    @classmethod
+    def get_methods(cls):
+        """Return a list of custom methods on this resource (if any)
+
+        Custom methods are returned as tuples of the form:
+        (uri_path, method_name)
+        """
+        return getattr(cls, 'custom_methods', [])
+
+    @classmethod
+    def get_routes(cls):
+        """Return a PathPrefixRoute for this resource"""
+
+        # By default, everyone gets the /objects and /objects/<id> route
+        sub_routes = [
+            webapp2.Route('', handler=cls),
+            webapp2.Route('/<resource_id:(\d+)>', handler=cls),
+        ]
+
+        # add any custom routes as needed
+        for uri_path, method_name in cls.get_methods():
+            logging.info('adding /{} -> {}'.format(uri_path, method_name))
+            route = webapp2.Route('/{}'.format(uri_path),
+                                  handler=cls,
+                                  handler_method=method_name)
+            sub_routes.append(route)
+
+        logging.info('/{} routes = {}'.format(cls.get_name(), sub_routes))
+        return routes.PathPrefixRoute('/{}'.format(cls.get_name()), sub_routes)
 
     def __init__(self, *args, **kwargs):
+        """Initialize the Resource with access to db & ae
+
+        All Resource instances have access to...
+            - the current user (self.user)
+            - a wrapper to access the DataStore (self.db)
+            - a wrapper to access the App Engine API (self.ae)
+
+        """
         self.db = kwargs.pop('db') if 'db' in kwargs else DbAccess()
         self.ae = kwargs.pop('ae') if 'ae' in kwargs else Wrapper()
         self.user = users.get_current_user()
@@ -45,9 +88,14 @@ class ApiHandler(webapp2.RequestHandler):
             self.db.user = self.user
             self.user.is_admin = users.is_current_user_admin()
             self.owner = self.db.get_owner_by_user(self.user)
-        super(ApiHandler, self).__init__(*args, **kwargs)
+        super(Resource, self).__init__(*args, **kwargs)
 
     def dump(self, result):
+        """Write the given result to the response object as JSON
+
+        :param result: The result to dump
+        :type result: core.Model or JSON serializable data type
+        """
         _ = lambda x: x.to_json_dict() if isinstance(x, Model) else x
         is_list = result.__class__ == list
         result_json = [_(o) for o in result] if is_list else _(result)
@@ -55,6 +103,20 @@ class ApiHandler(webapp2.RequestHandler):
         self.response.out.write(json.dumps(result_json))
 
     def handle_exception(self, exception, debug_mode):
+        """Exception handler for Resource
+
+        :param exception: The exception being handled
+        :type exception: Exception
+
+        :param debug_mode: Flag for if we're in debug mode or not
+        :type debug_mode: bool.
+
+        If the exception is an HTTPException, pass along the appropriate
+        status_code, otherwise use a generic 500
+
+        Wrap the exception as a FailureReport model and send that as JSON
+        in the response.
+        """
 
         status_code = 500
         if isinstance(exception, HTTPException):

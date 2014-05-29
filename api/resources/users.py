@@ -1,7 +1,7 @@
 """
 #
 # File: users.py
-# Description: Module for defining Users API Handler
+# Description: Module for defining Users API Resource
 #
 # Copyright 2011-2014 Adam Meadows
 #
@@ -20,17 +20,21 @@
 """
 
 
-from api.meta import ApiHandler
+from api.meta import Resource
 from core.model import (
     User as JsUser,
     ListOwner as JsOwner,
 )
 
 
-class CurrentUserHandler(ApiHandler):
+class Users(Resource):
     """ Current User Handler """
 
-    def get(self):
+    custom_methods = [
+        ('current', 'get_current'),
+    ]
+
+    def get_current(self):
         """Fetch the currently logged in User"""
 
         req = None
@@ -57,19 +61,3 @@ class CurrentUserHandler(ApiHandler):
         )
 
         self.dump(js_user)
-
-
-class OwnersHandler(ApiHandler):
-    """ Owners resource handler"""
-
-    def get(self, owner_id=None):
-        """ Fetch owner """
-        if owner_id is None:
-            self.abort(404)
-
-        owner = self.db.get_owner(int(owner_id))
-        if owner is None:
-            self.abort(404)
-
-        js_owner = JsOwner.from_db(owner)
-        self.dump(js_owner)

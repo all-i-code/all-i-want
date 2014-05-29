@@ -20,29 +20,36 @@
 """
 
 import webapp2
+from webapp2_extras import routes
 
-from api.users import (
-    CurrentUserHandler,
-    OwnersHandler,
-)
-
-from views import (
-    ListPage,
-    GoodbyePage,
-    NotFoundPage,
+from api.resources import (
+    Users,
+    Owners,
 )
 
 
-def not_found(request, response, e):
-    response.out.write('not found')
+def build_api_routes(version, resources):
+    """Create api routes given the version and list of resources
+
+    :param version: The API version.
+    :type version: str.
+    :param resources: The API Resources
+    :type resources: list.
+
+    """
+
+    sub_routes = [resource.get_routes() for resource in resources]
+    return routes.PathPrefixRoute('/api/v{}'.format(version), sub_routes)
 
 
-urls = [
-    ('/', ListPage),
-    ('/api/v1/users/current', CurrentUserHandler),
-    ('/api/v1/owners', OwnersHandler),
-    ('/api/v1/owners/(.*)', OwnersHandler),
-    ('/goodbye', GoodbyePage),
-    ('/.*', NotFoundPage),
+static_routes = [
+    webapp2.Route('/', handler='views.ListPage'),
+    webapp2.Route('/goodbye', handler='views.GoodbyePage'),
+    webapp2.Route('/.*', handler='views.NotFoundPage'),
 ]
-app = webapp2.WSGIApplication(urls, debug=True)
+
+api_routes = [
+    build_api_routes(version='1', resources=[Users, Owners]),
+]
+
+app = webapp2.WSGIApplication(static_routes + api_routes, debug=True)

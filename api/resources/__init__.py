@@ -1,7 +1,8 @@
 """
 #
-# File: urls.py
-# Description: GAE app to handle APIs
+# Package: resources
+# File: __init__.py
+# Description: Package for holding API resources
 #
 # Copyright 2011-2014 Adam Meadows
 #
@@ -19,23 +20,6 @@
 #
 """
 
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
-
-#from api.users import UsersHandler
-#from api.groups import GroupsHandler
-#from api.lists import ListsHandler
-
-urls = [
-    #('/api/v1/users.*', UsersHandler),
-    #('group.*', GroupsHandler),
-    #('lists.*', ListsHandler),
-]
-application = webapp.WSGIApplication(urls, debug=True)
-
-
-def main():
-    run_wsgi_app(application)
-
-if __name__ == '__main__':
-    main()
+# Expose the Resource classes from individual modules
+from users import Users  # noqa
+from owners import Owners  # noqa
