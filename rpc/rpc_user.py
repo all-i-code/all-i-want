@@ -20,8 +20,8 @@
 """
 
 from core.exception import PermissionDeniedError
-from core.model import User, ListOwner, AccessReq, ListPermission
-from core.util import get_base_url, extract_name
+from core.model import ListOwner, AccessReq, ListPermission
+from core.util import extract_name
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import (
     RpcParamBoolean as Boolean,
@@ -32,8 +32,6 @@ from rpc.rpc_params import (
 
 class UserRpcGroup(RpcGroupBase):
     rpcs = (
-        Rpc(name='get_current_user', params=(String('url'),)),
-        Rpc(name='get_owner', params=(Integer('owner_id'),)),
         Rpc(name='get_permissions',
             params=(Integer('owner_id'), Boolean('by_email'),)),
         Rpc(name='add_permission',
@@ -45,46 +43,6 @@ class UserRpcGroup(RpcGroupBase):
         Rpc(name='approve_request', params=(Integer('req_id'),)),
         Rpc(name='deny_request', params=(Integer('req_id'),)),
     )
-
-    def get_current_user(self, url):
-        """
-        Return a User object with details of the current authenticated user,
-        including a url for logging out.
-
-        If user has not yet been authenticated, return a User object with a
-        url to allow user to log in.
-        """
-        e, n, ui, li, lo, oid, wrd = (None, None, None, None, None, -1, False)
-        user = self.db.user
-        ia = False
-        if user is None:
-            li = self.ae.create_login_url(url)
-        else:
-            ia = user.is_admin
-            e, n, ui = user.email(), user.nickname(), user.user_id()
-            # make sure ListOwnerDb record exists
-            owner = self.db.get_owner_by_user(user)
-            req = None
-            if owner is None:
-                if not user.is_admin:
-                    req = self.db.get_req_by_user(user)
-                    if req is None:
-                        req = self.db.add_req(user)
-                else:
-                    owner = self.db.add_owner(user)
-            oid = owner.key().id() if owner is not None else -1
-            wrd = req.denied if req is not None else False
-            base = get_base_url(url)
-            lo = self.ae.create_logout_url('%s/#Goodbye:' % base)
-        return User(email=e, nickname=n, user_id=ui, login_url=li,
-                    logout_url=lo, owner_id=oid, was_req_denied=wrd,
-                    is_admin=ia)
-
-    def get_owner(self, owner_id):
-        """
-        Return the ListOwner object with the given owner_id
-        """
-        return ListOwner.from_db(self.db.get_owner(owner_id))
 
     def get_permissions(self, owner_id, by_email):
         """

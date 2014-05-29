@@ -1,9 +1,9 @@
 """
 #
-# File: views.py
+# File: urls.py
 # Description: URL handler for html/js URLs
 #
-# Copyright 2012 Adam Meadows
+# Copyright 2014 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -20,12 +20,28 @@
 """
 
 import webapp2
-from api.users import CurrentUserHandler
-from views import ListPage, GoodbyePage, NotFoundPage
+
+from api.users import (
+    CurrentUserHandler,
+    OwnersHandler,
+)
+
+from views import (
+    ListPage,
+    GoodbyePage,
+    NotFoundPage,
+)
+
+
+def not_found(request, response, e):
+    response.out.write('not found')
+
 
 urls = [
     ('/', ListPage),
     ('/api/v1/users/current', CurrentUserHandler),
+    ('/api/v1/owners', OwnersHandler),
+    ('/api/v1/owners/(.*)', OwnersHandler),
     ('/goodbye', GoodbyePage),
     ('/.*', NotFoundPage),
 ]

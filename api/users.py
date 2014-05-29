@@ -23,6 +23,7 @@
 from api.meta import ApiHandler
 from core.model import (
     User as JsUser,
+    ListOwner as JsOwner,
 )
 
 
@@ -31,6 +32,8 @@ class CurrentUserHandler(ApiHandler):
 
     def get(self):
         """Fetch the currently logged in User"""
+
+        req = None
 
         # If user is not yet a list owner, either submit a request
         # or, if user is an admin, create owner record
@@ -42,14 +45,31 @@ class CurrentUserHandler(ApiHandler):
                 if req is None:
                     req = self.db.add_req(self.user)
 
+        js_owner = JsOwner.from_db(self.owner) if self.owner else None
         js_user = JsUser(
             user_id=self.user.user_id(),
             nickname=self.user.nickname(),
             email=self.user.email(),
             was_request_denied=req.denied if req else False,
             is_admin=self.user.is_admin,
-            owner_id=self.owner.id() if self.owner else -1,
+            owner_id=js_owner.id if js_owner else -1,
             logout_url=self.ae.create_logout_url('/goodbye')
         )
 
         self.dump(js_user)
+
+
+class OwnersHandler(ApiHandler):
+    """ Owners resource handler"""
+
+    def get(self, owner_id=None):
+        """ Fetch owner """
+        if owner_id is None:
+            self.abort(404)
+
+        owner = self.db.get_owner(int(owner_id))
+        if owner is None:
+            self.abort(404)
+
+        js_owner = JsOwner.from_db(owner)
+        self.dump(js_owner)

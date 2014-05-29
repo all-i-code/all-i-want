@@ -24,6 +24,9 @@ import sys
 import traceback
 
 import webapp2
+from webob.exc import (
+    HTTPException,
+)
 from google.appengine.api import users
 
 from access import DbAccess
@@ -52,6 +55,11 @@ class ApiHandler(webapp2.RequestHandler):
         self.response.out.write(json.dumps(result_json))
 
     def handle_exception(self, exception, debug_mode):
+
+        status_code = 500
+        if isinstance(exception, HTTPException):
+            status_code = exception.code
+
         nm = lambda e: e.__class__.__name__
         tb = '\n'.join(traceback.format_exception(*sys.exc_info()))
         d = dict(
@@ -59,5 +67,5 @@ class ApiHandler(webapp2.RequestHandler):
             message=str(exception),
             traceback=tb,
         )
-        self.response.set_status(500)
+        self.response.set_status(status_code)
         self.dump(FailureReport(**d))
