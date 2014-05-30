@@ -23,3 +23,4 @@
 # Expose the Resource classes from individual modules
 from users import Users  # noqa
 from owners import Owners  # noqa
+from permissions import Permissions  # noqa

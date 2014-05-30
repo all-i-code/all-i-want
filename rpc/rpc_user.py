@@ -32,50 +32,12 @@ from rpc.rpc_params import (
 
 class UserRpcGroup(RpcGroupBase):
     rpcs = (
-        Rpc(name='get_permissions',
-            params=(Integer('owner_id'), Boolean('by_email'),)),
-        Rpc(name='add_permission',
-            params=(Integer('owner_id'), String('email'),)),
-        Rpc(name='remove_permission', params=(Integer('permission_id'),)),
         Rpc(name='update_owner',
             params=(Integer('owner_id'), String('name'), String('nickname'),)),
         Rpc(name='get_requests'),
         Rpc(name='approve_request', params=(Integer('req_id'),)),
         Rpc(name='deny_request', params=(Integer('req_id'),)),
     )
-
-    def get_permissions(self, owner_id, by_email):
-        """
-        Return the ListPermissions for the given ListOwner
-        That's not the ListPermissionDb object with owner=owner, but rather
-        those with email=owner.email
-        """
-        _ = lambda x: ListPermission.from_db(x)
-        owner = self.db.get_owner(owner_id)
-        if not by_email:
-            return [_(p) for p in owner.permissions]
-        return [
-            _(p) for p in self.db.get_permissions_by_email(owner.email)
-        ]
-
-    def add_permission(self, owner_id, email):
-        """
-        Add a ListPermission record
-        """
-        # TODO: confirm that the currently signed in user is owner_id
-        owner = self.db.get_owner(owner_id)
-        self.db.add_permission(owner, email)
-        _ = lambda x: ListPermission.from_db(x)
-        return [_(p) for p in owner.permissions]
-
-    def remove_permission(self, permission_id):
-        """
-        Remove a ListPermission record
-        """
-        # TODO: confirm that the currently signed in user is owner_id
-        p = self.db.get_permission(permission_id)
-        self.db.delete(p)
-        return []
 
     def update_owner(self, owner_id, name, nickname):
         """

@@ -25,6 +25,7 @@ from webapp2_extras import routes
 from api.resources import (
     Users,
     Owners,
+    Permissions,
 )
 
 
@@ -49,7 +50,7 @@ static_routes = [
 ]
 
 api_routes = [
-    build_api_routes(version='1', resources=[Users, Owners]),
+    build_api_routes(version='1', resources=[Users, Owners, Permissions]),
 ]
 
 app = webapp2.WSGIApplication(static_routes + api_routes, debug=True)

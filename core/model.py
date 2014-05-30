@@ -19,7 +19,7 @@
 #
 """
 
-# TODO: update these to user Model.property.get_value_for_datastore(instance)
+# TODO: update these to use Model.property.get_value_for_datastore(instance)
 # to get ids for reference properties
 
 from core.meta import (
@@ -222,6 +222,13 @@ class FailureReport(Model):
         String(name='error_type'),
         String(name='message'),
         String(name='traceback'),
+    )
+
+
+class Success(Model):
+    db = False
+    fields = (
+        String(name='message'),
     )
 
 
