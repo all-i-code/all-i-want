@@ -15,3 +15,4 @@ is viewable by all the friends/family you share your list with, but not by
 you. Friends who have access to your list can also add surprise items
 they have purchased for you so that others know not to get you the same thing.
 
+![Codeship Status](https://www.codeship.io/projects/5a7dc0b0-c9d0-0131-3637-5a369f970263/status)
