@@ -20,11 +20,10 @@
 """
 
 from core.exception import PermissionDeniedError
-from core.model import ListOwner, AccessReq, ListPermission
+from core.model import ListOwner, AccessReq
 from core.util import extract_name
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import (
-    RpcParamBoolean as Boolean,
     RpcParamInt as Integer,
     RpcParamString as String,
 )
