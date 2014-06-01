@@ -26,8 +26,17 @@ threadsafe: no
 builtins:
 - appstats: on
 
-handlers:
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^(.*/)?.*/tests/.*$
+- ^(.*/)?mocks/.*$
+- ^(.*/)?codeship_mocks/.*$
 
+handlers:
 - url: /static
   static_dir: static
   login: required

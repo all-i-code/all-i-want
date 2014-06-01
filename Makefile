@@ -19,23 +19,8 @@
 
 HIDE := @
 PYTHON ?= python
-BUILD := build
 
-.PHONY : build coverage flake8-test python-test test clean
-
-IGNORES := -not -path "*.git" \
-	-not -path "*tests"\
-	-not -path "*build"\
-	-not -path "*mocks"\
-	-not -path "*.config"
-
-build:
-	$(HIDE)rm -rf $(BUILD)
-	$(HIDE)mkdir $(BUILD)
-	$(HIDE)cp *.py $(BUILD)
-	$(HIDE)cp *.yaml $(BUILD)
-	$(HIDE)find . -type d -d 1 $(IGNORES) -exec cp -R {} $(BUILD) \;
-	$(HIDE)find $(BUILD) -name tests | xargs rm -rf
+.PHONY: coverage flake8-test python-test test clean
 
 coverage: export PYTHON := coverage run -a
 coverage:
@@ -52,7 +37,6 @@ python-test:
 test: flake8-test python-test
 
 clean:
-	$(HIDE)rm -rf $(BUILD)
 	$(HIDE)echo "Removing *.pyc files"
 	$(HIDE)find . -name \*.pyc | xargs rm -f
 	$(HIDE)echo "Removing *.py-e files"
