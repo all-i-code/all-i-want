@@ -25,7 +25,7 @@ from core.exception import PermissionDeniedError
 from core.util import get_base_url, extract_name
 from rpc.rpc_user import UserRpcGroup
 from mocks.mock_access import MockAccess
-from mocks.mock_ae import MockWrapper
+from mocks.mock_ae import MockAppEngine
 from mocks.mock_models import User
 
 
@@ -37,7 +37,7 @@ class UserRpcTest(unittest.TestCase):
     def set_user(self, user):
         self.user = user
         self.db = MockAccess(self.user)
-        self.ae = MockWrapper()
+        self.ae = MockAppEngine()
         self.rpc = UserRpcGroup(self.db, self.ae)
 
     def Xtest_get_user_none(self):

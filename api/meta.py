@@ -30,7 +30,7 @@ from webob.exc import HTTPException
 from google.appengine.api import users
 
 from access import DbAccess
-from ae import Wrapper
+from ae import AppEngine
 from core.meta import Model
 from core.model import FailureReport
 
@@ -82,8 +82,8 @@ class Resource(webapp2.RequestHandler):
 
         """
         self.db = kwargs.pop('db') if 'db' in kwargs else DbAccess()
-        self.ae = kwargs.pop('ae') if 'ae' in kwargs else Wrapper()
-        self.user = users.get_current_user()
+        self.ae = kwargs.pop('ae') if 'ae' in kwargs else AppEngine()
+        self.user = self.ae.get_current_user()
         if self.user is not None:
             self.db.user = self.user
             self.user.is_admin = users.is_current_user_admin()

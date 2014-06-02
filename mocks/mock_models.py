@@ -23,10 +23,14 @@
 class Db(object):
     _id_map = {}
 
+    @classmethod
+    def reset(cls):
+        cls._id_map = {}
+
     def __init__(self, id=None):
         if id is None:
-            id = self._id_map.setdefault(self.__class__, 1)
-            self._id_map[self.__class__] += 1
+            id = Db._id_map.setdefault(self.__class__, 1)
+            Db._id_map[self.__class__] += 1
         self._id = id
 
     def id(self):

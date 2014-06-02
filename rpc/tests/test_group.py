@@ -23,7 +23,7 @@ import unittest
 from core.exception import UserVisibleError, DuplicateNameError
 from rpc.rpc_group import GroupRpcGroup
 from mocks.mock_access import MockAccess
-from mocks.mock_ae import MockWrapper
+from mocks.mock_ae import MockAppEngine
 from mocks.mock_models import User
 
 
@@ -31,7 +31,7 @@ class GroupRpcTest(unittest.TestCase):
 
     def setUp(self):
         self.db = MockAccess(User(), add_owner=True)
-        self.ae = MockWrapper()
+        self.ae = MockAppEngine()
         self.rpc = GroupRpcGroup(self.db, self.ae)
 
     def set_user(self, user):

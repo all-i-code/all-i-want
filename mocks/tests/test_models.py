@@ -38,7 +38,9 @@ class DummyModelTest(unittest.TestCase):
         """
         Make sure that ids are increasing with each object
         """
-        eq = lambda id, obj: self.assertEquals(id, obj.key().id())
+        def eq(id, obj):
+            msg = 'ID matches for {}'.format(obj.__class__.__name__)
+            self.assertEqual(id, obj.key().id(), msg)
         ids = range(1, 100)
 
         classes = (User, Group, Invite, Member, List, Item)

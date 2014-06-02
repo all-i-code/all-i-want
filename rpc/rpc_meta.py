@@ -27,7 +27,7 @@ from google.appengine.ext import webapp
 from core.model import FailureReport
 from core.util import camelize
 from access import DbAccess
-from ae import Wrapper
+from ae import AppEngine
 
 
 class RpcReqHandler(webapp.RequestHandler):
@@ -38,7 +38,7 @@ class RpcReqHandler(webapp.RequestHandler):
 
     def __init__(self):
         group_cls = self.get_rpc_group_cls()
-        self.rpc_group = group_cls(DbAccess(), Wrapper())
+        self.rpc_group = group_cls(DbAccess(), AppEngine())
         super(RpcReqHandler, self).__init__()
 
     def post(self):
@@ -49,7 +49,7 @@ class RpcReqHandler(webapp.RequestHandler):
 
     def process_req(self):
         rpc_name = os.path.basename(self.request.path)
-        self.user = users.get_current_user()
+        self.user = self.ae.get_current_user()
         if self.user is None:
             # A bit of a hack to let first get the user
             if rpc_name != 'get_current_user':

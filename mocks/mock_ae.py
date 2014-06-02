@@ -19,13 +19,15 @@
 #
 """
 
-from ae import Wrapper
+from ae import AppEngine
+from mocks.mock_models import User
 
 
-class MockWrapper(Wrapper):
+class MockAppEngine(AppEngine):
 
     def __init__(self):
         self.msg = {}
+        self.user = User()
 
     def create_login_url(self, url):
         return 'LOGIN: %s' % url
@@ -33,5 +35,11 @@ class MockWrapper(Wrapper):
     def create_logout_url(self, url):
         return 'LOGOUT: %s' % url
 
+    def get_current_user(self):
+        return self.user
+
     def send_mail_from(self, sender, to, subject, body):
         self.msg = dict(f=sender, t=to, s=subject, b=body)
+
+    def set_current_user(self, user):
+        self.user = user

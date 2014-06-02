@@ -26,7 +26,7 @@ from core.exception import (
 )
 from rpc.rpc_list import ListRpcGroup
 from mocks.mock_access import MockAccess
-from mocks.mock_ae import MockWrapper
+from mocks.mock_ae import MockAppEngine
 from mocks.mock_models import User
 
 
@@ -34,7 +34,7 @@ class ListRpcTest(unittest.TestCase):
 
     def setUp(self):
         self.db = MockAccess(User(), add_owner=True)
-        self.ae = MockWrapper()
+        self.ae = MockAppEngine()
         self.rpc = ListRpcGroup(self.db, self.ae)
 
     def set_user(self, user):
