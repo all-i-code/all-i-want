@@ -38,6 +38,9 @@ class MockAppEngine(AppEngine):
     def get_current_user(self):
         return self.user
 
+    def is_current_user_admin(self):
+        return getattr(self.user, 'is_admin', False)
+
     def send_mail_from(self, sender, to, subject, body):
         self.msg = dict(f=sender, t=to, s=subject, b=body)
 

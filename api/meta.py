@@ -27,7 +27,6 @@ import traceback
 import webapp2
 from webapp2_extras import routes
 from webob.exc import HTTPException
-from google.appengine.api import users
 
 from access import DbAccess
 from ae import AppEngine
@@ -86,7 +85,7 @@ class Resource(webapp2.RequestHandler):
         self.user = self.ae.get_current_user()
         if self.user is not None:
             self.db.user = self.user
-            self.user.is_admin = users.is_current_user_admin()
+            self.user.is_admin = self.ae.is_current_user_admin()
             self.owner = self.db.get_owner_by_user(self.user)
         super(Resource, self).__init__(*args, **kwargs)
 

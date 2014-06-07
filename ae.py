@@ -67,6 +67,9 @@ class AppEngine(object):
     def get_current_user(self):
         return users.get_current_user()
 
+    def is_current_user_admin(self):
+        return users.is_current_user_admin()
+
     def send_mail(self, to, subject, body):
         self.send_mail_from(self.FROM_ADDRESS, to, subject, body)
 
