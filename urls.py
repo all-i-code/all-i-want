@@ -24,10 +24,11 @@ from webapp2_extras import routes
 
 from api.owners import Owners
 from api.permissions import Permissions
+from api.requests import Requests
 from api.users import Users
 
 
-def build_api_routes(version, resources):
+def build_api_routes(version, resources=None):
     """Create api routes given the version and list of resources
 
     :param version: The API version.
@@ -36,6 +37,8 @@ def build_api_routes(version, resources):
     :type resources: list.
 
     """
+    if resources is None:
+        resources = [Owners, Permissions, Requests, Users]
 
     sub_routes = [resource.get_routes() for resource in resources]
     return routes.PathPrefixRoute('/api/v{}'.format(version), sub_routes)
@@ -48,7 +51,7 @@ static_routes = [
 ]
 
 api_routes = [
-    build_api_routes(version='1', resources=[Users, Owners, Permissions]),
+    build_api_routes(version='1')
 ]
 
 app = webapp2.WSGIApplication(static_routes + api_routes, debug=True)

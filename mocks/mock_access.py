@@ -125,7 +125,7 @@ class MockAccess(object):
         return self.requests.get(req_id, None)
 
     def get_reqs(self):
-        return (self.get_request(rid) for rid in self.request_ids)
+        return (self.get_req(rid) for rid in self.request_ids)
 
     def add_list(self, owner_id, name, desc):
         owner = self.get_owner(owner_id)
