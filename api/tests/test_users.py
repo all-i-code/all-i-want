@@ -21,18 +21,17 @@
 
 import unittest
 
-from core.util import get_base_url, extract_name
-from api.resources.tests.base import ResourceTest
-from api.resources import Users
+from core.util import extract_name
+from api.tests.base import ResourceTest
+from api.users import Users
 
 
 class UsersTest(ResourceTest):
     resource_cls = Users
 
-    def test_get_user(self):
+    def test_get_current(self):
         """
-        Verify that calling get_current_user while logged in provides you
-        with a logout url and your login info
+        get_current gives currently logged in user and a logout URL
         """
         self.user.is_admin = True
 
@@ -42,9 +41,7 @@ class UsersTest(ResourceTest):
 
         # make the API Call
         self.resource.get_current()
-
-        # grab the last js_response object
-        user = self.resource.last_js_response
+        user = self.resource.get_last_response()
 
         # Verify correct user details are returned
         logout_url = self.ae.create_logout_url('/goodbye')
@@ -61,43 +58,42 @@ class UsersTest(ResourceTest):
         self.assertEqual(self.user.email(), owner.email)
         self.assertEqual(extract_name(self.user.email()), owner.name)
 
-    def Xtest_get_user_owner_exists(self):
+    def test_get_user_owner_exists(self):
         """
-        Verify that a duplicate owner is not created when get_current_user
-        is called
+        get_current does not created a duplicate owner
         """
         # Make sure owner exists before call
         owner = self.db.add_owner(self.user)
+        self.resource.owner = owner
         num_owners = len(self.db.owners)
 
-        url = 'http://www.domain.com/some/extra/path/'
-        user = self.rpc.get_current_user(url)
+        # make the API Call
+        self.resource.get_current()
+        user = self.resource.get_last_response()
 
         # verify still the same owner after the call
         self.assertEqual(num_owners, len(self.db.owners))
         self.assertEqual(owner.key().id(), user.owner_id)
         self.assertEqual(owner, self.db.user_owners[self.user])
 
-    def Xtest_get_user_add_req(self):
+    def test_get_user_add_req(self):
         """
-        Verify that when non-admin user tries to log in, an Access Request is
-        created for them.
+        get_current creates an AccessRequest for non-admin users who
+        are not yet owners.
         """
 
         # Verify no owner exists before call
         self.assertEqual(None, self.db.user_owners.get(self.user, None))
         num_owners = len(self.db.owners)
 
-        url = 'http://www.domain.com/some/extra/path/'
-        user = self.rpc.get_current_user(url)
+        self.resource.get_current()
+        user = self.resource.get_last_response()
 
         # Verify correct user details are returned
-        base = get_base_url(url)
-        goodbye = '{}/#Goodbye:'.format(base)
-        self.assertEqual(self.ae.create_logout_url(goodbye), user.logout_url)
+        self.assertEqual(self.ae.create_logout_url('/goodbye'),
+                         user.logout_url)
         self.assertEqual(self.user.nickname(), user.nickname)
         self.assertEqual(self.user.email(), user.email)
-        self.assertEqual(None, user.login_url)
         self.assertEqual(-1, user.owner_id)
         self.assertEqual(num_owners, len(self.db.owners))
 
@@ -106,10 +102,9 @@ class UsersTest(ResourceTest):
         req = self.db.requests.values()[0]
         self.assertEqual(self.user, req.user)
 
-    def Xtest_get_user_req_exists(self):
+    def test_get_user_req_exists(self):
         """
-        Verify that the second time get_current_user is called, a second
-        AccessRequest is not created.
+        get_current does not create a duplicate AccessRequest
         """
 
         # Verify no owner exists before call
@@ -120,11 +115,10 @@ class UsersTest(ResourceTest):
         self.db.add_req(self.user)
         self.assertEqual(1, len(self.db.request_ids))
 
-        url = 'http://www.domain.com/some/extra/path/'
-        user = self.rpc.get_current_user(url)
+        self.resource.get_current()
+        user = self.resource.get_last_response()
 
         # Verify correct user details are returned
-        self.assertEqual(None, user.login_url)
         self.assertEqual(-1, user.owner_id)
         self.assertEqual(num_owners, len(self.db.owners))
 

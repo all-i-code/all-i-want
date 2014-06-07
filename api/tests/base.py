@@ -48,10 +48,15 @@ class ResourceTest(unittest.TestCase):
         resource_cls = self.get_resource_cls()
 
         class SpyResource(resource_cls):
-            last_js_response = None
+            def __init__(self, *args, **kwargs):
+                super(SpyResource, self).__init__(*args, **kwargs)
+                self.last_response = None
+
+            def get_last_response(self):
+                return self.last_response
 
             def dump(self, js_response):
-                self.last_js_response = js_response
+                self.last_response = js_response
 
         # instantiate the SpyResource with fake Request/Response as well as
         # AppEngine and DbAccess

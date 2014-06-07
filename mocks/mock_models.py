@@ -19,6 +19,8 @@
 #
 """
 
+from core.util import extract_name
+
 
 class Db(object):
     _id_map = {}
@@ -76,7 +78,6 @@ class User(Db):
 class ListOwner(Db):
     def __init__(self, user, **kwargs):
         super(ListOwner, self).__init__(**kwargs)
-        from core.util import extract_name
         self.user = user
         self.name = extract_name(user.email())
         self.nickname = user.nickname()

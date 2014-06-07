@@ -22,11 +22,9 @@
 import webapp2
 from webapp2_extras import routes
 
-from api.resources import (
-    Users,
-    Owners,
-    Permissions,
-)
+from api.owners import Owners
+from api.permissions import Permissions
+from api.users import Users
 
 
 def build_api_routes(version, resources):
