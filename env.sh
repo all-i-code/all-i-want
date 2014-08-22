@@ -25,3 +25,15 @@ fi
 export PYTHONPATH=${PWD}:${GAE}/lib/yaml/lib:${GAE}/lib/webob-1.1.1:${GAE}/lib/django-1.4:${GAE}/lib/webapp2-2.5.2:${GAE}/lib:${GAE}
 export MAX_PY_WIDTH=80
 export HTML_TABS=4
+
+#
+# Utility to add a directory to PATH (if it's not there already)
+# taken from http://superuser.com/a/39995
+#
+function pathadd() {
+    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+        PATH="$1:$PATH"
+    fi
+}
+
+pathadd ${PWD}/node_modules/.bin

@@ -35,6 +35,7 @@ skip_files:
 - ^(.*/)?.*/tests/.*$
 - ^(.*/)?mocks/.*$
 - ^(.*/)?codeship_mocks/.*$
+- ^(.*/)?node_modules/.*$
 
 handlers:
 - url: /static

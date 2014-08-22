@@ -3,3 +3,4 @@
 index.yaml
 build
 *.pyc
+node_modules
