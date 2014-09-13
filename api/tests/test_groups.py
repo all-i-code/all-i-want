@@ -166,7 +166,89 @@ class GroupsTest(ResourceTest):
         resp = self.resource.last_response
         self.assertEqual(resp.name, 'Sinister Six')
 
-    # TODO: Add tests for PUT and DELETE
+    def test_update_no_owner(self):
+        """Can't update if not owner"""
+        self.resource.owner = None
+        with self.assertRaises(PermissionDeniedError):
+            self.resource.put()
+
+    def test_non_admin_update_other_group(self):
+        """Can't update someone else's group if not an admin"""
+        self._setup_groups()
+        self.user.is_admin = False
+        group_id = self.db.group_ids[-1]
+        self.request.body = json.dumps(dict(name='New Name',
+                                            description='n/a'))
+        with self.assertRaises(PermissionDeniedError):
+            self.resource.put(str(group_id))
+
+    def test_admin_update_other_group(self):
+        """Admin can update someone else's group"""
+        self._setup_groups()
+        self.user.is_admin = True
+        group_id = self.db.group_ids[-1]
+        self.request.body = json.dumps(dict(name='New Name',
+                                            description='n/a'))
+        self.resource.put(str(group_id))
+        self.assertEqual(self.db.groups[group_id].name, 'New Name')
+
+    def test_non_admin_update_own_group(self):
+        """Non admin user can update his/her own groups"""
+        self._setup_groups()
+        self.user.is_admin = False
+        group_id = self.db.group_ids[0]
+        self.request.body = json.dumps(dict(name='Super Squad',
+                                            description='n/a'))
+        self.resource.put(str(group_id))
+        group = self.db.get_group(group_id)
+        self.assertEqual(group.name, 'Super Squad')
+        self.assertEqual(group.description, 'n/a')
+
+    def test_no_duplicate_names(self):
+        """Can't update someone else's group if not an admin"""
+        self._setup_groups()
+        self.user.is_admin = True
+        group_id = self.db.group_ids[-1]
+        self.request.body = json.dumps(dict(name='Avengers',
+                                            description='n/a'))
+        with self.assertRaises(DuplicateNameError):
+            self.resource.put(str(group_id))
+
+    def test_delete(self):
+        """Delete your own group"""
+        self._setup_groups()
+        self.assertEqual(len(self.db.groups), 5)
+        group_id = self.db.group_ids[0]
+        self.assertTrue(group_id in self.db.groups)
+
+        self.resource.delete(group_id)
+
+        self.assertEqual(len(self.db.groups), 4)
+        self.assertFalse(group_id in self.db.groups)
+
+    def test_delete_other_group_admin(self):
+        """Delete someone else's group (as admin)"""
+        self._setup_groups()
+        self.user.is_admin = True
+        self.assertEqual(len(self.db.groups), 5)
+        group_id = self.db.group_ids[-1]
+        self.assertTrue(group_id in self.db.groups)
+
+        self.resource.delete(group_id)
+
+        self.assertEqual(len(self.db.groups), 4)
+        self.assertFalse(group_id in self.db.groups)
+
+    def test_delete_other_group_non_admin(self):
+        """Delete someone else's group (as non-admin)"""
+        self._setup_groups()
+        self.user.is_admin = False
+        group_id = self.db.group_ids[-1]
+
+        with self.assertRaises(PermissionDeniedError):
+            self.resource.delete(group_id)
+
+    # TODO: Add tests for LEAVE
 
 if __name__ == '__main__':
     unittest.main()

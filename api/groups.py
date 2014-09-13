@@ -19,7 +19,6 @@
 #
 """
 
-import json
 import logging
 
 from api.meta import (
@@ -80,19 +79,20 @@ class Groups(Resource):
         """Update an existing resource"""
         extra = dict(resource_id=resource_id, body=self.request.body)
         logging.info('groups::put', extra=extra)
-        data = json.loads(self.request.body)
+        data = self.parse_json(self.request.body)
 
         group = self.db.get_group(int(resource_id))
 
-        # You can only update your own groups
-        if group.owner.key().id() != self.owner.key().id():
+        # You can only update your own groups (unless you're an admin)
+        is_own_group = group.owner.key().id() == self.owner.key().id()
+        if not self.user.is_admin and not is_own_group:
             raise PermissionDeniedError()
 
         if not self.db.is_group_name_unique(data.name, group.key()):
             raise DuplicateNameError(JsGroup, data.name)
 
         group.name = data.name
-        group.description = data.desc
+        group.description = data.description
         self.dump(JsGroup.from_db(group.put()))
 
     @require_owner

@@ -192,7 +192,7 @@ class MockAccess(object):
         for m in group.members:
             self._delete_member(m)
         del self.groups[gid]
-        self.gropu_ids.remove(gid)
+        self.group_ids.remove(gid)
 
     def _delete_invite(self, invite, from_group=False):
         iid = invite.key().id()
