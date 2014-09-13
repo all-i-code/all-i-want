@@ -19,6 +19,7 @@
 #
 """
 
+import json
 import logging
 
 from api.meta import Resource
@@ -33,7 +34,7 @@ class Owners(Resource):
     def get(self, resource_id=None):
         """ Fetch owner """
 
-        logging.info('Owners::get owner_id = [{}]'.format(resource_id))
+        logging.info('owners::get', extra=dict(owner_id=resource_id))
         if resource_id is None:
             self.abort(404)
 
@@ -42,4 +43,16 @@ class Owners(Resource):
             self.abort(404)
 
         js_owner = JsOwner.from_db(owner)
+        self.dump(js_owner)
+
+    def put(self, resource_id):
+        """ Update owner """
+        extra = dict(owner_id=resource_id, body=self.request.body)
+        logging.info('owners::put', extra=extra)
+
+        data = json.loads(self.request.body)
+        owner = self.db.get_owner(int(resource_id))
+        owner.name = data.name
+        owner.nickname = data.nickname
+        js_owner = JsOwner.from_db(owner.put())
         self.dump(js_owner)

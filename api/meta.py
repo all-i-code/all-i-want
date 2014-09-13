@@ -30,8 +30,27 @@ from webob.exc import HTTPException
 
 from access import DbAccess
 from ae import AppEngine
+from core.exception import PermissionDeniedError
 from core.meta import Model
 from core.model import FailureReport
+
+
+def require_owner(func):
+    """Decorator to require an owner for a Resource method"""
+    def wrapped(self, *args, **kwargs):
+        if not self.owner:
+            raise PermissionDeniedError()
+        return func(*args, **kwargs)
+    return wrapped
+
+
+def require_admin(func):
+    """Decorator to require an admin for a Resource method"""
+    def wrapped(self, *args, **kwargs):
+        if not self.user.is_admin:
+            raise PermissionDeniedError()
+        return func(*args, **kwargs)
+    return wrapped
 
 
 class Resource(webapp2.RequestHandler):

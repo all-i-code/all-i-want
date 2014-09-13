@@ -16,11 +16,11 @@
     "tests"
   ],
   "devDependencies": {
-    "bootstrap": "~3.2.0",
-    "jquery": "~2.1.1",
-    "lodash": "~2.4.1",
-    "requirejs": "~2.1.14",
-    "require-css": "~0.1.5",
-    "jade": "~1.5.0"
+    "bootstrap": "^3.2.0",
+    "jquery": "^2.1.1",
+    "lodash": "^2.4.1",
+    "requirejs": "^2.1.14",
+    "require-css": "^0.1.5",
+    "jade": "^1.5.0"
   }
 }
