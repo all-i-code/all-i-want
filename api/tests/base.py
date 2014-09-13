@@ -33,10 +33,14 @@ class ResourceTest(unittest.TestCase):
     def get_resource_cls(cls):
         return getattr(cls, 'resource_cls')
 
+    @classmethod
+    def is_user_owner(cls):
+        return getattr(cls, 'user_owner', False)
+
     def setUp(self):
         self.ae = MockAppEngine()
         self.user = self.ae.get_current_user()
-        self.db = MockAccess(self.user)
+        self.db = MockAccess(user=self.user, add_owner=self.is_user_owner())
 
         # set up mock Request and Response objects
         self.request = mock.MagicMock()

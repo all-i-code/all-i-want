@@ -19,8 +19,8 @@
 #
 """
 
-import logging
 import json
+import logging
 
 from api.meta import (
     Resource,
@@ -46,12 +46,12 @@ class Groups(Resource):
     def post(self):
         """Create a new group"""
         logging.info('groups::post', extra=dict(body=self.request.body))
-        data = json.loads(self.request.body)
+        data = self.parse_json(self.request.body)
 
         if not self.db.is_group_name_unique(data.name):
             raise DuplicateNameError(JsGroup, data.name)
 
-        group = self.db.add_group(data.name, data.desc, self.owner)
+        group = self.db.add_group(data.name, data.description, self.owner)
         self.db.add_group_member(group, self.owner)
         self.dump(JsGroup.from_db(group))
 
@@ -60,15 +60,19 @@ class Groups(Resource):
         """Fetch group(s)"""
 
         logging.info('groups::get', extra=dict(resource_id=resource_id))
+
+        if self.user.is_admin:
+            owner_groups = self.db.get_groups()
+        else:
+            owner_groups = [g for g in self.owner.groups]
+            owner_groups.extend([m.group for m in self.owner.memberships])
+
         if resource_id is None:
-            if self.user.is_admin:
-                groups = self.db.get_groups()
-            else:
-                groups = [g for g in self.owner.groups]
-                groups.extend([m.group for m in self.owner.memberships])
-            self.dump([JsGroup.from_db(g) for g in groups])
+            self.dump([JsGroup.from_db(g) for g in owner_groups])
         else:
             group = self.db.get_group(int(resource_id))
+            if group not in owner_groups:
+                raise PermissionDeniedError()
             self.dump(JsGroup.from_db(group))
 
     @require_owner

@@ -22,10 +22,9 @@
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import (
-    RpcParamString as String,
     RpcParamInt as Integer,
 )
-from core.model import GroupInvitation, ListOwner
+from core.model import ListOwner
 from core.exception import PermissionDeniedError
 
 

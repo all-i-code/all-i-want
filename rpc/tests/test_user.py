@@ -21,7 +21,6 @@
 
 import unittest
 
-from core.exception import PermissionDeniedError
 from core.util import get_base_url, extract_name
 from rpc.rpc_user import UserRpcGroup
 from mocks.mock_access import MockAccess
@@ -189,63 +188,6 @@ class UserRpcTest(unittest.TestCase):
         self.assertTrue(owner.saved())
         self.assertEqual('Joe Smith', owner.name)
         self.assertEqual('Joe', owner.nickname)
-
-    def test_approve_request_no_admin(self):
-        """
-        Verify that attempting to approve a request as non admin user
-        raises a PermissionDeniedError
-        """
-        self.assertRaises(PermissionDeniedError, self.rpc.approve_request, 1)
-
-    def test_deny_request_no_admin(self):
-        """
-        Verify that attempting to approve a request as non admin user
-        raises a PermissionDeniedError
-        """
-        self.assertRaises(PermissionDeniedError, self.rpc.approve_request, 1)
-
-    def test_approve_request(self):
-        """
-        Confirm approving a request for access to all i want
-        """
-        self.set_user(User(is_admin=True))
-        user = User(email='joe.smith@email.com')
-        req = self.db.add_req(user)
-        self.assertEqual({}, self.ae.msg)
-
-        self.rpc.approve_request(req.key().id())
-
-        self.assertEqual(0, len(self.db.request_ids))
-        owner = self.db.owners.values()[0]
-        self.assertEqual(user, owner.user)
-        msg = self.ae.msg
-        self.assertEqual(self.ae.FROM_ADDRESS, msg['f'])
-        self.assertEqual(owner.email, msg['t'])
-        self.assertEqual('Account Activated', msg['s'])
-        body = self.ae.APPROVE_TEMPLATE % extract_name(owner.email)
-        self.assertEqual(body, msg['b'])
-
-    def test_deny_request(self):
-        """
-        Confirm verifying a request for access to all i want
-        """
-
-        self.set_user(User(is_admin=True))
-        user = User(email='joe.smith@email.com')
-        req = self.db.add_req(user)
-        self.assertEqual({}, self.ae.msg)
-
-        self.rpc.approve_request(req.key().id())
-
-        self.assertEqual(0, len(self.db.request_ids))
-        owner = self.db.owners.values()[0]
-        self.assertEqual(user, owner.user)
-        msg = self.ae.msg
-        self.assertEqual(self.ae.FROM_ADDRESS, msg['f'])
-        self.assertEqual(owner.email, msg['t'])
-        self.assertEqual('Account Activated', msg['s'])
-        body = self.ae.APPROVE_TEMPLATE % extract_name(owner.email)
-        self.assertEqual(body, msg['b'])
 
 if __name__ == '__main__':
     unittest.main()

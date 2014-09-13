@@ -72,7 +72,7 @@ class GroupRpcTest(unittest.TestCase):
         self.db.add_group_member(self.g2, self.u2)
         self.db.add_group_member(self.g2, self.u3)
 
-    def test_add_group(self):
+    def Xtest_add_group(self):
         """
         Confirm that add_group actually adds a group
         """
@@ -84,14 +84,14 @@ class GroupRpcTest(unittest.TestCase):
         self.assertEqual('Group Name', g.name)
         self.assertEqual('Group Desc', g.description)
 
-    def test_add_group_requires_admin(self):
+    def Xtest_add_group_requires_admin(self):
         """
         Confirm trying to add group with non admin user raised Exception
         """
         with self.assertRaises(UserVisibleError):
             self.rpc.add_group('Name', 'Desc')
 
-    def test_add_group_duplicate_name(self):
+    def Xtest_add_group_duplicate_name(self):
         """
         Confirm that trying to add a group with a duplicate name raises
         a DuplicateNameError
@@ -102,7 +102,7 @@ class GroupRpcTest(unittest.TestCase):
         with self.assertRaises(DuplicateNameError):
             self.rpc.add_group(name, 'Group Desc')
 
-    def test_get_groups(self):
+    def Xtest_get_groups(self):
         """
         Confirm group retrieval
         """
@@ -112,7 +112,7 @@ class GroupRpcTest(unittest.TestCase):
         for g, group in zip(self.db.get_groups(), groups):
             self.compare_group(g, group)
 
-    def test_update_group(self):
+    def Xtest_update_group(self):
         """
         Confirm ability to change group name/desc
         """
@@ -123,7 +123,7 @@ class GroupRpcTest(unittest.TestCase):
         self.assertEqual('New Name', g.name)
         self.assertEqual('New Desc', g.description)
 
-    def test_update_group_duplicate_name(self):
+    def Xtest_update_group_duplicate_name(self):
         """
         Confirm that trying to update a group with a used name raises a
         DuplicateNameError
@@ -134,7 +134,7 @@ class GroupRpcTest(unittest.TestCase):
         with self.assertRaises(DuplicateNameError):
             self.rpc.update_group(id, name, 'New Desc')
 
-    def test_update_group_same_name(self):
+    def Xtest_update_group_same_name(self):
         """
         Confirm that trying to update a group with its own name and a new
         description does NOT raise a DuplicateNameError
@@ -143,7 +143,7 @@ class GroupRpcTest(unittest.TestCase):
         g = self.db.groups.values()[0]
         self.rpc.update_group(g.key().id(), g.name, 'New Desc')
 
-    def test_invite_member(self):
+    def Xtest_invite_member(self):
         """
         Confirm ability to invite someone to a group
         """
@@ -156,7 +156,7 @@ class GroupRpcTest(unittest.TestCase):
         invite = group.invitations[0]
         self.assertEqual('address@email.com', invite.email)
 
-    def test_accept_invitation(self):
+    def Xtest_accept_invitation(self):
         """
         Confirm ability to accept a group invite
         """
@@ -169,7 +169,7 @@ class GroupRpcTest(unittest.TestCase):
         self.assertEqual(1, len(group.members))
         self.assertEqual(self.db.owner, group.members[0].member)
 
-    def test_decline_invitation(self):
+    def Xtest_decline_invitation(self):
         """
         Confirm ability to decline a group invitation
         """

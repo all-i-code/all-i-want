@@ -36,24 +36,56 @@ from core.model import FailureReport
 
 
 def require_owner(func):
-    """Decorator to require an owner for a Resource method"""
+    """Decorate a Resource instance method to require a user to be an owner
+
+    :param func: instance method to decorate
+    :type func: function
+
+    :returns: the decorated instance method
+    """
     def wrapped(self, *args, **kwargs):
         if not self.owner:
             raise PermissionDeniedError()
-        return func(*args, **kwargs)
+        return func(self, *args, **kwargs)
     return wrapped
 
 
 def require_admin(func):
-    """Decorator to require an admin for a Resource method"""
+    """Decorate a Resource method to require user to be admin
+
+    :param func: instance method to decorate
+    :type func: function
+
+    :returns: the decorated instance method
+    """
     def wrapped(self, *args, **kwargs):
         if not self.user.is_admin:
             raise PermissionDeniedError()
-        return func(*args, **kwargs)
+        return func(self, *args, **kwargs)
     return wrapped
 
 
+def to_object(json_dict):
+    """Convert a JSON dictionary to a Python object
+
+    The key/value pairs of the dictionary will be mapped into attributes
+    of the Python object
+
+    :param json_dict: the JSON dictionary
+    :type json_dict: dict
+
+    :returns: a Python object with attribute name/vals matching dict key/vals
+    """
+    class SimpleObject(object):
+        def __init__(self, **kwargs):
+            for key, value in kwargs.iteritems():
+                setattr(self, key, value)
+
+    return SimpleObject(**json_dict)
+
+
 class Resource(webapp2.RequestHandler):
+    """Special request handler for a REST Resource"""
 
     @classmethod
     def get_name(cls):
@@ -107,6 +139,16 @@ class Resource(webapp2.RequestHandler):
             self.user.is_admin = self.ae.is_current_user_admin()
             self.owner = self.db.get_owner_by_user(self.user)
         super(Resource, self).__init__(*args, **kwargs)
+
+    def parse_json(self, json_string):
+        """Parse the given JSON string into an object with properties
+
+        :param json_string: The original JSON string
+        :type json_string: str
+
+        :returns: A Python object whose properties map to the JSON dict keys
+        """
+        return json.loads(json_string, object_hook=to_object)
 
     def dump(self, result):
         """Write the given result to the response object as JSON
