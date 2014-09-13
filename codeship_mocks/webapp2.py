@@ -27,4 +27,7 @@ class Route(object):
 
 class RequestHandler(object):
     def __init__(self, *args, **kwargs):
-        pass
+        if 'request' in kwargs:
+            self.request = kwargs['request']
+        if 'response' in kwargs:
+            self.response = kwargs['response']

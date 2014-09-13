@@ -36,6 +36,9 @@ python-test:
 
 test: flake8-test python-test
 
+cs-test:
+	$(HIDE)PYTHONPATH=$${PWD}:$${PWD}/codeship_mocks make test
+
 clean:
 	$(HIDE)echo "Removing *.pyc files"
 	$(HIDE)find . -name \*.pyc | xargs rm -f
