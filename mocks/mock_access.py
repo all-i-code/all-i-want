@@ -104,6 +104,14 @@ class MockAccess(object):
         owner.memberships.append(m)
         return m
 
+    def get_group_member(self, owner, group):
+        membership = None
+        for m in owner.memberships:
+            if m.group.key().id() == group.key().id():
+                membership = m
+                break
+        return membership
+
     def get_owner(self, owner_id):
         return self.owners.get(owner_id, None)
 
@@ -207,6 +215,8 @@ class MockAccess(object):
             member.group.members.remove(member)
         del self.members[mid]
         self.member_ids.remove(mid)
+        owner = member.member
+        owner.memberships.remove(member)
 
     def _delete_owner(self, owner):
         del self.user_owners[owner.user]

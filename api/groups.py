@@ -28,6 +28,7 @@ from api.meta import (
 from core.exception import (
     DuplicateNameError,
     PermissionDeniedError,
+    UserVisibleError,
 )
 from core.model import (
     Group as JsGroup,
@@ -115,6 +116,9 @@ class Groups(Resource):
         logging.info('groups::leave', extra=dict(resource_id=resource_id))
 
         group = self.db.get_group(int(resource_id))
+        if self.owner.key().id() == group.owner.key().id():
+            raise UserVisibleError('You cannot leave a group you created.')
+
         member = self.db.get_group_member(self.owner, group)
         self.db.delete(member)
         self.dump({})

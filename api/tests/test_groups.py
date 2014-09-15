@@ -27,6 +27,7 @@ from api.tests.base import ResourceTest
 from core.exception import (
     DuplicateNameError,
     PermissionDeniedError,
+    UserVisibleError,
 )
 from mocks.mock_models import User
 
@@ -248,7 +249,22 @@ class GroupsTest(ResourceTest):
         with self.assertRaises(PermissionDeniedError):
             self.resource.delete(group_id)
 
-    # TODO: Add tests for LEAVE
+    def test_leave_group(self):
+        """Leave a group"""
+        self._setup_groups()
+        # Last group should be the one we're just a member of
+        group_id = self.db.group_ids[-1]
+        self.assertEqual(len(self.resource.owner.memberships), 1)
+        self.resource.leave(str(group_id))
+        self.assertEqual(len(self.resource.owner.memberships), 0)
+
+    def test_leave_own_group(self):
+        """Can't leave a group you own"""
+        self._setup_groups()
+        # First group is one we own
+        group_id = self.db.group_ids[0]
+        with self.assertRaises(UserVisibleError):
+            self.resource.leave(str(group_id))
 
 if __name__ == '__main__':
     unittest.main()
