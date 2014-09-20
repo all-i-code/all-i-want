@@ -4,4 +4,5 @@ index.yaml
 build
 *.pyc
 node_modules
+bower_components
 .*.swp
