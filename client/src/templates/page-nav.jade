@@ -1,0 +1,34 @@
+nav.navbar.navbar-default(role="navigation")
+    .container-fluid
+    // Brand and toggle get grouped for better mobile display
+    .navbar-header
+        button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar")
+            span.sr-only= "Toggle navigation"
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+        a.navbar-brand(href="/")= "All I Want"
+
+    #navbar.collapse.navbar-collapse
+        ul.nav.navbar-nav
+            each link in links
+                - var className = (link.active) ? 'active' : '';
+                li(class="#{className}")
+                    a(href="#{link.url}")= link.name
+        ul.nav.navbar-nav.navbar-right
+            li
+                a(href="https://github.com/adammeadows/all-i-want")= codeLabel
+            li.dropdown
+                a.dropdown-toggle(href="#", data-toggle="dropdown")
+                    | user.nickname
+                    span.caret
+                ul.dropdown-menu(role="menu")
+                    // TODO: make this passed in
+                    li
+                        a(href="/settings")= "Settings"
+                    if user.isAdmin
+                        li
+                            a(href="/requests")= "Requests"
+                    li.divider
+                    li
+                        a(href="#{logoutUrl}")= "Logout"

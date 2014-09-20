@@ -1,6 +1,6 @@
 {
   "name": "all-i-want",
-  "version": "0.0.1",
+  "version": "2.0.0-rc1",
   "homepage": "https://github.com/adammeadows/all-i-want",
   "authors": [
     "Adam Meadows <adam.meadows@gmail.com>"
@@ -10,9 +10,7 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
     "static/bower_components",
-    "test",
     "tests"
   ],
   "devDependencies": {

@@ -1,4 +1,9 @@
-/* RequireJS config for all-i-want */
+/*
+ * RequireJS config for all-i-want
+ */
+
+/* global requirejs */
+
 requirejs.config({
     baseUrl: '/static',
     paths: {

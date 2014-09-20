@@ -24,7 +24,9 @@ fi
 
 export PYTHONPATH=${PWD}:${GAE}/lib/yaml/lib:${GAE}/lib/webob-1.1.1:${GAE}/lib/django-1.4:${GAE}/lib/webapp2-2.5.2:${GAE}/lib:${GAE}
 export MAX_PY_WIDTH=80
+export MAX_JS_WIDTH=80
 export HTML_TABS=4
+export ESLINT_RULES_DIR=${PWD}/client/eslint-rules
 
 #
 # Utility to add a directory to PATH (if it's not there already)
@@ -36,4 +38,4 @@ function pathadd() {
     fi
 }
 
-pathadd ${PWD}/node_modules/.bin
+pathadd ${PWD}/client/node_modules/.bin
