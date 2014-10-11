@@ -25,7 +25,7 @@ fi
 export PYTHONPATH=${PWD}:${GAE}/lib/yaml/lib:${GAE}/lib/webob-1.1.1:${GAE}/lib/django-1.4:${GAE}/lib/webapp2-2.5.2:${GAE}/lib:${GAE}
 export MAX_PY_WIDTH=80
 export MAX_JS_WIDTH=80
-export HTML_TABS=4
+export HTML_TABS=2
 export ESLINT_RULES_DIR=${PWD}/client/eslint-rules
 
 #

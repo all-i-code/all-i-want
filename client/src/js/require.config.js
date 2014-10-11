@@ -4,26 +4,35 @@
 
 /* global requirejs */
 
-requirejs.config({
-    baseUrl: '/static',
-    paths: {
-        'lodash': 'bower_components/lodash/dist/lodash.min',
-        'jquery': 'bower_components/jquery/dist/jquery.min',
-        'jquery.bootstrap': 'bower_components/bootstrap/dist/js/bootstrap.min',
-    },
-    map: {
-        '*': {
-            'css': 'bower_components/require-css/css.min',
+(function () {
+    'use strict';
+
+    function bower(path) {
+        return 'bower_components/' + path;
+    }
+
+    requirejs.config({
+        baseUrl: '/static',
+        packages: [{
+            name: 'css',
+            location: bower('require-css'),
+            main: 'css.min',
+        }],
+        paths: {
+            'jade': bower('jade/runtime'),
+            'lodash': bower('lodash/dist/lodash.min'),
+            'jquery': bower('jquery/dist/jquery.min'),
+            'jquery.bootstrap': bower('bootstrap/dist/js/bootstrap.min'),
+            'q': bower('q/q'),
+            'q-xhr': bower('q-xhr/q-xhr'),
         },
-    },
-    deps: [
-        'jquery.bootstrap',
-        'css!libs/bootswatch/slate/bootstrap.min',
-        //'css!bower_components/bootstrap/dist/css/bootstrap.min',
-    ],
-    shim: {
-        'jquery.bootstrap': {
-            deps: ['jquery'],
+        deps: [
+            'jquery.bootstrap',
+        ],
+        shim: {
+            'jquery.bootstrap': {
+                deps: ['jquery'],
+            },
         },
-    },
-});
+    });
+}());

@@ -3,8 +3,7 @@
 index.yaml
 
 # generated client files
-/static
-**/*.tmpl.js
+/client/build
 
 # npm/bower
 node_modules

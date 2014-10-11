@@ -42,7 +42,8 @@ class PageHandler(webapp2.RequestHandler):
 
 class ListPage(PageHandler):
     def get(self):
-        self.response.out.write(self.render_template('index.html'))
+        data = {'main': 'list-main.js'}
+        self.response.out.write(self.render_template('index.html', data))
 
 
 class NotFoundPage(PageHandler):

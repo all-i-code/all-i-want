@@ -39,7 +39,7 @@ skip_files:
 
 handlers:
 - url: /static
-  static_dir: static
+  static_dir: client/build
   login: required
 
 - url: /.*
