@@ -46,6 +46,12 @@ class ListPage(PageHandler):
         self.response.out.write(self.render_template('index.html', data))
 
 
+class SettingsPage(PageHandler):
+    def get(self):
+        data = {'main': 'settings-main.js'}
+        self.response.out.write(self.render_template('index.html', data))
+
+
 class NotFoundPage(PageHandler):
     def get(self):
         self.error(404)

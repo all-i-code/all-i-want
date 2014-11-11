@@ -13,7 +13,7 @@ nav.navbar.navbar-default(role="navigation")
   #navbar.collapse.navbar-collapse
     ul.nav.navbar-nav
       each link in links
-        - var className = (link.active) ? 'active' : '';
+        - var className = (path === link.url) ? 'active' : '';
         li(class="#{className}")
           a(href="#{link.url}")= link.name
     ul.nav.navbar-nav.navbar-right
@@ -21,15 +21,13 @@ nav.navbar.navbar-default(role="navigation")
         a(href="https://github.com/adammeadows/all-i-want")= codeLabel
       li.dropdown
         a.dropdown-toggle(href="#", data-toggle="dropdown")
-          | user.nickname
+          | #{nickname}
           span.caret
         ul.dropdown-menu(role="menu")
-          // TODO: make this passed in
-          li
-            a(href="/settings")= settingsLabel
-          if user.isAdmin
-            li
-              a(href="/requests")= requestsLabel
+          each link in userLinks
+            - var className = (path === link.url) ? 'active' : '';
+            li(class="#{className}")
+              a(href="#{link.url}")= link.name
           li.divider
           li
-            a(href="#{logoutUrl}")= logoutLabel
+            a(href="#{logout.url}")= logout.label

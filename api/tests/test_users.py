@@ -44,7 +44,7 @@ class UsersTest(ResourceTest):
         user = self.resource.get_last_response()
 
         # Verify correct user details are returned
-        logout_url = self.ae.create_logout_url('/goodbye')
+        logout_url = self.ae.create_logout_url('/')
         self.assertEqual(logout_url, user.logout_url)
         self.assertEqual(self.user.nickname(), user.nickname)
         self.assertEqual(self.user.email(), user.email)
@@ -90,7 +90,7 @@ class UsersTest(ResourceTest):
         user = self.resource.get_last_response()
 
         # Verify correct user details are returned
-        self.assertEqual(self.ae.create_logout_url('/goodbye'),
+        self.assertEqual(self.ae.create_logout_url('/'),
                          user.logout_url)
         self.assertEqual(self.user.nickname(), user.nickname)
         self.assertEqual(self.user.email(), user.email)

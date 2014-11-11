@@ -1,0 +1,16 @@
+.page-header
+  h1= settingsLabel
+
+  form.form-horizontal(role="form")
+    .form-group
+      label.col-sm-2.control-label(for="name")= nameLabel
+      .col-sm-4
+        input#name.form-control(type="text", placeholder="#{nameLabel}")
+    .form-group
+      label.col-sm-2.control-label(for="nickname")= nicknameLabel
+      .col-sm-4
+        input#nickname.form-control(type="text", placeholder="#{nicknameLabel}")
+    .form-group
+      .col-sm-2
+      .col-sm-4
+        button.btn.btn-default#submit(type="submit")= submitLabel

@@ -4,33 +4,36 @@ define(function (require) {
 
     var Q = require('q-xhr');
     var NavBar = require('js/nav-bar');
-    var listsTmpl = require('js/templates/lists.tmpl');
+    var settingsTmpl = require('js/templates/settings.tmpl');
 
-    function ListView($container) {
+    function SettingsView($container) {
         this.$container = $container;
         this.nav = null;
         this.user = null;
     }
 
-    ListView.prototype.init = function () {
+    SettingsView.prototype.init = function () {
         var self = this;
 
         var data = {
-            listsLabel: 'Lists',
+            settingsLabel: 'Settings',
+            nameLabel: 'Name',
+            nicknameLabel: 'Nickname',
+            submitLabel: 'Submit',
         };
 
-        this.$container.append(listsTmpl(data));
+        this.$container.append(settingsTmpl(data));
 
         Q.xhr.get('/api/v1/users/current').then(function (resp) {
             self.setUser(resp.data);
         });
     };
 
-    ListView.prototype.setUser = function (user) {
+    SettingsView.prototype.setUser = function (user) {
         this.user = user;
         this.nav = new NavBar(user);
         this.nav.render();
     };
 
-    return ListView;
+    return SettingsView;
 });

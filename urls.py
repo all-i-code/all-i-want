@@ -46,6 +46,7 @@ def build_api_routes(version, resources=None):
 
 static_routes = [
     webapp2.Route('/', handler='views.ListPage'),
+    webapp2.Route('/settings', handler='views.SettingsPage'),
     webapp2.Route('/goodbye', handler='views.GoodbyePage'),
     webapp2.Route('/.*', handler='views.NotFoundPage'),
 ]

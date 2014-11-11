@@ -57,7 +57,7 @@ class Users(Resource):
             was_request_denied=req.denied if req else False,
             is_admin=self.user.is_admin,
             owner_id=js_owner.id if js_owner else -1,
-            logout_url=self.ae.create_logout_url('/goodbye')
+            logout_url=self.ae.create_logout_url('/')
         )
 
         self.dump(js_user)
