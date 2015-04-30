@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: access.py
 # Description: Interface into the database
@@ -17,8 +17,10 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
+from google.appengine.api import mail
 from google.appengine.ext.db import Key
+
 from core.util import extract_name as extract
 from models import (
     AccessReqDb, ListOwnerDb, GroupDb, GroupInvitationDb,
@@ -32,7 +34,6 @@ class DbAccess(object):
         self.owner = None
 
     def send_mail(self, sender, to, subject, message_body):
-        from google.appengine.api import mail
         message = mail.EmailMessage()
         message.sender = sender
         message.to = to
@@ -145,7 +146,6 @@ class DbAccess(object):
             obj.delete()
 
     def _delete_group(self, group):
-        [ m.delete() for m in group.members ]
-        [ i.delete() for i in group.invitations ]
+        [m.delete() for m in group.members]
+        [i.delete() for i in group.invitations]
         group.delete()
-

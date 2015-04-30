@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: test_rpc_list.py
 # Description: Unit tests for rpc_list module
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 import unittest
 
@@ -26,7 +26,7 @@ from core.exception import (
 )
 from rpc.rpc_list import ListRpcGroup
 from mocks.mock_access import MockAccess
-from mocks.mock_ae import MockWrapper
+from mocks.mock_ae import MockAppEngine
 from mocks.mock_models import User
 
 
@@ -34,7 +34,7 @@ class ListRpcTest(unittest.TestCase):
 
     def setUp(self):
         self.db = MockAccess(User(), add_owner=True)
-        self.ae = MockWrapper()
+        self.ae = MockAppEngine()
         self.rpc = ListRpcGroup(self.db, self.ae)
 
     def set_user(self, user):
@@ -52,16 +52,18 @@ class ListRpcTest(unittest.TestCase):
 
     def create_group(self, created_by, members, name='Group', desc='Desc'):
         g = self.db.add_group(name, desc, created_by)
-        [ self.db.add_group_member(g, o) for o in members ]
+        [self.db.add_group_member(g, o) for o in members]
         return g
 
     def create_list(self, oid, idx, count):
-        _ = lambda x: '{} {}'.format(x, idx)
-        wl = self.db.add_list(oid, _('List'), _('List Desc'))
+        def _ai(x):
+            return '{} {}'.format(x, idx)
+
+        wl = self.db.add_list(oid, _ai('List'), _ai('List Desc'))
         lid = wl.key().id()
         for idx in xrange(count):
-            self.db.add_list_item(lid, _('Item'), _('Cat'), _('Desc'),
-                                  _('url'), idx % 2 == 0)
+            self.db.add_list_item(lid, _ai('Item'), _ai('Cat'), _ai('Desc'),
+                                  _ai('url'), idx % 2 == 0)
 
     def create_lists(self, owner, count):
         oid = owner.key().id()
@@ -81,16 +83,19 @@ class ListRpcTest(unittest.TestCase):
 
     def compare_items(self, item, witem):
         ga, eq = (getattr, self.assertEqual)
-        _ = lambda x: x.label() if x is not None else ''
+
+        def _lbl(x):
+            return x.label() if x is not None else ''
+
         attrs = ('name', 'category', 'description', 'url', 'is_surprise')
-        [ eq(ga(item, a), ga(witem, a)) for a in attrs ]
-        eq(_(item.purchased_by), witem.purchased_by)
-        eq(_(item.reserved_by), witem.reserved_by)
+        [eq(ga(item, a), ga(witem, a)) for a in attrs]
+        eq(_lbl(item.purchased_by), witem.purchased_by)
+        eq(_lbl(item.reserved_by), witem.reserved_by)
 
     def test_add_list(self):
-        '''
+        """
         Confirm that add_list actually adds a list
-        '''
+        """
         oid = self.db.owner.key().id()
         self.rpc.add_list(oid, 'List Name', 'List Desc')
         self.assertEqual(1, len(self.db.lists))
@@ -100,29 +105,29 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual('List Desc', l.description)
 
     def test_add_list_no_owner(self):
-        '''
+        """
         Confirm that trying to add a list with no owner raises a
         PermissionDeniedError
-        '''
+        """
         oid = self.delete_owner()
         with self.assertRaises(PermissionDeniedError):
             self.rpc.add_list(oid, 'Name', 'Desc')
 
     def test_add_list_other_owner(self):
-        '''
+        """
         Confirm that trying to add a list for another owner raises a
         PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         oid = o.key().id()
         with self.assertRaises(PermissionDeniedError):
             self.rpc.add_list(oid, 'Name', 'Desc')
 
     def test_add_list_duplicate_name(self):
-        '''
+        """
         Confirm that trying to add a list with a duplicate name raises
         a DuplicateNameError
-        '''
+        """
         oid = self.db.owner.key().id()
         name = 'My Wish List'
         self.db.add_list(oid, name, 'Description')
@@ -130,9 +135,9 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.add_list(oid, name, 'Another List Description')
 
     def test_update_list(self):
-        '''
+        """
         Confirm that update_list actually updates a list
-        '''
+        """
         oid = self.db.owner.key().id()
         l = self.db.add_list(oid, 'Name', 'Description')
         lid = l.key().id()
@@ -143,10 +148,10 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual('New Desc', l.description)
 
     def test_update_list_no_owner(self):
-        '''
+        """
         Confirm that trying to update a list with no owner raises a
         PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         l = self.db.add_list(o.key().id(), 'List Name', 'List Desc')
         lid = l.key().id()
@@ -155,10 +160,10 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.update_list(lid, 'Name', 'Desc')
 
     def test_update_list_invalid_owner(self):
-        '''
+        """
         Confirm that trying to add a list for an invalid owner raises a
         PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         oid = o.key().id()
         l = self.db.add_list(oid, 'New List', 'New Desc')
@@ -167,10 +172,10 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.update_list(lid, 'Name', 'Desc')
 
     def test_update_list_duplicate_name(self):
-        '''
+        """
         Confirm that trying to update a list with a duplicate name raises
         a DuplicateNameError
-        '''
+        """
         oid = self.db.owner.key().id()
         name = 'My Wish List'
         self.db.add_list(oid, name, 'Description')
@@ -180,10 +185,10 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.update_list(lid, name, 'Another List Description')
 
     def test_get_list_no_owner(self):
-        '''
+        """
         Confirm that trying to get lists  with no owner raises a
         PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         oid = o.key().id()
         self.delete_owner()
@@ -191,34 +196,34 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.get_lists(oid)
 
     def test_get_lists_invalid_owner(self):
-        '''
+        """
         Confirm that trying to get lists for an invalid owner raises
         PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         oid = o.key().id()
         with self.assertRaises(PermissionDeniedError):
             self.rpc.get_lists(oid)
 
     def test_get_own_lists(self):
-        '''
+        """
         Confirm that get_lists works for current owner
-        '''
+        """
         oid = self.db.owner.key().id()
 
         def _add(i):
             return self.db.add_list(oid, 'List {}'.format(i),
                                     'Desc {}'.format(i))
 
-        lists = [ _add(i) for i in '12345' ]
+        lists = [_add(i) for i in '12345']
         wls = self.rpc.get_lists(oid)
         self.assertEqual(len(lists), len(wls))
 
     def test_get_lists_from_member_of_my_group(self):
-        '''
+        """
         Confirm that get_lists works for an owner who is a member of
         a group owned by current owner
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(self.db.owner, [o])
@@ -227,10 +232,10 @@ class ListRpcTest(unittest.TestCase):
         self.compare_all_lists(o.lists, wls)
 
     def test_get_lists_from_member_of_group_im_in(self):
-        '''
+        """
         Confirm that get_lists works for an owner who is a member of
         a group current owner is also in
-        '''
+        """
         o1 = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
         self.create_lists(o1, 5)
@@ -241,10 +246,10 @@ class ListRpcTest(unittest.TestCase):
         pass
 
     def test_get_lists_from_owner_of_group_im_in(self):
-        '''
+        """
         Confirm that get_lists works for an owner who is the owner of
         a group current owner is in
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
@@ -253,10 +258,10 @@ class ListRpcTest(unittest.TestCase):
         self.compare_all_lists(o.lists, wls)
 
     def test_add_item_to_invalid_owner(self):
-        '''
+        """
         Confirm that trying to add an item to the list of an invalid owner
         raises PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
@@ -265,10 +270,10 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', False)
 
     def test_add_surprise_item_to_invalid_owner(self):
-        '''
+        """
         Confirm that trying to add a surprise item to the list of an invalid
         owner raises PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         lid = o.lists[0].key().id()
@@ -276,9 +281,9 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.add_item(lid, 'item', 'cat', 'desc', 'url', True)
 
     def test_add_surprise_item_for_fellow_group_memeber(self):
-        '''
+        """
         Confirm ability to add a surprise item to a list you have access to
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
@@ -296,9 +301,9 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual(self.db.owner.nickname, witem.reserved_by)
 
     def test_add_item_to_own_list(self):
-        '''
+        """
         Confirm ability to add an item to your own list
-        '''
+        """
         self.create_lists(self.db.owner, 1)
         l = self.db.owner.lists[0]
         count = len(l.items)
@@ -315,9 +320,9 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual('', witem.purchased_by)
 
     def test_update_item_in_own_list(self):
-        '''
+        """
         Confirm ability to update an existing item in your own list
-        '''
+        """
         self.create_lists(self.db.owner, 2)
         l = self.db.owner.lists[1]
         count = len(l.items)
@@ -333,10 +338,10 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual(u, witem.url)
 
     def test_update_item_in_invalid_list(self):
-        ''''
+        """'
         Confirm that trying to update an item in someone else's list
         raises PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
@@ -346,9 +351,9 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.update_item(iid, 'item', 'cat', 'desc', 'url')
 
     def test_remove_item_from_own_list(self):
-        '''
+        """
         Confirm ability to remove an item from your own list
-        '''
+        """
         self.create_lists(self.db.owner, 5)
         l = self.db.owner.lists[3]
         count = len(l.items)
@@ -359,11 +364,11 @@ class ListRpcTest(unittest.TestCase):
         self.assertTrue(item not in self.db.owner.lists[3].items)
 
     def test_remove_reserved_item_from_own_list(self):
-        '''
+        """
         Confirm ability to remove an item from your own list
         which has previously been marked as reserved, and that an
         email is sent to the reserver
-        '''
+        """
         self.create_lists(self.db.owner, 5)
         l = self.db.owner.lists[-1]
         count = len(l.items)
@@ -386,11 +391,11 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual(msg, self.ae.msg)
 
     def test_remove_purchased_item_from_own_list(self):
-        '''
+        """
         Confirm ability to remove an item from your own list
         which has previously been marked as purchased, and that an
         email is sent to the purchaser
-        '''
+        """
         self.create_lists(self.db.owner, 5)
         l = self.db.owner.lists[-1]
         count = len(l.items)
@@ -413,10 +418,10 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual(msg, self.ae.msg)
 
     def test_remove_item_from_invalid_list(self):
-        '''
+        """
         Confirm that trying to remove an item from someone else's
         list raises PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
@@ -425,9 +430,9 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.remove_item(iid)
 
     def test_reserve_item(self):
-        '''
+        """
         Confirm ability to reserve an item from list you can access
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
@@ -440,9 +445,9 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual(None, item.purchased_by)
 
     def test_reserve_reserved_item(self):
-        '''
+        """
         Confirm trying to reserve a reserved item raises UserVisibleError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
         self.create_lists(o, 5)
@@ -455,9 +460,9 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.reserve_item(iid)
 
     def test_reserve_puchased_item(self):
-        '''
+        """
         Confirm trying to reserve a purchased item raises UserVisibleError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
         self.create_lists(o, 5)
@@ -470,9 +475,9 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.reserve_item(iid)
 
     def test_unreserve_item(self):
-        '''
+        """
         Confirm ability to unreserve and item previously reserved by you
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
@@ -487,10 +492,10 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual(None, item.purchased_by)
 
     def test_unreserve_item_not_reserved_by_you(self):
-        '''
+        """
         Confirm that trying to unrserve an item reserved by someone else
         raises a UserVisibleError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
         self.create_lists(o, 5)
@@ -503,10 +508,10 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.unreserve_item(iid)
 
     def test_reserve_invalid_item(self):
-        '''
+        """
         Confirm trying to reserve an item you don't have access to raises
         PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         item = o.lists[2].items[1]
@@ -515,10 +520,10 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.reserve_item(iid)
 
     def test_unreserve_invalid_item(self):
-        '''
+        """
         Confirm trying to unreserve an item you don't have access to raises
         PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         item = o.lists[2].items[1]
@@ -527,9 +532,9 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.unreserve_item(iid)
 
     def test_purchase_item(self):
-        '''
+        """
         Confirm ability to purchase an item from list you can access
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
@@ -542,9 +547,9 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual(self.db.owner, item.purchased_by)
 
     def test_purchase_reserved_item(self):
-        '''
+        """
         Confirm trying to purchase a reserved item raises UserVisibleError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
         self.create_lists(o, 5)
@@ -557,9 +562,9 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.purchase_item(iid)
 
     def test_purchase_puchased_item(self):
-        '''
+        """
         Confirm trying to purchase a purchased item raises UserVisibleError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
         self.create_lists(o, 5)
@@ -572,10 +577,10 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.purchase_item(iid)
 
     def test_purchase_invalid_item(self):
-        '''
+        """
         Confirm trying to purchase an item you don't have access to raises
         PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         item = o.lists[2].items[1]
@@ -584,10 +589,10 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.purchase_item(iid)
 
     def test_unpurchase_invalid_item(self):
-        '''
+        """
         Confirm trying to unpurchase an item you don't have access to raises
         PermissionDeniedError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         item = o.lists[2].items[1]
@@ -596,9 +601,9 @@ class ListRpcTest(unittest.TestCase):
             self.rpc.unpurchase_item(iid)
 
     def test_unpurchase_item(self):
-        '''
+        """
         Confirm ability to unpurchase an item you previously purchased
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         self.create_lists(o, 5)
         self.create_group(o, [self.db.owner])
@@ -613,10 +618,10 @@ class ListRpcTest(unittest.TestCase):
         self.assertEqual(None, item.purchased_by)
 
     def test_unpurchase_item_purchased_by_someone_else(self):
-        '''
+        """
         Confirm trying to unpurchase an item purchased by someone else
         raises a UserVisibleError
-        '''
+        """
         o = self.db.add_owner(User('foo', 'foo@email.com'))
         o2 = self.db.add_owner(User('bar', 'bar@email.com'))
         self.create_lists(o, 5)

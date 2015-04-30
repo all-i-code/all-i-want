@@ -2,7 +2,7 @@
 # File: Makefile
 # Description: makefile for all-i-want
 #
-# Copyright 2011-2013 Adam Meadows
+# Copyright 2011-2015 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -19,23 +19,16 @@
 
 HIDE := @
 PYTHON ?= python
-BUILD := build
 
-.PHONY : build coverage flake8-test python-test test clean
+.PHONY: coverage flake8-test python-test test clean
 
-IGNORES := -not -path "*.git" \
-	-not -path "*tests"\
-	-not -path "*build"\
-	-not -path "*mocks"\
-	-not -path "*.config"
+flake8-test:
+	$(HIDE)flake8 .
 
-build:
-	$(HIDE)rm -rf $(BUILD)
-	$(HIDE)mkdir $(BUILD)
-	$(HIDE)cp *.py $(BUILD)
-	$(HIDE)cp *.yaml $(BUILD)
-	$(HIDE)find . -type d -d 1 $(IGNORES) -exec cp -R {} $(BUILD) \;
-	$(HIDE)find $(BUILD) -name tests | xargs rm -rf
+python-test:
+	$(HIDE)nosetests
+
+test: flake8-test python-test
 
 coverage: export PYTHON := coverage run -a
 coverage:
@@ -43,16 +36,20 @@ coverage:
 	$(HIDE)echo -e "\nCoverage Stats:\n"
 	$(HIDE)coverage report --omit /Applications/*.py
 
-flake8-test:
-	$(HIDE)flake8 --config=.config/flake8 .
-
-python-test:
-	$(HIDE)nosetests
-
-test: flake8-test python-test
-
 clean:
-	$(HIDE)rm -rf $(BUILD)
 	$(HIDE)echo "Removing *.pyc files"
 	$(HIDE)find . -name \*.pyc | xargs rm -f
+	$(HIDE)echo "Removing *.py-e files"
+	$(HIDE)find . -name \*.py-e | xargs rm -f
 
+# Continuous Integration targets
+
+ci-test: flake8-test ci-python-test
+ci-python-test:
+	$(HIDE)PYTHONPATH=$${PWD}:$${PWD}/ci_mocks make test
+
+ci-coverage: export PYTHON := coverage run -a
+ci-coverage:
+	$(HIDE)make ci-python-test
+	$(HIDE)echo -e "\nCoverage Stats:\n"
+	$(HIDE)coverage report --omit /Applications/*.py

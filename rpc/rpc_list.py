@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: rpc_list.py
 # Description:
@@ -18,7 +18,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 from rpc.rpc_meta import RpcGroupBase, RpcReqHandler, Rpc
 from rpc.rpc_params import (
@@ -65,13 +65,13 @@ class ListRpcGroup(RpcGroupBase):
         self._verify_owner()
         perms = self.db.get_permissions_by_email(self.owner.email)
         oid = self.owner.key().id()
-        oids = [ oid ] + [ p.owner.key().id() for p in perms ]
+        oids = [oid] + [p.owner.key().id() for p in perms]
         return owner_id in oids
 
     def _can_read_list(self, owner_id):
-        _ = lambda x: x.member.key().id()
+        _ = lambda x: x.member.key().id() # flake8: noqa
         self._verify_owner()
-        oids = [ self.owner.key().id() ]
+        oids = [self.owner.key().id()]
         groups, memberships = (self.owner.groups, self.owner.memberships)
         oids.extend(g.owner.key().id() for g in groups)
         oids.extend(_(m) for g in groups for m in g.members)
@@ -84,9 +84,9 @@ class ListRpcGroup(RpcGroupBase):
         raise UserVisibleError(msg)
 
     def add_list(self, owner_id, name, desc):
-        '''
+        """
         Add a new wish list for the given owner, ensuring a unique name
-        '''
+        """
         if not self._can_add_to_list(owner_id):
             raise PermissionDeniedError()
 
@@ -97,10 +97,10 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(l)
 
     def update_list(self, list_id, name, desc):
-        '''
+        """
         Update the name/description of an existing wish list for
         the given owner, ensuring a unique name
-        '''
+        """
         l = self.db.get_list(list_id)
         oid = l.owner.key().id()
         if not self._can_add_to_list(oid):
@@ -114,9 +114,9 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(l.put())
 
     def delete_list(self, list_id):
-        '''
+        """
         Delete the given List
-        '''
+        """
         l = self.db.get_list(list_id)
         oid = l.owner.key().id()
         if not self._can_add_to_list(oid):
@@ -126,21 +126,21 @@ class ListRpcGroup(RpcGroupBase):
         return []
 
     def get_lists(self, owner_id):
-        '''
+        """
         Retrieve all the wish lists for the given owner
-        '''
+        """
         if not self._can_read_list(owner_id):
             raise PermissionDeniedError()
 
         oid = self.owner.key().id()
         own = oid == owner_id
         owner = self.db.get_owner(owner_id)
-        return [ WishList.from_db(l, own=own) for l in owner.lists ]
+        return [WishList.from_db(l, own=own) for l in owner.lists]
 
     def add_item(self, list_id, name, cat, desc, url, surprise):
-        '''
+        """
         Add an item to the given wish list
-        '''
+        """
         l = self.db.get_list(list_id)
         can_read = self._can_read_list(l.owner.key().id())
         can_add = self._can_add_to_list(l.owner.key().id())
@@ -154,9 +154,9 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(self.db.get_list(list_id))
 
     def update_item(self, item_id, name, cat, desc, url):
-        '''
+        """
         Update the name, category, description and url of an existing item
-        '''
+        """
         item = self.db.get_item(item_id)
         if not self._can_add_to_list(item.parent_list.owner.key().id()):
             raise PermissionDeniedError()
@@ -168,10 +168,10 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(item.put().parent_list)
 
     def remove_item(self, item_id):
-        '''
+        """
         Remove the given item. If the item has been reserved/purchased, send
         an email notification to the the reserver/purchaser
-        '''
+        """
         self._verify_owner()
         item = self.db.get_item(item_id)
         if not self._can_add_to_list(item.parent_list.owner.key().id()):
@@ -203,9 +203,9 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(l)
 
     def reserve_item(self, item_id):
-        '''
+        """
         Mark the given item as reserved
-        '''
+        """
         _ = lambda x: x.key().id()
         self._verify_owner()
         item = self.db.get_item(item_id)
@@ -224,9 +224,9 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(item.put().parent_list)
 
     def unreserve_item(self, item_id):
-        '''
+        """
         Mark the given item as not reserved if you were the one who reserved it
-        '''
+        """
         _ = lambda x: x.key().id()
         self._verify_owner()
         item = self.db.get_item(item_id)
@@ -244,9 +244,9 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(item.put().parent_list)
 
     def purchase_item(self, item_id):
-        '''
+        """
         Mark the given item as purchased
-        '''
+        """
         _ = lambda x: x.key().id()
         self._verify_owner()
         item = self.db.get_item(item_id)
@@ -265,10 +265,10 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(item.put().parent_list)
 
     def unpurchase_item(self, item_id):
-        '''
+        """
         Mark the given item as not purchased if you were the one who
         purchased it
-        '''
+        """
         _ = lambda x: x.key().id()
         self._verify_owner()
         item = self.db.get_item(item_id)
@@ -293,13 +293,12 @@ class ListRpcGroup(RpcGroupBase):
         return WishList.from_db(l)
 
     def get_reserved_and_purchased_items(self):
-        '''
+        """
         Retrieve all items which have been reserved or purchased by you
-        '''
+        """
         # TODO: implement this
         pass
 
 
 class ListRpcReqHandler(RpcReqHandler):
     group_cls = ListRpcGroup
-

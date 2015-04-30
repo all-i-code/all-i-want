@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: rpc_params.py
 # Description: Module for defining RPC Parameter classes
@@ -17,26 +17,15 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 import json
 
 
 class RpcParam(object):
-    '''Base class for RPC parameters'''
+    """Base class for RPC parameters"""
 
     def __init__(self, name):
         self.name = name
-
-    @classmethod
-    def get_java_type(cls):
-        return getattr(cls, 'java_type')
-
-    def get_java_name(self):
-        from jhb.core.util import camelize
-        return camelize(self.name)
-
-    def get_java_param(self):
-        return '%s %s' % (self.get_java_type(), self.get_java_name())
 
     def get_value(self, value):
         return value
@@ -93,5 +82,4 @@ class RpcParamList(RpcParam):
         return 'java.util.ArrayList<%s>' % self.param.get_java_type()
 
     def get_value(self, value):
-        return [ self.param.get_value(v) for v in json.loads(value) ]
-
+        return [self.param.get_value(v) for v in json.loads(value)]

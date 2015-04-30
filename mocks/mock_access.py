@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: mock_access.py
 # Description: Mock Interface into the database for testing
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 from mocks.mock_models import (
     AccessReq as Req,
     ListOwner as Owner,
@@ -61,9 +61,9 @@ class MockAccess(object):
         return owner
 
     def is_group_name_unique(self, name, key=None):
-        groups = [ g for g in self.groups.values() if g.name == name ]
+        groups = [g for g in self.groups.values() if g.name == name]
         if key is not None:
-            groups = [ g for g in groups if g.key() != key ]
+            groups = [g for g in groups if g.key() != key]
         return len(groups) == 0
 
     def add_group(self, name, description, owner=None):
@@ -104,6 +104,14 @@ class MockAccess(object):
         owner.memberships.append(m)
         return m
 
+    def get_group_member(self, owner, group):
+        membership = None
+        for m in owner.memberships:
+            if m.group.key().id() == group.key().id():
+                membership = m
+                break
+        return membership
+
     def get_owner(self, owner_id):
         return self.owners.get(owner_id, None)
 
@@ -125,7 +133,7 @@ class MockAccess(object):
         return self.requests.get(req_id, None)
 
     def get_reqs(self):
-        return (self.get_request(rid) for rid in self.request_ids)
+        return (self.get_req(rid) for rid in self.request_ids)
 
     def add_list(self, owner_id, name, desc):
         owner = self.get_owner(owner_id)
@@ -141,10 +149,13 @@ class MockAccess(object):
 
     def is_list_name_unique(self, owner_id, name, key=None):
         owner = self.get_owner(owner_id)
-        _ = lambda l: l.owner == owner and l.name == name
-        lists = [ l for l in self.lists.values() if _(l) ]
+
+        def matches(l):
+            return l.owner == owner and l.name == name
+
+        lists = [l for l in self.lists.values() if matches(l)]
         if key is not None:
-            lists = [ l for l in lists if l.key() != key ]
+            lists = [l for l in lists if l.key() != key]
         return len(lists) == 0
 
     def add_list_item(self, list_id, name, category, desc, url, is_surprise):
@@ -192,7 +203,7 @@ class MockAccess(object):
         for m in group.members:
             self._delete_member(m)
         del self.groups[gid]
-        self.gropu_ids.remove(gid)
+        self.group_ids.remove(gid)
 
     def _delete_invite(self, invite, from_group=False):
         iid = invite.key().id()
@@ -207,6 +218,8 @@ class MockAccess(object):
             member.group.members.remove(member)
         del self.members[mid]
         self.member_ids.remove(mid)
+        owner = member.member
+        owner.memberships.remove(member)
 
     def _delete_owner(self, owner):
         del self.user_owners[owner.user]
@@ -218,4 +231,3 @@ class MockAccess(object):
 
     def get_permissions_by_email(self, email):
         return []
-

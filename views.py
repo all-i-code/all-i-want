@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: views.py
 # Description: URL handlers for html/js pages
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 import os
 import webapp2
@@ -42,12 +42,22 @@ class PageHandler(webapp2.RequestHandler):
 
 class ListPage(PageHandler):
     def get(self):
-        self.response.out.write(self.render_template('index.html'))
+        data = {'main': 'list-main.js'}
+        self.response.out.write(self.render_template('index.html', data))
+
+
+class SettingsPage(PageHandler):
+    def get(self):
+        data = {'main': 'settings-main.js'}
+        self.response.out.write(self.render_template('index.html', data))
 
 
 class NotFoundPage(PageHandler):
     def get(self):
+        self.error(404)
         self.response.out.write(self.render_template('404.html'))
 
 
-app = webapp2.WSGIApplication([('/.*', PageHandler)], debug=True)
+class GoodbyePage(PageHandler):
+    def get(self):
+        self.response.out.write(self.render_template('bye.html'))

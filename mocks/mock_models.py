@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: mock_models.py
 # Description: Mock Model objects
@@ -17,16 +17,22 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
+
+from core.util import extract_name
 
 
 class Db(object):
     _id_map = {}
 
+    @classmethod
+    def reset(cls):
+        cls._id_map = {}
+
     def __init__(self, id=None):
         if id is None:
-            id = self._id_map.setdefault(self.__class__, 1)
-            self._id_map[self.__class__] += 1
+            id = Db._id_map.setdefault(self.__class__, 1)
+            Db._id_map[self.__class__] += 1
         self._id = id
 
     def id(self):
@@ -72,7 +78,6 @@ class User(Db):
 class ListOwner(Db):
     def __init__(self, user, **kwargs):
         super(ListOwner, self).__init__(**kwargs)
-        from core.util import extract_name
         self.user = user
         self.name = extract_name(user.email())
         self.nickname = user.nickname()

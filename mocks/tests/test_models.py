@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: test_models.py
 # Description: Unit tests for Mock Model objects
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 import unittest
 from mocks.mock_models import (
@@ -35,22 +35,24 @@ from mocks.mock_models import (
 class DummyModelTest(unittest.TestCase):
 
     def test_increasing_ids(self):
-        '''
+        """
         Make sure that ids are increasing with each object
-        '''
-        eq = lambda id, obj: self.assertEquals(id, obj.key().id())
+        """
+        def eq(id, obj):
+            msg = 'ID matches for {}'.format(obj.__class__.__name__)
+            self.assertEqual(id, obj.key().id(), msg)
         ids = range(1, 100)
 
-        classes = ( User, Group, Invite, Member, List, Item )
+        classes = (User, Group, Invite, Member, List, Item)
         for cls in classes:
-            objs = [ cls() for i in ids ]
-            [ eq(id, o) for id, o in zip(ids, objs) ]
+            objs = [cls() for i in ids]
+            [eq(id, o) for id, o in zip(ids, objs)]
 
         u = User()
-        u_classes = ( Req, Owner )
+        u_classes = (Req, Owner)
         for cls in u_classes:
-            objs = [ cls(u) for i in ids ]
-            [ eq(id, o) for id, o in zip(ids, objs) ]
+            objs = [cls(u) for i in ids]
+            [eq(id, o) for id, o in zip(ids, objs)]
 
 
 if '__main__' == __name__:

@@ -1,5 +1,14 @@
 
 .coverage
 index.yaml
-build
+
+# generated client files
+/client/build
+
+# npm/bower
+node_modules
+bower_components
+
+# Temp files
 *.pyc
+.*.swp

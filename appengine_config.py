@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: appengine_config.py
 # Description: config to allow appstats
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 
 def webapp_add_wsgi_middleware(app):
