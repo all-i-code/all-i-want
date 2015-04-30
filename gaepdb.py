@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: gaepdb.py
 # Description: A GAE wrapper for pdb to allow pdb.set_trace() to work in GAE
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 
 def set_trace():

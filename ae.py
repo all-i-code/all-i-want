@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: ae.py
 # Description: wrapper for app engine services
@@ -17,13 +17,13 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 from google.appengine.api import users
 from google.appengine.api import mail
 
 
-class Wrapper(object):
-
+class AppEngine(object):
+    """Wrapper for AppEngine methods used for easier testing"""
     FROM_ADDRESS = 'All I Want Mail <mail.all.i.want@gmail.com>'
     # TODO: update these templates to use .format()
     APPROVE_TEMPLATE = (
@@ -64,6 +64,12 @@ class Wrapper(object):
     def create_logout_url(self, url):
         return users.create_logout_url(url)
 
+    def get_current_user(self):
+        return users.get_current_user()
+
+    def is_current_user_admin(self):
+        return users.is_current_user_admin()
+
     def send_mail(self, to, subject, body):
         self.send_mail_from(self.FROM_ADDRESS, to, subject, body)
 
@@ -74,4 +80,3 @@ class Wrapper(object):
         msg.subject = subject
         msg.body = body
         msg.send()
-

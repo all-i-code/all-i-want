@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: rpc_urls.py
 # Description: GAE app to handle RPCs
@@ -17,7 +17,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -39,4 +39,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

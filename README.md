@@ -22,3 +22,4 @@ to your lists.
 > let you see them, now would they?
 
 
+![Codeship Status](https://www.codeship.io/projects/5a7dc0b0-c9d0-0131-3637-5a369f970263/status)

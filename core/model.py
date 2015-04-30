@@ -1,4 +1,4 @@
-'''
+"""
 #
 # File: model.py
 # Description: Model classes
@@ -17,18 +17,18 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-'''
+"""
 
-# TODO: update these to user Model.property.get_value_for_datastore(instance)
+# TODO: update these to use Model.property.get_value_for_datastore(instance)
 # to get ids for reference properties
 
 from core.meta import (
+    Boolean,
+    Integer,
     Model,
-    FieldBoolean as Boolean,
-    FieldInt as Integer,
-    FieldString as String,
-    FieldText as Text,
-    FieldModelArray as ModelArray,
+    ModelArray,
+    String,
+    Text,
 )
 
 
@@ -139,8 +139,8 @@ class Group(Model):
     def from_db(cls, db):
         _id = lambda x: x.key().id() if x is not None else -1
         _lbl = lambda x: x.label() if x is not None else -1
-        invitations = [ GroupInvitation.from_db(i) for i in db.invitations ]
-        members = [ GroupMember.from_db(m) for m in db.members ]
+        invitations = [GroupInvitation.from_db(i) for i in db.invitations]
+        members = [GroupMember.from_db(m) for m in db.members]
         return cls(
             id=db.key().id(),
             name=db.name,
@@ -195,7 +195,7 @@ class WishList(Model):
     @classmethod
     def from_db(cls, db, own=False):
         _ = lambda i: (not own) or (not i.is_surprise)
-        items = [ ListItem.from_db(i) for i in db.items if _(i) ]
+        items = [ListItem.from_db(i) for i in db.items if _(i)]
         return cls(
             id=db.key().id(),
             name=db.name,
@@ -209,7 +209,6 @@ class User(Model):
         String(name='email'),
         String(name='nickname'),
         String(name='user_id'),
-        String(name='login_url'),
         String(name='logout_url'),
         Integer(name='owner_id'),
         Boolean(name='was_req_denied'),
@@ -218,10 +217,25 @@ class User(Model):
 
 
 class FailureReport(Model):
+    db = False
     fields = (
         String(name='error_type'),
         String(name='message'),
         String(name='traceback'),
+    )
+
+
+class Success(Model):
+    db = False
+    fields = (
+        String(name='message'),
+    )
+
+
+class Redirect(Model):
+    db = False
+    fields = (
+        String(name='url'),
     )
 
 
