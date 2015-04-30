@@ -69,7 +69,7 @@ class ListRpcGroup(RpcGroupBase):
         return owner_id in oids
 
     def _can_read_list(self, owner_id):
-        _ = lambda x: x.member.key().id()
+        _ = lambda x: x.member.key().id() # flake8: noqa
         self._verify_owner()
         oids = [self.owner.key().id()]
         groups, memberships = (self.owner.groups, self.owner.memberships)

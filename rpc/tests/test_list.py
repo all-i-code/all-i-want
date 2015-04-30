@@ -56,12 +56,14 @@ class ListRpcTest(unittest.TestCase):
         return g
 
     def create_list(self, oid, idx, count):
-        _ = lambda x: '{} {}'.format(x, idx)
-        wl = self.db.add_list(oid, _('List'), _('List Desc'))
+        def _ai(x):
+            return '{} {}'.format(x, idx)
+
+        wl = self.db.add_list(oid, _ai('List'), _ai('List Desc'))
         lid = wl.key().id()
         for idx in xrange(count):
-            self.db.add_list_item(lid, _('Item'), _('Cat'), _('Desc'),
-                                  _('url'), idx % 2 == 0)
+            self.db.add_list_item(lid, _ai('Item'), _ai('Cat'), _ai('Desc'),
+                                  _ai('url'), idx % 2 == 0)
 
     def create_lists(self, owner, count):
         oid = owner.key().id()
@@ -81,11 +83,14 @@ class ListRpcTest(unittest.TestCase):
 
     def compare_items(self, item, witem):
         ga, eq = (getattr, self.assertEqual)
-        _ = lambda x: x.label() if x is not None else ''
+
+        def _lbl(x):
+            return x.label() if x is not None else ''
+
         attrs = ('name', 'category', 'description', 'url', 'is_surprise')
         [eq(ga(item, a), ga(witem, a)) for a in attrs]
-        eq(_(item.purchased_by), witem.purchased_by)
-        eq(_(item.reserved_by), witem.reserved_by)
+        eq(_lbl(item.purchased_by), witem.purchased_by)
+        eq(_lbl(item.reserved_by), witem.reserved_by)
 
     def test_add_list(self):
         """

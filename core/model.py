@@ -32,6 +32,14 @@ from core.meta import (
 )
 
 
+def _id(x):
+    return x.key().id() if x is not None else -1
+
+
+def _lbl(x):
+    return x.label() if x is not None else ''
+
+
 class AccessReq(Model):
     fields = (
         Integer(name='id'),
@@ -57,8 +65,8 @@ class ListPermission(Model):
 
     @classmethod
     def from_db(cls, db):
-        _ = lambda x: x.key().id()
-        return cls(id=_(db), owner_id=_(db.owner), email=db.email)
+
+        return cls(id=_id(db), owner_id=_id(db.owner), email=db.email)
 
 
 class ListOwner(Model):
@@ -71,9 +79,8 @@ class ListOwner(Model):
 
     @classmethod
     def from_db(cls, db):
-        _ = lambda x: x.key().id()
         return cls(
-            id=_(db),
+            id=_id(db),
             name=db.name,
             nickname=db.nickname,
             email=db.email,
@@ -91,10 +98,9 @@ class GroupInvitation(Model):
 
     @classmethod
     def from_db(cls, db):
-        _ = lambda x: x.key().id()
         return cls(
-            id=_(db),
-            group_id=_(db.group),
+            id=_id(db),
+            group_id=_id(db.group),
             group_name=db.group.name,
             owner_name=db.group.owner.label(),
             member_email=db.email,
@@ -113,10 +119,9 @@ class GroupMember(Model):
 
     @classmethod
     def from_db(cls, db):
-        _ = lambda x: x.key().id()
         return cls(
-            id=_(db),
-            group_id=_(db.group),
+            id=_id(db),
+            group_id=_id(db.group),
             name=db.member.name,
             user_id=db.member.user.user_id(),
             nickname=db.member.nickname,
@@ -137,8 +142,6 @@ class Group(Model):
 
     @classmethod
     def from_db(cls, db):
-        _id = lambda x: x.key().id() if x is not None else -1
-        _lbl = lambda x: x.label() if x is not None else -1
         invitations = [GroupInvitation.from_db(i) for i in db.invitations]
         members = [GroupMember.from_db(m) for m in db.members]
         return cls(
@@ -168,16 +171,18 @@ class ListItem(Model):
 
     @classmethod
     def from_db(cls, db):
-        _ = lambda x: x.nickname if x is not None else ''
-        _id = lambda x: x.key().id() if x is not None else -1
+
+        def _nn(x):
+            return x.nickname if x is not None else ''
+
         return cls(
             id=db.key().id(),
             name=db.name,
             description=db.description,
             category=db.category,
             url=db.url,
-            reserved_by=_(db.reserved_by),
-            purchased_by=_(db.purchased_by),
+            reserved_by=_nn(db.reserved_by),
+            purchased_by=_nn(db.purchased_by),
             reserved_by_owner_id=_id(db.reserved_by),
             purchased_by_owner_id=_id(db.purchased_by),
             is_surprise=db.is_surprise,
@@ -194,10 +199,12 @@ class WishList(Model):
 
     @classmethod
     def from_db(cls, db, own=False):
-        _ = lambda i: (not own) or (not i.is_surprise)
-        items = [ListItem.from_db(i) for i in db.items if _(i)]
+        def is_visible(i):
+            return (not own) or (not i.is_surprise)
+
+        items = [ListItem.from_db(i) for i in db.items if is_visible(i)]
         return cls(
-            id=db.key().id(),
+            id=_id(db),
             name=db.name,
             description=db.description,
             items=items,

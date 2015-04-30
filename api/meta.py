@@ -3,7 +3,7 @@
 # File: meta.py
 # Description: Module for meta API Resource handlers
 #
-# Copyright 2014 Adam Meadows
+# Copyright 2014-2015 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -156,9 +156,12 @@ class Resource(webapp2.RequestHandler):
         :param result: The result to dump
         :type result: core.Model or JSON serializable data type
         """
-        _ = lambda x: x.to_json_dict() if isinstance(x, Model) else x
+
+        def _jsd(x):
+            return x.to_json_dict() if isinstance(x, Model) else x
+
         is_list = result.__class__ == list
-        result_json = [_(o) for o in result] if is_list else _(result)
+        result_json = [_jsd(o) for o in result] if is_list else _jsd(result)
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(result_json))
 
@@ -182,10 +185,9 @@ class Resource(webapp2.RequestHandler):
         if isinstance(exception, HTTPException):
             status_code = exception.code
 
-        nm = lambda e: e.__class__.__name__
         tb = '\n'.join(traceback.format_exception(*sys.exc_info()))
         d = dict(
-            error_type=nm(exception),
+            error_type=exception.__class__.__name__,
             message=str(exception),
             traceback=tb,
         )

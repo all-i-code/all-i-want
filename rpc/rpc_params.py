@@ -27,17 +27,6 @@ class RpcParam(object):
     def __init__(self, name):
         self.name = name
 
-    @classmethod
-    def get_java_type(cls):
-        return getattr(cls, 'java_type')
-
-    def get_java_name(self):
-        from jhb.core.util import camelize
-        return camelize(self.name)
-
-    def get_java_param(self):
-        return '%s %s' % (self.get_java_type(), self.get_java_name())
-
     def get_value(self, value):
         return value
 

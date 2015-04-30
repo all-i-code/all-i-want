@@ -149,8 +149,11 @@ class MockAccess(object):
 
     def is_list_name_unique(self, owner_id, name, key=None):
         owner = self.get_owner(owner_id)
-        _ = lambda l: l.owner == owner and l.name == name
-        lists = [l for l in self.lists.values() if _(l)]
+
+        def matches(l):
+            return l.owner == owner and l.name == name
+
+        lists = [l for l in self.lists.values() if matches(l)]
         if key is not None:
             lists = [l for l in lists if l.key() != key]
         return len(lists) == 0

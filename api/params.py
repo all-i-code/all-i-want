@@ -28,7 +28,7 @@ class Param(object):
         self.name = name
 
     def get_json_name(self):
-        from jhb.core.util import camelize
+        from core.util import camelize
         return camelize(self.name)
 
     def get_value(self, value):

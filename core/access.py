@@ -3,7 +3,7 @@
 # File: access.py
 # Description: AllIWant interface for accessing data (stored model objects)
 #
-# Copyright 2011-2013 Adam Meadows
+# Copyright 2011-2015 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -55,18 +55,27 @@ class MemoryAccess(Access):
 
     def load_data(self, data):
         from core.model import get_db_classes
-        g = lambda x: getattr(data, self.pl(x))
-        _ = lambda x: (self.nm(x), [n.clone() for n in g(x)])
-        self.data = dict((_(cls) for cls in get_db_classes()))
+        self.data = dict((
+            (self.nm(cls), [n.clone() for n in getattr(data, self.pl(cls))])
+            for cls in get_db_classes()
+        ))
 
     def filter(self, cls, field=None, value=None):
         """Retrieve all model objects by class and a field"""
-        e = lambda f, v: f is not None and v is not None
-        _ = lambda r, f, v: getattr(r, f) == v if e(f, v) else True
+
+        def both(f, v):
+            return f is not None and v is not None
+
+        def matches(record, field, value):
+            if both(field, value):
+                return getattr(record, field) == value
+
+            return True
+
         return [
-            r
-            for r in self.data.get(self.nm(cls))
-            if _(r, field, value)
+            record
+            for record in self.data.get(self.nm(cls))
+            if matches(record, field, value)
         ]
 
     def get(self, cls, id):

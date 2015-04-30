@@ -3,7 +3,7 @@
 # File: util.py
 # Description: Utility methods for use in AllIWant
 #
-# Copyright 2011-2013 Adam Meadows
+# Copyright 2011-2015 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -22,9 +22,13 @@
 
 def camelize(s, trailing=False):
     """Translate string into camel-case"""
-    u = lambda i: not trailing or i > 0
-    _ = lambda x, i: x[0].upper() + x[1:] if u(i) else x
-    return ''.join(_(w, i) for i, w in enumerate(s.split('_')))
+    def should_cap(i):
+        return not trailing or i > 0
+
+    def cap_first(word, index):
+        return word[0].upper() + word[1:] if should_cap(index) else word
+
+    return ''.join(cap_first(w, i) for i, w in enumerate(s.split('_')))
 
 
 def uncamelize(s):

@@ -3,7 +3,7 @@
 # File: meta.py
 # Description: Meta-class and base classes for AllIWant model objects
 #
-# Copyright 2011-2013 Adam Meadows
+# Copyright 2011-2015 Adam Meadows
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -66,11 +66,12 @@ class Boolean(Field):
 
 class ModelArray(Field):
     def __init__(self, type=None, name=None, default=None):
-        default = default or []
-        _ = lambda x: pluralize(uncamelize(x.__name__))
+        if name is None:
+            name = pluralize(uncamelize(self.__class__.__name__))
+
         self.type = type
-        self.name = name if name is not None else _(self.__class__)
-        self.default = default
+        self.name = name
+        self.default = default or []
 
 
 class ModelMeta(type):
@@ -132,9 +133,10 @@ class Model(object):
 
     @classmethod
     def from_json_dict(cls, json_dict):
-        j = lambda n: cls.get_json_name(n)
-        v = lambda n: json_dict.get(j(n))
-        return cls(dict((n, v(n)) for n in cls.get_field_names()))
+        return cls(
+            dict((n, json_dict.get(cls.get_json_name(n))))
+            for n in cls.get_field_names()
+        )
 
     def __init__(self, **kwargs):
         fields = ((f.get_name(), f.get_default()) for f in self.get_fields())
@@ -151,14 +153,16 @@ class Model(object):
         return v
 
     def to_dict(self):
-        v = lambda f: self.get_value(f.get_name())
-        n = lambda f: f.get_name()
-        return dict((n(f), v(f)) for f in self.get_fields())
+        return dict(
+            (f.get_name(), self.get_value(f.get_name()))
+            for f in self.get_fields()
+        )
 
     def to_json_dict(self):
-        v = lambda f: self.get_value(f.get_name())
-        n = lambda f: self.get_json_name(f.get_name())
-        return dict((n(f), v(f)) for f in self.get_fields())
+        return dict(
+            (self.get_json_name(f.get_name()), self.get_value(f.get_name()))
+            for f in self.get_fields()
+        )
 
     def clone(self):
         d = self.to_dict()
