@@ -1,3 +1,4 @@
 [report]
 omit =
     */.virtualenvs/*
+    */site-packages/*
