@@ -2,7 +2,7 @@
 [![buildstatus](https://travis-ci.org/jobsquad/all-i-want.svg?branch=master)]
 (https://travis-ci.org/jobsquad/all-i-want)
 
-![Coverage Status](https://coveralls.io/repos/jobsquad/all-i-want/badge.svg?branch=master)]
+[![Coverage Status](https://coveralls.io/repos/jobsquad/all-i-want/badge.svg?branch=master)]
 (https://coveralls.io/r/jobsquad/all-i-want?branch=master)
 
 
