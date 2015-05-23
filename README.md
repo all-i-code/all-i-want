@@ -1,6 +1,9 @@
-# All I Want
-[![build status](https://travis-ci.org/jobsquad/all-i-want.svg?branch=master)]
+# All I Want [![build
+status](https://travis-ci.org/jobsquad/all-i-want.svg?branch=master)]
 (https://travis-ci.org/jobsquad/all-i-want)
+
+[![Coverage Status](https://coveralls.io/repos/jobsquad/all-i-want/badge.svg)]
+(https://coveralls.io/r/jobsquad/all-i-want)
 
 
 The All I Want wishlist management system is hosted

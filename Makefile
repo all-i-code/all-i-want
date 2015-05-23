@@ -30,11 +30,8 @@ python-test:
 
 test: flake8-test python-test
 
-coverage: export PYTHON := coverage run -a
 coverage:
-	$(HIDE)make python-test
-	$(HIDE)echo -e "\nCoverage Stats:\n"
-	$(HIDE)coverage report --omit /Applications/*.py
+	$(HIDE)nosetests --with-coverage --cover-package=all-i-want
 
 clean:
 	$(HIDE)echo "Removing *.pyc files"
@@ -43,13 +40,10 @@ clean:
 	$(HIDE)find . -name \*.py-e | xargs rm -f
 
 # Continuous Integration targets
-
+CI_VARS := PYTHONPATH=$(PWD):$(PWD)/ci_mocks
 ci-test: flake8-test ci-python-test
 ci-python-test:
-	$(HIDE)PYTHONPATH=$${PWD}:$${PWD}/ci_mocks make test
+	$(HIDE) PYTHONPATH=$${PWD}:$${PWD}/ci_mocks make test
 
-ci-coverage: export PYTHON := coverage run -a
 ci-coverage:
-	$(HIDE)make ci-python-test
-	$(HIDE)echo -e "\nCoverage Stats:\n"
-	$(HIDE)coverage report --omit /Applications/*.py
+	$(HIDE) PYTHONPATH=$${PWD}:$${PWD}/ci_mocks make coverage
